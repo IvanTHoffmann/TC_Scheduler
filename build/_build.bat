@@ -1,0 +1,1 @@
+g++ -std=c++17 -I../include -ID:/path/_thirdparty/RmlUi/Include -ID:/path/_thirdparty/glfw/include ../src/*.cpp ../lib/*.a -lshlwapi -o _rmluiTest
