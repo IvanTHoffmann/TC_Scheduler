@@ -1,0 +1,61 @@
+
+
+ALL
+	warnings (string dropdown)
+	- lunch violation (link to individual/tutor page)
+	- # hours (link to individual/tutor page)
+	- part-time hours (link to summary)
+	- coverage (link to summary/center coverage)
+	- Not enough eTutoring hours (link to summary/eTutoring Coverage)
+
+	Settings (button | links to settings page)
+
+SETTINGS
+	filename
+	save
+	load
+	generate
+	set resolution
+	
+	debug console
+	
+
+INDIVIDUAL
+	tutor name (string dropdown | double-click to edit current | final option is "new toot")
+	- schedule (tab)
+		total hours (int | read-only) 
+		min hours (int)
+		max hours (int)
+		brushType (enum)
+		schedule (table | colored by embedded/center hours)
+	- classes (tab)
+		category name (string)
+		class number (int | default "all" | enter presses add button)
+		add (button)
+		remove (button)
+		class list (table)
+	boot that toot (button)
+
+SUMMARY
+	table type (dropdown)
+	- TC hours (table | colored by open/closed)
+		total hours (int | read-only)
+	- full-time (table | colored by # of tutors)
+		total hours (int | read-only)
+		target hours (int | read-only)
+	- part-time (table | colored by # of tutors)
+		total hours (int | read-only)
+		max hours (int | read-only)
+	- drop-in (table | colored by # of tutors)
+		total hours (int | read-only)
+	- embedded (table | colored by # of tutors)
+		total hours (int | read-only)	
+	- eTutoring (table | colored by # of tutors)
+		total hours (int | read-only)
+		min hours (int)
+	- By Appointment (table | colored by # of tutors)
+		total hours (int | read-only)
+		min hours (int)
+	- by subject (table | colored by # of tutors)
+		subject name (dropdown | read-only)
+	
