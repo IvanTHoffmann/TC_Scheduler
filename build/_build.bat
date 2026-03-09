@@ -1,1 +1,1 @@
-g++ -std=c++17 -I../include ../src/*.cpp ../lib/*.a -lshlwapi -o TCScheduler
+g++ -std=c++20 -I../include ../src/*.cpp ../lib/*.a -lshlwapi -o TCScheduler

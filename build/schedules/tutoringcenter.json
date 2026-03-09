@@ -1,0 +1,16 @@
+{
+    "categories":{
+        "MATH": [86, 96],
+        "BIO": [123, 456]
+    },
+    "tutors":[
+        {
+            "firstName": "Ivan",
+            "lastName": "Hoffmann"
+        },
+        {
+            "firstName": "Eric",
+            "lastName": "Nitardy"
+        }
+    ]
+}
