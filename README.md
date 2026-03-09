@@ -1,6 +1,6 @@
 <h1>Description</h1>
 
-This is an application to help Sam with scheduling tutors and generating schedule information
+This is an application for scheduling tutors and generating schedule information
 
 <h1>Build Instructions</h1>
 
