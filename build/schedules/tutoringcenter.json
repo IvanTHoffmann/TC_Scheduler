@@ -1,16 +1,32 @@
 {
-    "categories":{
-        "MATH": [86, 96],
-        "BIO": [123, 456]
-    },
-    "tutors":[
+    "schedule_name": "Tutoring Center",
+    "categories": ["MATH", "BIOL", "CHEM", "PHYS", "STAT", "CS", "ECON", "BUS", "ACCT"],
+    "tutors": [
         {
-            "firstName": "Ivan",
-            "lastName": "Hoffmann"
+            "first_name": "Ivan",
+            "last_name": "Hoffmann",
+            "classes": [
+                    {
+                        "category": 0, 
+                        "classes": [123, 456]
+                    }
+                    {
+                        "category": 3, 
+                        "classes": [789, 456]
+                    }
+            ]
         },
         {
-            "firstName": "Eric",
-            "lastName": "Nitardy"
+            "first_name": "Eric",
+            "last_name": "Nitardy"
+        },
+        {
+            "first_name": "Angel",
+            "last_name": "Wiebe-Wright"
+        },
+        {
+            "first_name": "Brandon",
+            "last_name": "Vassion"
         }
     ]
 }

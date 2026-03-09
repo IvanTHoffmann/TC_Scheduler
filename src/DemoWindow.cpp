@@ -21,7 +21,7 @@ struct BrushType{
 struct ClassList{
     uint8_t categoryID;
     bool excludeList;
-    array<uint16_t, 16> classNums;
+    vector<uint16_t> classes;
 };
 
 struct DaySchedule{
@@ -33,18 +33,17 @@ struct WeekSchedule {
 };
 
 struct Tutor {
-    Rml::String firstName, lastName, fullName;
+    Rml::String first_name, last_name;
 
-    uint16_t totalHours;
-    uint16_t minHours;
-    uint16_t maxHours;
+    uint16_t total_hours;
+    uint16_t min_hours;
+    uint16_t max_hours;
 
     WeekSchedule schedule;
-    array<ClassList, 12> classes;
+    array<ClassList, 12> categories;
 };
 
 struct AppData {
-	Rml::String scheduleName;
     vector<Tutor> tutors;
 
 	// CONFIG
@@ -65,17 +64,15 @@ struct AppData {
 
 bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 {
-	Tutor tutor;
-	tutor.firstName = "Ivan";
-	tutor.lastName = "Hoffmann";
-	appData.tutors.push_back(tutor);
+	// Load schedule
 
+	// Create data model
 	if (Rml::DataModelConstructor constructor = context->CreateDataModel("app_data"))
     {
 		if (auto tutor_handle = constructor.RegisterStruct<Tutor>())
 		{
-			tutor_handle.RegisterMember("firstName", &Tutor::firstName);
-			tutor_handle.RegisterMember("lastName", &Tutor::lastName);
+			tutor_handle.RegisterMember("first_name", &Tutor::firstName);
+			tutor_handle.RegisterMember("last_name", &Tutor::lastName);
 		}
 
 		constructor.RegisterArray<vector<Rml::String>>();
