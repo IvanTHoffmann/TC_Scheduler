@@ -80,7 +80,6 @@ struct AppData {
 
 bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 {
-
 	Tutor tutor;
 	tutor.firstName = "Ivan";
 	tutor.lastName = "Hoffmann";
@@ -106,7 +105,7 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 
 	using namespace Rml;
 
-	document = context->LoadDocument("data/demo.rml");
+	document = context->LoadDocument("assets/demo.rml");
 	if (!document)
 		return false;
 
@@ -116,7 +115,6 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 	if (auto source = rmlui_dynamic_cast<Rml::ElementFormControl*>(document->GetElementById("sandbox_rml_source")))
 	{
 		auto value = source->GetValue();
-		value += "<p>Write your RML here</p>\n\n<!-- <img src=\"assets/high_scores_alien_1.tga\"/> -->";
 		source->SetValue(value);
 	}
 

@@ -1,28 +1,129 @@
 <rml>
-	<head>
-		<title>Demo</title>
-		<link type="text/template" href="window.rml" />
-		<style>
-			body
-			{
-				width: 300dp;
-				height: 225dp;
+<head>
+<link type="text/template" href="../../../assets/window.rml"/>
+<title>Demo Sample</title>
+<link type="text/rcss" href="style.rcss"/>
+</head>
 
-				margin: auto;
-			}
+<body template="window">
 
-			div#title_bar div#icon
-			{
-				display: none;
-			}
+<tabset id="menu">
 
-			div#content
-			{
-				text-align: left;
-			}
-		</style>
-	</head>
-	<body template="window">
-		This is a sample.
-	</body>
+<tab>Summary</tab>
+<panel id="summary">
+	<p class="title" align:"center">Summary Page</p>
+
+	<div>
+		<select name="filter_name" onkeydown="cancel_selection_on_escape">
+				<option value="none" selected>Choose Filter</option>
+				<option data-for="filter:filters">{{filter}}</option>
+			</select>
+		<button class="gradient">Button</button>
+	</div>
+
+</panel>
+
+<tab>Manage Schedules</tab>
+<panel id="page_manage_schedules">
+	<p class="title">Manage Schedules</p>
+	<div data-model="app_data">
+		<div>
+			<select name="tutor_name" onkeydown="cancel_selection_on_escape">
+				<option value="none" selected>Choose Tutor</option>
+				<option data-for="tutor:tutors" value={{name}}>{{tutor.lastName}}, {{tutor.firstName}}</option>
+			</select>
+			<button class="gradient">Boot This Toot</button>
+		</div>
+	</div>
+</panel>
+
+<tab>Manage Classes</tab>
+<panel id="page_manage_classes">
+	<p class="title">Manage Classes</p>
+	<div data-model="app_data">
+		<div>
+			<select name="tutor_name" onkeydown="cancel_selection_on_escape">
+				<option value="none" selected>Choose Tutor</option>
+				<option data-for="tutor:tutors" value={{name}}>{{tutor.lastName}}, {{tutor.firstName}}</option>
+			</select>
+			<button class="gradient">Boot This Toot</button>
+		</div>
+		<div>
+			<select name="category_name" onkeydown="cancel_selection_on_escape">
+				<option value="none" selected>Choose Category</option>
+				<option data-for="category:categories">{{category}}</option>
+			</select>
+			<input/>
+			<button class="gradient">Add</button>
+			<button class="gradient">Remove</button>
+		</div>
+	</div>
+	<table>
+		<thead>
+			<tr>
+				<td>Category</td>
+				<td>Classes</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Math</td>
+				<td>69</td>
+			</tr>
+			<tr>
+				<td>BIO</td>
+				<td>999, 123</td>
+			</tr>
+			<tr>
+				<td>COOL</td>
+				<td>All Except 420, 101, 102</td>
+			</tr>
+			<tr>
+				<td>NURS</td>
+				<td>All</td>
+			</tr>
+		</tbody>
+	</table>
+</panel>
+
+<tab>Configure</tab>
+<panel>
+	<div>
+		This is the configuration page where you will be able to control the settings of the application.
+	</div>
+</panel>
+
+<tab>Test</tab>
+<panel>
+	<div data-model="app_data">
+		<div>
+			<select name="tutor_name" onkeydown="cancel_selection_on_escape">
+				<option value="none" selected>Choose Tutor</option>
+				<option data-for="tutor:tutors" value={{name}}>{{tutor.lastName}}, {{tutor.firstName}}</option>
+			</select>
+		</div>
+	</div>
+</panel>
+
+<tab>Sandbox</tab>
+<panel id="sandbox">
+	<table>
+		<col id="col_rml_source"/>
+		<col/>
+		<col/>
+		<tr id="row_source">
+			<td><textarea id="sandbox_rml_source" wrap="nowrap" onchange="set_sandbox_body"></textarea></td>
+			<td id="vertical_slider"><handle class="slider" size_target="col_rml_source"/></td>
+			<td><textarea id="sandbox_rcss_source" wrap="nowrap" onchange="set_sandbox_style"></textarea></td>
+		</tr>
+		<tr>
+			<td colspan=3 id="horizontal_slider"><handle class="slider" size_target="row_source"/></td>
+		</tr>
+		<tr style="height: 100%">
+			<td colspan=3><div id="sandbox_target"/></td>
+		</tr>
+	</table>
+</panel>
+</tabset>
+</body>
 </rml>

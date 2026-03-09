@@ -21,7 +21,7 @@ int main(int /*argc*/, char** /*argv*/)
 		return -1;
 
 	// Constructs the system and render interfaces, creates a window, and attaches the renderer.
-	if (!Backend::Initialize("Demo Sample", width, height, true))
+	if (!Backend::Initialize("Tutoring Center Scheduler", width, height, true))
 	{
 		Shell::Shutdown();
 		return -1;
