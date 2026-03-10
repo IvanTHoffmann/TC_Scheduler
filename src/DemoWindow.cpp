@@ -71,8 +71,8 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
     {
 		if (auto tutor_handle = constructor.RegisterStruct<Tutor>())
 		{
-			tutor_handle.RegisterMember("first_name", &Tutor::firstName);
-			tutor_handle.RegisterMember("last_name", &Tutor::lastName);
+			tutor_handle.RegisterMember("first_name", &Tutor::first_name);
+			tutor_handle.RegisterMember("last_name", &Tutor::last_name);
 		}
 
 		constructor.RegisterArray<vector<Rml::String>>();
