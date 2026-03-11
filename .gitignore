@@ -67,3 +67,12 @@ vcpkg_installed/
 # test output & cache
 Testing/
 .cache/
+
+# Batch files
+.bat
+
+# Visual Studio Code settings
+.vscode/
+*.exe
+*.o
+*.a
