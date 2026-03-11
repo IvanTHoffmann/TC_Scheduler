@@ -32,7 +32,7 @@
 				<option value="none" selected>Choose Tutor</option>
 				<option data-for="tutor:tutors" value={{name}}>{{tutor.lastName}}, {{tutor.firstName}}</option>
 			</select>
-			<button class="gradient">Boot This Toot</button>
+			<button class="gradient" onclick="test_button">Boot This Toot</button>
 		</div>
 	</div>
 </panel>
