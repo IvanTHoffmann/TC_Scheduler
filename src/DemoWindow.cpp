@@ -1,4 +1,6 @@
 #include "DemoWindow.h"
+#include "json11.hpp"
+
 #include "RmlUi/Core/StreamMemory.h"
 #include <RmlUi/Core/Context.h>
 #include <RmlUi/Core/ElementDocument.h>
@@ -8,7 +10,12 @@
 #include <RmlUi_Backend.h>
 #include <RmlUi/Core.h>
 
+#include <iostream>
+#include <fstream>
+#include <string>
 #include <vector>
+
+using namespace json11;
 using namespace std;
 
 typedef uint8_t BrushIndex_t;
@@ -62,9 +69,55 @@ struct AppData {
 } appData;
 
 
+bool DemoWindow::loadData() {
+	ifstream fin;
+	string buf, err;
+
+	fin.open(APPDATA_FILENAME);
+	if (fin.is_open()) {
+		string line;
+		while (std::getline(fin, line)) {
+			buf += line + "\n";
+		}
+		fin.close();
+	}
+	else {
+		// create a default appdata.json file
+	}
+
+	json = Json::parse(buf, err);
+
+	/*
+	if (err.empty()){
+		cout << "loaded " << APPDATA_FILENAME << ": " << json.dump().c_str() << endl;
+	}
+	else{
+		cout << "failed to load " << APPDATA_FILENAME << ": " << err << endl;
+	}
+	*/
+
+    return err.empty();
+}
+
+
 bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 {
-	// Load schedule
+	// Load appdata
+	loadData();
+
+	Json settings = json["settings"];
+	Json::array resolution_options = json["resolution_options"].array_items();
+	int resolution_id = settings["resolution"].int_value();
+	//Json resolution_option = resolution_options[resolution_id];
+
+	cout << "resolution: " << resolution_options[0].dump().c_str() << endl;
+
+	//Json::array resolution = resolution_json.array_items();
+	//appData.resolution[0] = resolution[0].int_value();
+	//appData.resolution[1] = resolution[1].int_value();
+
+	cout << "settings: " << settings.dump().c_str() << endl;
+	cout << "resolution: (" << appData.resolution[0] << ", " << appData.resolution[1] << ")" << endl;
 
 	// Create data model
 	if (Rml::DataModelConstructor constructor = context->CreateDataModel("app_data"))
