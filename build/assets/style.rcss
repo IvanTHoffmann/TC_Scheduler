@@ -1,6 +1,6 @@
 @spritesheet demo-sheet
 {
-	src: /assets/invader.tga;
+	src: /assets/ui_elements.tga;
 
 	window-outer: 0px 0px 144px 151px;
 

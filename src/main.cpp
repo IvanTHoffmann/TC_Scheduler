@@ -6,6 +6,9 @@
 #include <RmlUi_Backend.h>
 #include <Shell.h>
 
+#define WINDOW_TITLE "TC Scheduler"
+
+
 #if defined RMLUI_PLATFORM_WIN32
 	#include <RmlUi_Include_Windows.h>
 int APIENTRY WinMain(HINSTANCE /*instance_handle*/, HINSTANCE /*previous_instance_handle*/, char* /*command_line*/, int /*command_show*/)
@@ -13,15 +16,15 @@ int APIENTRY WinMain(HINSTANCE /*instance_handle*/, HINSTANCE /*previous_instanc
 int main(int /*argc*/, char** /*argv*/)
 #endif
 {
-	const int width = 1300;
-	const int height = 600;
+	DemoWindow demo_window;
+	demo_window.load();
 
 	// Initializes the shell which provides common functionality used by the included samples.
 	if (!Shell::Initialize())
 		return -1;
 
 	// Constructs the system and render interfaces, creates a window, and attaches the renderer.
-	if (!Backend::Initialize("Tutoring Center Scheduler", width, height, true))
+	if (!Backend::Initialize(demo_window.getWindowTitle().c_str(), demo_window.getWidth(), demo_window.getHeight(), true))
 	{
 		Shell::Shutdown();
 		return -1;
@@ -35,7 +38,7 @@ int main(int /*argc*/, char** /*argv*/)
 	Rml::Initialise();
 
 	// Create the main RmlUi context.
-	Rml::Context* context = Rml::CreateContext("main", Rml::Vector2i(width, height));
+	Rml::Context* context = Rml::CreateContext("main", Rml::Vector2i(demo_window.getWidth(), demo_window.getHeight()));
 	if (!context)
 	{
 		Rml::Shutdown();
@@ -48,12 +51,10 @@ int main(int /*argc*/, char** /*argv*/)
 
 	Shell::LoadFonts();
 
-	DemoWindow demo_window;
-
 	DemoEventListenerInstancer event_listener_instancer{&demo_window};
 	Rml::Factory::RegisterEventListenerInstancer(&event_listener_instancer);
 
-	if (!demo_window.Initialize("TC Scheduler", context))
+	if (!demo_window.Initialize(WINDOW_TITLE, context))
 	{
 		Rml::Shutdown();
 		Backend::Shutdown();
@@ -63,7 +64,7 @@ int main(int /*argc*/, char** /*argv*/)
 
 	demo_window.GetDocument()->AddEventListener(Rml::EventId::Keydown, &demo_window);
 	demo_window.GetDocument()->AddEventListener(Rml::EventId::Keyup, &demo_window);
-	demo_window.GetDocument()->AddEventListener(Rml::EventId::Animationend, &demo_window);
+	//demo_window.GetDocument()->AddEventListener(Rml::EventId::Animationend, &demo_window);
 
 	bool running = true;
 	while (running)

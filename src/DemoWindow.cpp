@@ -51,12 +51,13 @@ struct Tutor {
 };
 
 struct AppData {
+	string window_title;
     vector<Tutor> tutors;
 
 	// CONFIG
     int resolution[2];
-    float fontSize, fontSpacing;
-    Rml::String scheduleName;
+    float fontSize;
+    int schedule_id;
 
 	// INDIVIDUAL
 	vector<Rml::String> categories;
@@ -64,12 +65,12 @@ struct AppData {
     
 	// SUMMARY
 	vector<Rml::String> filters;
-	WeekSchedule schedule;
+
+
 
 } appData;
 
-
-bool DemoWindow::loadData() {
+bool DemoWindow::load() {
 	ifstream fin;
 	string buf, err;
 
@@ -87,38 +88,51 @@ bool DemoWindow::loadData() {
 
 	json = Json::parse(buf, err);
 
-	/*
-	if (err.empty()){
+	//*
+	if (err.empty()) {
 		cout << "loaded " << APPDATA_FILENAME << ": " << json.dump().c_str() << endl;
 	}
-	else{
+	else {
 		cout << "failed to load " << APPDATA_FILENAME << ": " << err << endl;
 	}
-	*/
+	//*/
+
+	Json settings = json["settings"];
+
+	appData.window_title = settings["window_title"].string_value();
+	appData.schedule_id = settings["startup_schedule"].int_value();
+
+	Json::array resolution_options = settings["resolution_options"].array_items();
+	int resolution_id = settings["resolution"].int_value();
+	Json::array resolution = resolution_options[resolution_id].array_items();
+	appData.resolution[0] = resolution[0].int_value();
+	appData.resolution[1] = resolution[1].int_value();
+
+	//cout << "settings: " << settings.dump().c_str() << endl;
+	//cout << "resolution: (" << appData.resolution[0] << ", " << appData.resolution[1] << ")" << endl;
 
     return err.empty();
+}
+
+bool DemoWindow::save(){
+	return false;
+}
+
+const string& DemoWindow::getWindowTitle(){
+	return appData.window_title;
+}
+
+int DemoWindow::getWidth(){
+	return appData.resolution[0];
+}
+
+int DemoWindow::getHeight(){
+	return appData.resolution[1];
 }
 
 
 bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 {
-	// Load appdata
-	loadData();
-
-	Json settings = json["settings"];
-	Json::array resolution_options = json["resolution_options"].array_items();
-	int resolution_id = settings["resolution"].int_value();
-	//Json resolution_option = resolution_options[resolution_id];
-
-	cout << "resolution: " << resolution_options[0].dump().c_str() << endl;
-
-	//Json::array resolution = resolution_json.array_items();
-	//appData.resolution[0] = resolution[0].int_value();
-	//appData.resolution[1] = resolution[1].int_value();
-
-	cout << "settings: " << settings.dump().c_str() << endl;
-	cout << "resolution: (" << appData.resolution[0] << ", " << appData.resolution[1] << ")" << endl;
-
 	// Create data model
 	if (Rml::DataModelConstructor constructor = context->CreateDataModel("app_data"))
     {
