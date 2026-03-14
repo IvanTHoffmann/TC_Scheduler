@@ -1,0 +1,98 @@
+{
+    "settings": {
+        "window_title": "Tutoring Center Scheduler",
+        "resolution_options": [ [1920, 1080], [1200, 600], [500, 500] ],
+        "resolution": 1,
+        "startup_schedule": 0
+    },
+    "departments": ["MATH", "BIOL", "CHEM", "PHYS", "STAT", "CS", "ECON", "BUS", "ACCT"],
+    "service_types": [
+        {
+            "name": "In-Person",
+            "min_hours": 0,
+            "max_hours": 0
+        }, 
+        {
+            "name": "By Appointment",
+            "min_hours": 0,
+            "max_hours": 0
+        }, 
+        {
+            "name": "Online",
+            "min_hours": 0,
+            "max_hours": 0
+        }, 
+        {
+            "name": "eTutoring",
+            "min_hours": 0,
+            "max_hours": 0
+        }, 
+        {
+            "name": "Embedded",
+            "min_hours": 0,
+            "max_hours": 0
+        }
+    ],
+    "budgets": [
+        {
+            "name": "Tutoring"
+        },
+        {
+            "name": "CS"
+        },
+        {
+            "name": "S&A"
+        }
+    ],
+    "schedules": [
+        {
+            "name": "Tutoring Center",
+            "hours": [
+                {
+                    "days": [0, 1, 2, 3],
+                    "start": 800,
+                    "end": 1900
+                },
+                {
+                    "days": [4],
+                    "start": 800,
+                    "end": 1700
+                },
+                {
+                    "days": [5],
+                    "start": 800,
+                    "end": 1700
+                }
+            ],
+            "tutors": [
+                {
+                    "first_name": "Ivan",
+                    "last_name": "Hoffmann",
+                    "min_hours": 20,
+                    "max_hours": 20,
+                    "classes": [
+                            {
+                                "department": 0,
+                                "all_except": false,
+                                "courses": [123, 456]
+                            },
+                            {
+                                "department": 3,
+                                "all_except": false,
+                                "courses": [789, 456]
+                            }
+                    ],
+                    "shifts":[
+                        {
+                            "days": [0, 1, 2, 3],
+                            "service_type": 0,
+                            "budget_id": 0,
+                            "start": 1000,
+                            "end": 1500
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
