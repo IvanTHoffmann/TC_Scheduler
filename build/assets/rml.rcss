@@ -1,61 +1,88 @@
-/*
-* Default styles for all the basic elements.
-*/
-
-div
-{
-	display: block;
+#page_manage_schedules {
+    display: block;
+    height: 100%; 
+    padding: 10px;
 }
 
-p
-{
-	display: block;
+/* Core Layout */
+body {
+    font-family: Lato; /* Or whatever font you have in assets */
+    font-weight: normal;
+    font-style: normal;
+    font-size: 15px;
+    color: white;
 }
 
-h1
-{
-	display: block;
+div { display: block; }
+
+/* The main container from your RML */
+#page_manage_schedules {
+    display: block;
+    padding: 20px;
 }
 
-em
-{
-	font-style: italic;
+.title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-weight: bold;
 }
 
-strong
-{
-	font-weight: bold;
+/* Toolbar Area */
+.toolbar {
+    display: block;
+    background-color: #333;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
 }
 
-select
-{
-	text-align: left;
+select {
+    width: 200px;
+    height: 35px;
+    background-color: #444;
+    border: 1px solid #666;
+    margin-right: 10px;
+    color: white;
 }
 
-tabset tabs
-{
-	display: block;
+/* THE TABLE FIXES */
+.schedule-container {
+    display: block;
+    width: 800px; /* Force a width so we can see it */
+    height: 400px;
+    overflow: auto; /* Adds both scrollbars */
+    background-color: #111;
 }
 
 table {
-	box-sizing: border-box;
-	display: table;
+    display: table;
+    border-collapse: collapse;
 }
-tr {
-	box-sizing: border-box;
-	display: table-row;
+
+tr { display: table-row; }
+
+td, th {
+    display: table-cell;
+    border: 1px solid #444;
+    min-width: 80px; /* Ensures the columns don't collapse */
+    height: 40px;
+    text-align: center;
+    vertical-align: middle;
 }
-td {
-	box-sizing: border-box;
-	display: table-cell;
+
+.day-label {
+    background-color: #222;
+    font-weight: bold;
 }
-col {
-	box-sizing: border-box;
-	display: table-column;
-}
-colgroup {
-	display: table-column-group;
-}
-thead, tbody, tfoot {
-	display: table-row-group;
+
+/* Colors */
+.math { background-color: #2b5078; }
+.coding { background-color: #6a2b78; }
+.science { background-color: #2b783c; }
+
+button.gradient {
+    display: inline-block;
+    padding: 8px 15px;
+    background: #007acc;
+    border-radius: 3px;
 }
