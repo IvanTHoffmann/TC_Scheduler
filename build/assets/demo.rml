@@ -1,107 +1,112 @@
 <rml>
 <head>
-<link type="text/template" href="../../../assets/window.rml"/>
-<title>Tutoring Center Scheduler</title>
-<link type="text/rcss" href="style.rcss"/>
+    <link type="text/template" href="../../../assets/window.rml"/>
+    <title>Tutoring Center Scheduler</title>
+    <link type="text/rcss" href="style.rcss"/>
 </head>
 
 <body template="window">
-
 <tabset id="menu">
 
-<tab>Summary</tab>
-<panel id="summary">
-	<p class="title" align:"center">Summary Page</p>
-
-	<div>
-		<select name="filter_name" onkeydown="cancel_selection_on_escape">
-				<option value="none" selected>Choose Filter</option>
-				<option data-for="filter:filters">{{filter}}</option>
-			</select>
-		<button class="gradient">Button</button>
-	</div>
-
-</panel>
-
-<tab>Manage Schedules</tab>
-<panel id="page_manage_schedules">
-    <p class="title">Manage Schedules</p>
-    
-    <div data-model="app_data">
-        <div class="toolbar">
-            <label>Type: </label>
-            <select id="type_select">
-                <option value="math">Math</option>
-                <option value="english">English</option>
-                <option value="science">Science</option>
-                <option value="coding">Coding</option>
+    <tab>Summary</tab>
+    <panel id="summary">
+        <p class="title" align="center">Summary Page</p>
+        <div data-model="app_data"> <select name="filter_name">
+                <option value="none" selected>Choose Filter</option>
+                <option data-for="filter:filters">{{filter}}</option>
             </select>
+            <button class="gradient">Apply Filter</button>
+        </div>
+    </panel>
 
-            <label>Tutor: </label>
-            <select id="tutor_select" name="tutor_name">
+    <tab>Manage Schedules</tab>
+    <panel id="page_manage_schedules">
+        <p class="title">Manage Schedules</p>
+        <div data-model="app_data">
+            <div class="toolbar">
+                <label>Type: </label>
+                <select id="type_select">
+                    <option value="math">Math</option>
+                    <option value="chemistry">Chemistry</option>
+                    <option value="biology">Biology</option>
+                    <option value="computer_science">Computer Science</option>
+                </select>
+
+                <label>Tutor: </label>
+                <select id="tutor_select" name="tutor_name">
+                    <option value="none" selected>Choose Tutor</option>
+                    <option data-for="tutor:tutors" value="{{tutor.first_name}}">
+                        {{tutor.last_name}}, {{tutor.first_name}}
+                    </option>
+                </select>
+                <button class="gradient" onclick="boot_tutor">Boot This Toot</button>
+            </div>
+
+            <div class="view-toggles">
+                <button class="toggle-btn active">Editor View</button>
+                <button class="toggle-btn">Summary View</button>
+            </div>
+
+            <div class="schedule-container">
+                <div class="grid-scroll">
+                    <table class="schedule-table">
+                        <colgroup>
+                            <col style="width: 15%;"/> <col data-for="i : 12" style="width: 7%;"/>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th class="day-label"></th>
+                                <th>08:00</th><th>08:30</th><th>09:00</th><th>09:30</th>
+                                <th>10:00</th><th>10:30</th><th>11:00</th><th>11:30</th>
+                                <th>12:00</th><th>12:30</th><th>13:00</th><th>13:30</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="day-label">Mon</td>
+                                <td class="slot"></td><td class="slot math"></td><td class="slot math"></td><td class="slot"></td><td class="slot coding"></td><td class="slot coding"></td><td class="slot"></td><td class="slot"></td><td class="slot"></td><td class="slot"></td><td class="slot science"></td><td class="slot science"></td>
+                            </tr>
+                            <tr>
+                                <td class="day-label">Tue</td>
+                                <td class="slot"></td><td class="slot"></td><td class="slot"></td><td class="slot"></td><td class="slot"></td><td class="slot"></td><td class="slot"></td><td class="slot"></td><td class="slot"></td><td class="slot"></td><td class="slot"></td><td class="slot"></td>
+                            </tr>
+                            <tr>
+                                <td class="day-label">Wed</td>
+                            </tr>
+                            <tr>
+                                <td class="day-label">Thu</td>
+                            </tr>
+                            <tr>
+                                <td class="day-label">Fri</td>
+                            </tr>
+                            <tr>
+                                <td class="day-label">Sat</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div> </panel>
+
+    <tab>Configure</tab>
+    <panel>
+        <div>
+            This is the configuration page where you will be able to control the settings of the application.
+        </div>
+    </panel>
+
+    <tab>Test</tab>
+    <panel>
+        <div data-model="app_data">
+            <select name="tutor_name">
                 <option value="none" selected>Choose Tutor</option>
                 <option data-for="tutor:tutors" value="{{tutor.first_name}}">
                     {{tutor.last_name}}, {{tutor.first_name}}
                 </option>
             </select>
-            
-            <button class="gradient" onclick="boot_tutor">Boot This Toot</button>
         </div>
+    </panel>
 
-        <div class="view-toggles">
-            <button class="toggle-btn active">Editor View</button>
-            <button class="toggle-btn">Summary View</button>
-        </div>
-
-        <div class="schedule-container">
-			<div class="grid-scroll">
-				<table class="schedule-table">
-					<col style="width: 80px;"/> <col data-for="i : 12" style="width: 60px;"/> <thead>
-						<tr>
-							<th>Day</th>
-							<th>08:00</th><th>08:30</th><th>09:00</th><th>09:30</th>
-							<th>10:00</th><th>10:30</th><th>11:00</th><th>11:30</th>
-							<th>12:00</th><th>12:30</th><th>13:00</th><th>13:30</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td class="day-label">Mon</td>
-							<td class="slot"></td><td class="slot math"></td><td class="slot math"></td><td class="slot"></td>
-							<td class="slot coding"></td><td class="slot coding"></td><td class="slot"></td><td class="slot"></td>
-							<td class="slot"></td><td class="slot"></td><td class="slot science"></td><td class="slot science"></td>
-						</tr>
-						<tr>
-							<td class="day-label">Tue</td>
-							<td class="slot"></td><td class="slot"></td><td class="slot"></td><td class="slot"></td>
-							<td class="slot"></td><td class="slot"></td><td class="slot"></td><td class="slot"></td>
-							<td class="slot"></td><td class="slot"></td><td class="slot"></td><td class="slot"></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-    </div>
-</panel>
-
-<tab>Configure</tab>
-<panel>
-	<div>
-		This is the configuration page where you will be able to control the settings of the application.
-	</div>
-</panel>
-
-<tab>Test</tab>
-<panel>
-	<div data-model="app_data">
-		<div>
-			<select name="tutor_name" onkeydown="cancel_selection_on_escape">
-				<option value="none" selected>Choose Tutor</option>
-				<option data-for="tutor:tutors" value={{name}}>{{tutor.lastName}}, {{tutor.firstName}}</option>
-			</select>
-		</div>
-	</div>
-</panel>
 </tabset>
 </body>
 </rml>
