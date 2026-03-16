@@ -12,7 +12,7 @@
 <tab>Summary</tab>
 <panel id="summary">
 	<p class="title" align:"center">Summary Page</p>
-
+	
 	<div>
 		<select name="filter_name" onkeydown="cancel_selection_on_escape">
 				<option value="none" selected>Choose Filter</option>

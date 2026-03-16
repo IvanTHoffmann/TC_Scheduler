@@ -33,7 +33,7 @@
 
 body.window
 {
-	inset: 50dp 80dp;
+	inset: 50dp 50dp;
 	min-width: 1040dp;
 	min-height: 300dp;
 	max-width: none;
@@ -96,8 +96,9 @@ panel
 	padding: 30dp;
 	margin-left: auto;
 	margin-right: auto;
-	max-width: 500dp;
+	/* max-width: 500dp; */
 }
+
 panel#welcome
 {
 	display: inline-block;
@@ -112,6 +113,7 @@ p.title
 	font-size: 35dp;
 	color: #b33;
 	font-effect: glow(2dp #ed5);
+	text-align: center;
 }
 .center {
 	text-align: center;
