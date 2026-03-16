@@ -1,7 +1,7 @@
 <rml>
 <head>
 <link type="text/template" href="../../../assets/window.rml"/>
-<title>Demo Sample</title>
+<title>Tutoring Center Scheduler</title>
 <link type="text/rcss" href="style.rcss"/>
 </head>
 

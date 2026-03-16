@@ -1,4 +1,6 @@
 #include "DemoWindow.h"
+#include "json11.hpp"
+
 #include "RmlUi/Core/StreamMemory.h"
 #include <RmlUi/Core/Context.h>
 #include <RmlUi/Core/ElementDocument.h>
@@ -8,7 +10,12 @@
 #include <RmlUi_Backend.h>
 #include <RmlUi/Core.h>
 
+#include <iostream>
+#include <fstream>
+#include <string>
 #include <vector>
+
+using namespace json11;
 using namespace std;
 
 typedef uint8_t BrushIndex_t;
@@ -44,12 +51,13 @@ struct Tutor {
 };
 
 struct AppData {
+	string window_title;
     vector<Tutor> tutors;
 
 	// CONFIG
     int resolution[2];
-    float fontSize, fontSpacing;
-    Rml::String scheduleName;
+    float fontSize;
+    int schedule_id;
 
 	// INDIVIDUAL
 	vector<Rml::String> categories;
@@ -57,15 +65,74 @@ struct AppData {
     
 	// SUMMARY
 	vector<Rml::String> filters;
-	WeekSchedule schedule;
+
+
 
 } appData;
+
+bool DemoWindow::load() {
+	ifstream fin;
+	string buf, err;
+
+	fin.open(APPDATA_FILENAME);
+	if (fin.is_open()) {
+		string line;
+		while (std::getline(fin, line)) {
+			buf += line + "\n";
+		}
+		fin.close();
+	}
+	else {
+		// create a default appdata.json file
+	}
+
+	json = Json::parse(buf, err);
+
+	//*
+	if (err.empty()) {
+		cout << "loaded " << APPDATA_FILENAME << ": " << json.dump().c_str() << endl;
+	}
+	else {
+		cout << "failed to load " << APPDATA_FILENAME << ": " << err << endl;
+	}
+	//*/
+
+	Json settings = json["settings"];
+
+	appData.window_title = settings["window_title"].string_value();
+	appData.schedule_id = settings["startup_schedule"].int_value();
+
+	Json::array resolution_options = settings["resolution_options"].array_items();
+	int resolution_id = settings["resolution"].int_value();
+	Json::array resolution = resolution_options[resolution_id].array_items();
+	appData.resolution[0] = resolution[0].int_value();
+	appData.resolution[1] = resolution[1].int_value();
+
+	//cout << "settings: " << settings.dump().c_str() << endl;
+	//cout << "resolution: (" << appData.resolution[0] << ", " << appData.resolution[1] << ")" << endl;
+
+    return err.empty();
+}
+
+bool DemoWindow::save(){
+	return false;
+}
+
+const string& DemoWindow::getWindowTitle(){
+	return appData.window_title;
+}
+
+int DemoWindow::getWidth(){
+	return appData.resolution[0];
+}
+
+int DemoWindow::getHeight(){
+	return appData.resolution[1];
+}
 
 
 bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 {
-	// Load schedule
-
 	// Create data model
 	if (Rml::DataModelConstructor constructor = context->CreateDataModel("app_data"))
     {

@@ -58,4 +58,6 @@ SUMMARY
 		min hours (int)
 	- by subject (table | colored by # of tutors)
 		subject name (dropdown | read-only)
+	- by budget
+		budget name
 	

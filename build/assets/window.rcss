@@ -1,6 +1,6 @@
 @spritesheet theme
 {
-	src: invader.tga;
+	src: ui_elements.tga;
 
 	/* For high dpi screens, designates the scaling it is intended to be shown at. */
 	resolution: 1x;
@@ -152,8 +152,8 @@ body
 
 body.window
 {
-	padding-top: 43dp;
-	padding-bottom: 20dp;
+	padding-top: 0dp;
+	padding-bottom: 0dp;
 
 	min-width: 250dp;
 	max-width: 800dp;
@@ -167,7 +167,7 @@ div#title_bar
 	z-index: 1;
 
 	position: absolute;
-	top: 7dp;
+	top: 0dp;
 	left: 0;
 
 	text-align: left;
@@ -178,7 +178,7 @@ div#title_bar div#icon
 {
 	position: absolute;
 	left: 15dp;
-	top: -4dp;
+	top: 0dp;
 
 	width: 51dp;
 	height: 39dp;
