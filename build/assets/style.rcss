@@ -429,6 +429,7 @@ form {
 }
 form input, form select {
 	margin-left: 0;
+	vertical-align: middle;
 }
 input.text, input.password {
 	width: 35%;

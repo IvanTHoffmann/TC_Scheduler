@@ -1,0 +1,11 @@
+<template name="timetable">
+<head>
+	<link type="text/rcss" href="rml.rcss"/>
+	<link type="text/rcss" href="window.rcss"/>
+</head>
+<body class="timetable">
+
+    <div>This is a timetable</div>
+    
+</body>
+</template>
