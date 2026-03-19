@@ -22,14 +22,14 @@ typedef uint8_t ServiceIndex_t;
 
 
 template <class _Ty>
-class vectorPtr {
+class vectorInterface {
 	private:
 	vector<_Ty> *v;
 
 	public:
 	using value_type = _Ty;
 
-	void Update(vector<_Ty> *new_v){
+	void update(vector<_Ty> *new_v){
 		v = new_v;
 	}
 
@@ -37,8 +37,12 @@ class vectorPtr {
 		return v->begin();
 	}
 
+	vector<_Ty>::iterator end(){
+		return v->end();
+	}
+
 	size_t size(){
-		return v->size();
+		return (v != nullptr) ? v->size() : 0;
 	}
 };
 
@@ -50,8 +54,8 @@ struct Service{
 };
 
 struct ClassList{
-    uint8_t department_id;
-    bool all_except;
+    int department_id;
+    bool subtractive;
     vector<int> courses;
 };
 
@@ -66,9 +70,9 @@ struct WeekSchedule {
 struct Tutor {
     Rml::String first_name, last_name;
 
-    uint16_t total_hours;
-    uint16_t min_hours;
-    uint16_t max_hours;
+    int total_hours;
+    int min_hours;
+    int max_hours;
 
     WeekSchedule schedule;
     vector<ClassList> classes;
@@ -77,7 +81,7 @@ struct Tutor {
 struct AppData {
 	string window_title;
     vector<Tutor> tutors;
-	vectorPtr<ClassList> selectedTutorClasses;
+	vectorInterface<ClassList> selectedTutorClasses;
 
 	int selected_tutor;
 	int selected_department;
@@ -141,7 +145,6 @@ bool DemoWindow::load() {
 	int resolution_id = settings["resolution"].int_value();
 	appData.resolution[0] = appData.resolutionOptions[resolution_id][0];
 	appData.resolution[1] = appData.resolutionOptions[resolution_id][1];
-
 	
 	Json::array schedules = jsonDocument["schedules"].array_items();
 	Json schedule = schedules[0];
@@ -170,18 +173,22 @@ bool DemoWindow::load() {
 		tutor.min_hours = tutor_json["min_hours"].int_value();
 		tutor.max_hours = tutor_json["max_hours"].int_value();
 
+		tutor.classes.clear();
 		for (const Json class_json : tutor_json["classes"].array_items()){
+			cout << "found class" << endl;
 			classList.department_id = class_json["department_id"].int_value();
-			classList.all_except = class_json["all_except"].bool_value();
+			classList.subtractive = class_json["subtractive"].bool_value();
+			
+			classList.courses.clear();
 			for (const Json course_json : class_json["courses"].array_items()){
 				classList.courses.push_back(course_json.int_value());
 			}
+
+			tutor.classes.push_back(classList);
 		}
 			
 		appData.tutors.push_back(tutor);
 	}
-
-
 
     return true;
 }
@@ -203,6 +210,23 @@ int DemoWindow::getHeight(){
 }
 
 
+void DemoWindow::SetTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments)
+{
+	if (arguments.size() != 1){
+		return;
+	}
+
+	const int index = arguments[0].Get<int>();
+	if (index == -1){
+		appData.selectedTutorClasses.update(nullptr);
+	} else {
+		appData.selectedTutorClasses.update(&appData.tutors[index].classes);
+	}
+	
+	dataModelHandle.DirtyVariable("selected_tutor_classes");
+}
+
+
 bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 {
 	// Create data model
@@ -215,7 +239,7 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 		if (auto handle = constructor.RegisterStruct<ClassList>())
 		{
 			handle.RegisterMember("department_id", &ClassList::department_id);
-			handle.RegisterMember("all_except", &ClassList::all_except);
+			handle.RegisterMember("subtractive", &ClassList::subtractive);
 			handle.RegisterMember("courses", &ClassList::courses);
 		}
 
@@ -240,17 +264,18 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 		}
 
 		constructor.RegisterArray<vector<Service>>();
-		constructor.RegisterArray<vectorPtr<ClassList>>();
+		constructor.RegisterArray<vectorInterface<ClassList>>();
 
 		constructor.Bind("departments", &appData.departments);
 		constructor.Bind("services", &appData.services);
 		constructor.Bind("tutors", &appData.tutors);
 		constructor.Bind("selected_department", &appData.selected_department);
 		constructor.Bind("selected_tutor", &appData.selected_tutor);
-		//constructor.Bind("selected_tutor_classes", &appData.selectedTutorClasses);
+		constructor.Bind("selected_tutor_classes", &appData.selectedTutorClasses);
 
-		//dataModelHandle = constructor.GetModelHandle();
-		//dataModelHandle.DirtyVariable("names");
+		constructor.BindEventCallback("SetTutor", &DemoWindow::SetTutor, this);
+
+		dataModelHandle = constructor.GetModelHandle();
     }
 
 	using namespace Rml;

@@ -34,6 +34,8 @@ public:
 
 	void SubmitForm(Rml::String in_submit_message);
 
+	void SetTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
+
 private:
 	Rml::ElementDocument* document = nullptr;
 	Rml::ElementDocument* iframe = nullptr;

@@ -8,7 +8,7 @@
     "schedules": [
         {
             "name": "Tutoring Center",
-            "departments": ["MATH", "BIOL", "CHEM", "PHYS", "STAT", "CS", "ECON", "BUS", "ACCT"],
+            "departments": ["MATH", "BIOL", "CHEM", "PHYS", "STAT", "CS", "ECON", "BUS", "ACCT", "SPAN"],
             "services": [
                 {
                     "name": "In-Person",
@@ -73,13 +73,23 @@
                     "classes": [
                             {
                                 "department_id": 0,
-                                "all_except": false,
-                                "courses": [123, 456]
+                                "subtractive": true,
+                                "courses": [146, 260]
                             },
                             {
-                                "department_id": 3,
-                                "all_except": false,
-                                "courses": [789, 456]
+                                "department_id": 9,
+                                "subtractive": false,
+                                "courses": [121, 122]
+                            },
+                            {
+                                "department_id": 5,
+                                "subtractive": true,
+                                "courses": []
+                            },
+                            {
+                                "department_id": 5,
+                                "subtractive": false,
+                                "courses": [1, 2, 3, 4, 5, 6]
                             }
                     ],
                     "shifts":[
@@ -100,12 +110,37 @@
                     "classes": [
                             {
                                 "department_id": 0,
-                                "all_except": false,
-                                "courses": [123, 456]
+                                "subtractive": true,
+                                "courses": []
+                            },
+                            {
+                                "department_id": 1,
+                                "subtractive": true,
+                                "courses": []
+                            },
+                            {
+                                "department_id": 2,
+                                "subtractive": false,
+                                "courses": [642, 456]
                             },
                             {
                                 "department_id": 3,
-                                "all_except": false,
+                                "subtractive": true,
+                                "courses": [55, 6542]
+                            },
+                            {
+                                "department_id": 4,
+                                "subtractive": false,
+                                "courses": [875,515,123566]
+                            },
+                            {
+                                "department_id": 5,
+                                "subtractive": false,
+                                "courses": [789, 456]
+                            },
+                            {
+                                "department_id": 6,
+                                "subtractive": false,
                                 "courses": [789, 456]
                             }
                     ],

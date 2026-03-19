@@ -20,14 +20,15 @@ void DemoEventListener::ProcessEvent(Rml::Event& event)
 
 		event.StopPropagation();
 	}
-
+	/*
 	else if (value == "onChange") {
 		cout << "Changed dropdown: " << value << endl;
 		event.StopPropagation();	
 	}
 	else {
-		cout << "Unrecognised event type: " << value << endl;
+		cout << "Unrecognized event type: " << value << endl;
 	}
+	*/
 }
 
 void DemoEventListener::OnDetach(Rml::Element* /*element*/)

@@ -59,6 +59,12 @@
 			</thead>
 			<tbody>
 				<tr data-for="class:selected_tutor_classes">
+					<td>{{departments[class.department_id]}}</td>
+					<td>
+					<span data-if="class.subtractive && class.courses.size == 0">All</span>
+					<span data-if="class.subtractive && class.courses.size > 0">All Except</span>
+					<span data-for="course:class.courses">{{it_index ? ',' : ' '}} {{course}}</span>
+					</td>
 				</tr>
 			</tbody>
 		</table>
