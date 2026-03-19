@@ -39,5 +39,5 @@ private:
 	Rml::ElementDocument* iframe = nullptr;
 
 	Rml::DataModelHandle dataModelHandle;
-	Json json;
+	Json jsonDocument;
 };
