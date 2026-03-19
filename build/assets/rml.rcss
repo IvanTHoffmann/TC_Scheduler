@@ -1,13 +1,13 @@
 /* Override the template's default padding */
 #window, #content, #menu, panels, panel {
-    display: block
-    width: 100%
-    max-width: none
-    min-width: 100%
-    margin: 0
-    padding: 0
-    left: 0
-    top: 0
+    display: block;
+    width: 100%;
+    max-width: none;
+    min-width: 100%;
+    margin: 0;
+    padding: 0;
+    left: 0;
+    top: 0;
 }
 
 /* Core Layout & Typography */

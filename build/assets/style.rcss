@@ -123,6 +123,35 @@ p.title
 	cursor: pointer;
 }
 
+.schedule-grid {
+	border: 1dp solid #777;
+	background-color: #111;
+	padding: 4dp;
+	margin-top: 14dp;
+}
+.schedule-grid .schedule-row {
+	display: flex;
+}
+.schedule-grid .schedule-row .slot,
+.schedule-grid .schedule-header .slot {
+	width: 80dp;
+	height: 28dp;
+	line-height: 28dp;
+	border: 1dp solid #aaa;
+	text-align: center;
+	font-size: 10dp;
+	user-select: none;
+	cursor: pointer;
+	margin: 0;
+	padding: 2dp;
+	background-color: #171717;
+}
+.schedule-grid .schedule-header .slot { background: #222; font-weight: bold; color: #fff; }
+.schedule-grid .schedule-row .slot.day-label { width: 56dp; background: #1a1a1a; cursor: default; color: #fff; }
+.schedule-grid .schedule-row .slot.selected { background: #3399ff; color: #fff; }
+.schedule-grid .schedule-row .slot.other { background: #bb8; color: #111; }
+.schedule-grid .schedule-row .slot:hover { /* no style; support only click/drag selection */ }
+.schedule-grid .schedule-row .slot.schedule-dragging { background-color: rgba(75, 178, 255, 0.45); }
 
 /***  Decorators  ***/
 #decorators {

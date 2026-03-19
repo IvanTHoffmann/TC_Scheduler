@@ -14,6 +14,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 using namespace json11;
 using namespace std;
@@ -161,23 +162,28 @@ bool DemoWindow::load() {
 	}
 	
 	Json::array tutors = schedule["tutors"].array_items();
-	Tutor tutor;
-	ClassList classList;
-	int courseID;
 	for (const Json tutor_json : tutors){
-		tutor.first_name = tutor_json["first_name"].string_value();
-		tutor.last_name = tutor_json["last_name"].string_value();
+		Tutor tutor;
+		tutor.total_hours = 0;
 		tutor.min_hours = tutor_json["min_hours"].int_value();
 		tutor.max_hours = tutor_json["max_hours"].int_value();
+		tutor.first_name = tutor_json["first_name"].string_value();
+		tutor.last_name = tutor_json["last_name"].string_value();
+
+		for (int d = 0; d < 7; ++d)
+			for (int seg = 0; seg < 96; ++seg)
+				tutor.schedule.days[d].segments[seg] = 0;
 
 		for (const Json class_json : tutor_json["classes"].array_items()){
+			ClassList classList;
 			classList.department_id = class_json["department_id"].int_value();
 			classList.all_except = class_json["all_except"].bool_value();
 			for (const Json course_json : class_json["courses"].array_items()){
 				classList.courses.push_back(course_json.int_value());
 			}
+			tutor.classes.push_back(classList);
 		}
-			
+
 		appData.tutors.push_back(tutor);
 	}
 
@@ -202,6 +208,128 @@ int DemoWindow::getHeight(){
 	return appData.resolution[1];
 }
 
+static int GetScheduleSegment(int slot) {
+	return 32 + slot * 2; // 8:00 is segment 32 (8*4), 30mins increments
+}
+
+static Rml::String FormatTimeSlot(int slot) {
+	int total_minutes = 8 * 60 + slot * 30;
+	int hour = total_minutes / 60;
+	int minute = total_minutes % 60;
+	char buf[8];
+	sprintf(buf, "%02d:%02d", hour, minute);
+	return buf;
+}
+
+uint8_t DemoWindow::GetScheduleValue(int tutor_index, int day, int slot) {
+	if (tutor_index < 0 || tutor_index >= (int)appData.tutors.size() || day < 0 || day >= 7 || slot < 0 || slot >= 22) {
+		return 0;
+	}
+	int segment = GetScheduleSegment(slot);
+	return appData.tutors[tutor_index].schedule.days[day].segments[segment];
+}
+
+void DemoWindow::SetScheduleValue(int tutor_index, int day, int slot, uint8_t value) {
+	if (tutor_index < 0 || tutor_index >= (int)appData.tutors.size() || day < 0 || day >= 7 || slot < 0 || slot >= 22)
+		return;
+	int segment = GetScheduleSegment(slot);
+	appData.tutors[tutor_index].schedule.days[day].segments[segment] = value ? 1 : 0;
+}
+
+void DemoWindow::UpdateScheduleGrid() {
+	if (!document)
+		return;
+
+	Rml::Element* container = document->GetElementById("schedule_grid_container");
+	if (!container)
+		return;
+
+	int selected_tutor = appData.selected_tutor;
+
+	std::string html;
+	html += "<div class='schedule-grid'>";
+
+	// Header row: time slots
+	html += "<div class='schedule-row schedule-header'><div class='slot day-label'></div>";
+	for (int slot = 0; slot < 22; ++slot) {
+		html += "<div class='slot'>";
+		html += FormatTimeSlot(slot);
+		html += "</div>";
+	}
+	html += "</div>";
+
+	static const char* days[7] = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+	for (int day = 0; day < 7; ++day) {
+		html += "<div class='schedule-row'>";
+		html += "<div class='slot day-label'>";
+		html += days[day];
+		html += "</div>";
+		for (int slot = 0; slot < 22; ++slot) {
+			bool selected = selected_tutor >= 0 && selected_tutor < (int)appData.tutors.size() && GetScheduleValue(selected_tutor, day, slot);
+			char buf[256];
+			sprintf(buf, "<div class='slot %s' data-day='%d' data-slot='%d' onmousedown='schedule_slot' onmousemove='schedule_slot' onmouseup='schedule_slot'> </div>", selected ? "selected" : "", day, slot);
+			html += buf;
+		}
+		html += "</div>";
+	}
+
+	html += "</div>";
+	container->SetInnerRML(html);
+}
+
+void DemoWindow::OnTutorChanged() {
+	UpdateScheduleGrid();
+}
+
+void DemoWindow::OnScheduleCellMouseDown(int day, int slot) {
+	if (appData.selected_tutor < 0 || appData.selected_tutor >= (int)appData.tutors.size())
+		return;
+
+	uint8_t old_value = GetScheduleValue(appData.selected_tutor, day, slot);
+	uint8_t new_value = old_value ? 0 : 1;
+	SetScheduleValue(appData.selected_tutor, day, slot, new_value);
+
+	schedule_drag_active = true;
+	schedule_drag_start_day = day;
+	schedule_drag_start_slot = slot;
+	schedule_drag_current_day = day;
+	schedule_drag_current_slot = slot;
+	schedule_drag_target_state = new_value;
+
+	UpdateScheduleGrid();
+}
+
+void DemoWindow::OnScheduleCellMouseMove(int day, int slot) {
+	if (!schedule_drag_active)
+		return;
+
+	if (day < 0 || day >= 7 || slot < 0 || slot >= 22)
+		return;
+
+	schedule_drag_current_day = day;
+	schedule_drag_current_slot = slot;
+
+	int day0 = std::min(schedule_drag_start_day, schedule_drag_current_day);
+	int day1 = std::max(schedule_drag_start_day, schedule_drag_current_day);
+	int slot0 = std::min(schedule_drag_start_slot, schedule_drag_current_slot);
+	int slot1 = std::max(schedule_drag_start_slot, schedule_drag_current_slot);
+
+	for (int d = day0; d <= day1; ++d) {
+		for (int s = slot0; s <= slot1; ++s) {
+			SetScheduleValue(appData.selected_tutor, d, s, schedule_drag_target_state);
+		}
+	}
+
+	UpdateScheduleGrid();
+}
+
+void DemoWindow::OnScheduleCellMouseUp(int day, int slot) {
+	if (!schedule_drag_active)
+		return;
+
+	schedule_drag_active = false;
+	UpdateScheduleGrid();
+}
 
 bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 {
@@ -261,7 +389,8 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 
 	document->GetElementById("title")->SetInnerRML(title);
 
-	document->Show();
+	UpdateScheduleGrid();
+		document->Show();
 
 	return true;
 }
@@ -296,6 +425,14 @@ void DemoWindow::ProcessEvent(Rml::Event& event)
 			Backend::RequestExit();
 	}
 	break;
+
+	case EventId::Mouseup:
+		schedule_drag_active = false;
+		break;
+
+	case EventId::Mouseout:
+		schedule_drag_active = false;
+		break;
 
 	default: break;
 	}

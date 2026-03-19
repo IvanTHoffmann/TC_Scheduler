@@ -33,6 +33,7 @@
 	<p class="title">Manage Schedules</p>
 	<div data-model="app_data">
 		<template src="tutor_select"/>
+		<div id="schedule_grid_container"></div>
 	</div>
 </panel>
 
