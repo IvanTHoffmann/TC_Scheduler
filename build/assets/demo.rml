@@ -41,34 +41,42 @@
 	<p class="title">Manage Classes</p>
 	<div data-model="app_data">
 		<template src="tutor_select"/>
-		<div>
-			<select name="department_name" data-value="selected_department" onkeydown="cancel_selection_on_escape">
-				<option value="none" selected>Choose Department</option>
-				<option data-for="department:departments" data-value="it_index">{{department}}</option>
-			</select>
-			<input/>
-			<button class="gradient">Add</button>
-			<button class="gradient">Remove</button>
+		<div data-if="selected_tutor != -1">
+			<div>
+				<!--
+				<span><span>Min hours: </span><input type="text" data-value="tutors[selected_tutor].min_hours"></input></span>
+				<span><span>Max hours: </span><input type="text" data-value="tutors[selected_tutor].max_hours"></input></span>
+				-->
+			</div>
+			<div>
+				<select name="department_name" data-value="selected_department" onkeydown="cancel_selection_on_escape">
+					<option value="none" selected>Choose Department</option>
+					<option data-for="department:departments" data-value="it_index">{{department}}</option>
+				</select>
+				<input/>
+				<button class="gradient">Add</button>
+				<button class="gradient">Remove</button>
+			</div>
+			<table>
+				<thead>
+					<tr>
+						<td>Department</td>
+						<td>Courses</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr data-for="class:selected_tutor_classes">
+						<td>{{departments[class.department_id]}}</td>
+						<td>
+						<span data-if="class.subtractive && class.courses.size == 0">All</span>
+						<span data-if="class.subtractive && class.courses.size > 0">All Except</span>
+						<span data-for="course:class.courses">{{it_index ? ',' : ' '}} {{course}}</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
-		<table>
-			<thead>
-				<tr>
-					<td>Department</td>
-					<td>Courses</td>
-				</tr>
-			</thead>
-			<tbody>
-				<tr data-for="class:selected_tutor_classes">
-					<td>{{departments[class.department_id]}}</td>
-					<td>
-					<span data-if="class.subtractive && class.courses.size == 0">All</span>
-					<span data-if="class.subtractive && class.courses.size > 0">All Except</span>
-					<span data-for="course:class.courses">{{it_index ? ',' : ' '}} {{course}}</span>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+	</div> <!-- End of tutor info container -->
 </panel>
 
 <tab>Configure</tab>

@@ -47,7 +47,7 @@ class vectorInterface {
 };
 
 
-struct Service{
+struct Service {
     Rml::String name;
 	int min_hours;
 	int max_hours;
@@ -226,6 +226,15 @@ void DemoWindow::SetTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml:
 	dataModelHandle.DirtyVariable("selected_tutor_classes");
 }
 
+const vector<ClassList>& DemoWindow::GetSelectedTutorClasses(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments)
+{
+	if (arguments.size() != 0){
+		return;
+	}
+	
+	return appData.tutors[appData.selected_tutor].classes;
+}
+
 
 bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 {
@@ -274,6 +283,7 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 		constructor.Bind("selected_tutor_classes", &appData.selectedTutorClasses);
 
 		constructor.BindEventCallback("SetTutor", &DemoWindow::SetTutor, this);
+		//constructor.BindEventCallback("GetSelectedTutorClasses", &DemoWindow::GetSelectedTutorClasses, this);
 
 		dataModelHandle = constructor.GetModelHandle();
     }
