@@ -90,6 +90,11 @@ public:
 	template <typename Container>
 	bool RegisterArray();
 
+	/*
+	template <typename Container>
+	bool RegisterSelectionInterface();
+	*/
+
 	// Register a transform function.
 	// A transform function modifies a variant with optional arguments. It can be called in data expressions using the pipe '|' operator.
 	// @note The transform function applies to every data model associated with the current Context.

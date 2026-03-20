@@ -22,29 +22,53 @@ typedef uint8_t ServiceIndex_t;
 
 
 template <class _Ty>
+class SelectedItemInterface;
+
+
+template <class _Ty>
 class vectorInterface {
 	private:
-	vector<_Ty> *v;
+	vector<_Ty> *_target;
+	SelectedItemInterface<_Ty> *_interface;
 
 	public:
 	using value_type = _Ty;
 
-	void update(vector<_Ty> *new_v){
-		v = new_v;
+	vectorInterface(SelectedItemInterface<_Ty> *interface) : _interface(interface) {}
+
+	void setTarget(vector<_Ty> *newTarget){
+		_target = newTarget;
 	}
 
 	vector<_Ty>::iterator begin(){
-		return v->begin();
-	}
-
-	vector<_Ty>::iterator end(){
-		return v->end();
+		return _target->begin() + _interface->index;
 	}
 
 	size_t size(){
-		return (v != nullptr) ? v->size() : 0;
+		if (_target == nullptr) { return 0; }
+		if (_interface->index < 0) { return 0; }
+		if (_interface->index >= _target->size()) { return 0; }
+		return 1;
 	}
 };
+
+template <class _Ty>
+class SelectedItemInterface {
+	public:
+	vectorInterface<_Ty> accessor;
+	int index;
+
+	SelectedItemInterface() : accessor(this), index(-1) {}
+
+	void setTarget(vector<_Ty> *newTarget){
+		accessor.setTarget(newTarget);
+	}
+
+	void setIndex(int newIndex){
+		index = newIndex;
+	}
+};
+
 
 
 struct Service {
@@ -68,7 +92,7 @@ struct WeekSchedule {
 };
 
 struct Tutor {
-    Rml::String first_name, last_name;
+	Rml::String first_name, last_name;
 
     int total_hours;
     int min_hours;
@@ -81,9 +105,9 @@ struct Tutor {
 struct AppData {
 	string window_title;
     vector<Tutor> tutors;
-	vectorInterface<ClassList> selectedTutorClasses;
+	SelectedItemInterface<Tutor> selected_tutor;
 
-	int selected_tutor;
+	//int selected_tutor;
 	int selected_department;
 
 	// CONFIG
@@ -175,7 +199,6 @@ bool DemoWindow::load() {
 
 		tutor.classes.clear();
 		for (const Json class_json : tutor_json["classes"].array_items()){
-			cout << "found class" << endl;
 			classList.department_id = class_json["department_id"].int_value();
 			classList.subtractive = class_json["subtractive"].bool_value();
 			
@@ -217,22 +240,9 @@ void DemoWindow::SetTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml:
 	}
 
 	const int index = arguments[0].Get<int>();
-	if (index == -1){
-		appData.selectedTutorClasses.update(nullptr);
-	} else {
-		appData.selectedTutorClasses.update(&appData.tutors[index].classes);
-	}
+	appData.selected_tutor.setIndex(index);
 	
-	dataModelHandle.DirtyVariable("selected_tutor_classes");
-}
-
-const vector<ClassList>& DemoWindow::GetSelectedTutorClasses(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments)
-{
-	if (arguments.size() != 0){
-		return;
-	}
-	
-	return appData.tutors[appData.selected_tutor].classes;
+	dataModelHandle.DirtyVariable("selected_tutor");
 }
 
 
@@ -273,19 +283,35 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 		}
 
 		constructor.RegisterArray<vector<Service>>();
+
+		//*
+		constructor.RegisterTransformFunc("tutor_min_hours", [](const Rml::VariantList& arguments) -> Rml::Variant {
+			const Rml::Variant variant = arguments[0];
+			return variant;
+			//return Rml::Variant(appData.tutors[index].min_hours);
+		});
+		//*/
+
 		constructor.RegisterArray<vectorInterface<ClassList>>();
+
+		constructor.RegisterArray<vectorInterface<Tutor>>();
+		if (auto handle = constructor.RegisterStruct<SelectedItemInterface<Tutor>>())
+		{
+			handle.RegisterMember("index", &SelectedItemInterface<Tutor>::index);
+			handle.RegisterMember("accessor", &SelectedItemInterface<Tutor>::accessor);
+		}
 
 		constructor.Bind("departments", &appData.departments);
 		constructor.Bind("services", &appData.services);
 		constructor.Bind("tutors", &appData.tutors);
 		constructor.Bind("selected_department", &appData.selected_department);
 		constructor.Bind("selected_tutor", &appData.selected_tutor);
-		constructor.Bind("selected_tutor_classes", &appData.selectedTutorClasses);
 
 		constructor.BindEventCallback("SetTutor", &DemoWindow::SetTutor, this);
-		//constructor.BindEventCallback("GetSelectedTutorClasses", &DemoWindow::GetSelectedTutorClasses, this);
 
 		dataModelHandle = constructor.GetModelHandle();
+
+		appData.selected_tutor.setTarget(&appData.tutors);
     }
 
 	using namespace Rml;

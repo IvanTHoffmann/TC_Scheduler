@@ -33,6 +33,11 @@
 	<p class="title">Manage Schedules</p>
 	<div data-model="app_data">
 		<template src="tutor_select"/>
+
+		<div data-for="tutor:selected_tutor.accessor">
+			<span><span>Min hours: </span><input type="number" data-value="tutor.min_hours"></input></span>
+			<span><span>Max hours: </span><input type="number" data-value="tutor.max_hours"></input></span>
+		</div>
 	</div>
 </panel>
 
@@ -41,16 +46,9 @@
 	<p class="title">Manage Classes</p>
 	<div data-model="app_data">
 		<template src="tutor_select"/>
-		<div data-if="selected_tutor != -1">
-			<div>
-				<!--
-				<span><span>Min hours: </span><input type="text" data-value="tutors[selected_tutor].min_hours"></input></span>
-				<span><span>Max hours: </span><input type="text" data-value="tutors[selected_tutor].max_hours"></input></span>
-				-->
-			</div>
+		<div data-for="tutor:selected_tutor.accessor">
 			<div>
 				<select name="department_name" data-value="selected_department" onkeydown="cancel_selection_on_escape">
-					<option value="none" selected>Choose Department</option>
 					<option data-for="department:departments" data-value="it_index">{{department}}</option>
 				</select>
 				<input/>
@@ -65,7 +63,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr data-for="class:selected_tutor_classes">
+					<tr data-for="class:tutor.classes">
 						<td>{{departments[class.department_id]}}</td>
 						<td>
 						<span data-if="class.subtractive && class.courses.size == 0">All</span>
