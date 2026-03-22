@@ -4,9 +4,7 @@
 #include "RmlUi/Core/StreamMemory.h"
 #include <RmlUi/Core/Context.h>
 #include <RmlUi/Core/ElementDocument.h>
-#include <RmlUi/Core/Elements/ElementFormControl.h>
 #include <RmlUi/Core/FileInterface.h>
-#include <RmlUi/Core/StyleSheetContainer.h>
 #include <RmlUi_Backend.h>
 #include <RmlUi/Core.h>
 
@@ -44,6 +42,10 @@ class vectorInterface {
 		return _target->begin() + _interface->index;
 	}
 
+	vector<_Ty>::iterator end(){
+		return _target->begin() + _interface->index + size();
+	}
+
 	size_t size(){
 		if (_target == nullptr) { return 0; }
 		if (_interface->index < 0) { return 0; }
@@ -63,12 +65,66 @@ class SelectedItemInterface {
 	void setTarget(vector<_Ty> *newTarget){
 		accessor.setTarget(newTarget);
 	}
-
-	void setIndex(int newIndex){
-		index = newIndex;
-	}
 };
 
+struct IntVectorEditable;
+
+class IntVectorScalar {
+	private:
+	IntVectorEditable* _target;
+	vector<int> tmp;
+
+	public:
+	Rml::String buffer;
+
+	IntVectorScalar(IntVectorEditable* target) : _target(target), buffer() {}
+
+	void read(const Rml::Variant& variant);
+};
+
+struct IntVectorEditable{
+	vector<int> data;
+	IntVectorScalar scalar;
+	IntVectorEditable() : scalar(this) {}
+};
+
+void IntVectorScalar::read(const Rml::Variant& variant) {
+	buffer.clear();
+	tmp.clear();
+
+	int value = -1;
+	bool isValid = true;
+	for (const char& c : variant.Get<Rml::String>()) {
+		if (std::isdigit(c)){
+			if ((value != -1) || (c != '0')){
+				if (value == -1){
+					value = 0;
+				}
+				value *= 10;
+				value += c - '0';
+				buffer += c;
+			}
+		}
+		else if ((c == ',' || isspace(c)) && (value != -1)){
+			tmp.push_back(value);
+			value = -1;
+			buffer += ',';
+		}
+		else {
+			isValid = false;
+		}
+	}
+	if (value > 0){
+		tmp.push_back(value);
+	}
+
+	if (isValid){	
+		_target->data.clear();
+		for (const int& i : tmp){
+			_target->data.push_back(i);
+		}
+	}
+}
 
 
 struct Service {
@@ -77,7 +133,7 @@ struct Service {
 	int max_hours;
 };
 
-struct ClassList{
+struct ClassList {
     int department_id;
     bool subtractive;
     vector<int> courses;
@@ -103,12 +159,15 @@ struct Tutor {
 };
 
 struct AppData {
+	IntVectorEditable testIntVectorEditable;
+
 	string window_title;
     vector<Tutor> tutors;
 	SelectedItemInterface<Tutor> selected_tutor;
 
 	//int selected_tutor;
 	int selected_department;
+	Rml::String courses_entry;
 
 	// CONFIG
 	vector<array<int, 2>> resolutionOptions;
@@ -232,18 +291,67 @@ int DemoWindow::getHeight(){
 	return appData.resolution[1];
 }
 
-
-void DemoWindow::SetTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments)
-{
-	if (arguments.size() != 1){
+void DemoWindow::AddCourses(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
+	if (arguments.size() != 0){
 		return;
 	}
 
-	const int index = arguments[0].Get<int>();
-	appData.selected_tutor.setIndex(index);
-	
-	dataModelHandle.DirtyVariable("selected_tutor");
+	vector<int> courses;
+
+
+	for (Tutor& tutor : appData.selected_tutor.accessor){
+		cout << "Tutor name: " << tutor.first_name << endl;
+
+		for (ClassList& classList : tutor.classes) {
+			if (classList.department_id == appData.selected_department){
+				cout << "Add courses: ";
+				if (appData.courses_entry.empty()) {
+					cout << "All";
+				} else {
+					cout << appData.courses_entry;
+				}
+				cout << endl;
+
+				dataModelHandle.DirtyAllVariables();
+
+				return;
+			}
+		}
+
+		ClassList newClassList;
+		newClassList.department_id = appData.selected_department;
+		newClassList.subtractive = appData.courses_entry.empty();
+
+		tutor.classes.push_back(newClassList);
+
+		dataModelHandle.DirtyAllVariables();
+	}
 }
+
+void DemoWindow::RemoveCourses(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
+	if (arguments.size() != 0){
+		return;
+	}
+
+	if (appData.selected_tutor.accessor.size()){
+		cout << "Tutor name: " << appData.selected_tutor.accessor.begin()[0].first_name << endl;
+		if (appData.courses_entry.empty()){
+			cout << "Remove courses: " << "All" << endl;
+		}
+		else {
+			cout << "Remove courses: " << appData.courses_entry << endl;
+		}
+	}
+}
+
+void DemoWindow::AddTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
+	
+}
+
+void DemoWindow::RemoveTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
+	
+}
+
 
 
 bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
@@ -254,6 +362,22 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 		
 		constructor.RegisterArray<vector<Rml::String>>();
 		constructor.RegisterArray<vector<int>>();
+
+		constructor.RegisterScalar<IntVectorScalar>(
+			[](const IntVectorScalar& int_vector_scalar, Rml::Variant& variant) { 
+				variant = int_vector_scalar.buffer; 
+			},
+    		// This setter will not set if the input is invalid
+    		[](IntVectorScalar& int_vector_scalar, const Rml::Variant& variant) {
+				int_vector_scalar.read(variant);
+			}
+		);
+
+		if (auto handle = constructor.RegisterStruct<IntVectorEditable>())
+		{
+			handle.RegisterMember("data", &IntVectorEditable::data);
+			handle.RegisterMember("scalar", &IntVectorEditable::scalar);
+		}
 
 		if (auto handle = constructor.RegisterStruct<ClassList>())
 		{
@@ -305,11 +429,18 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 		constructor.Bind("services", &appData.services);
 		constructor.Bind("tutors", &appData.tutors);
 		constructor.Bind("selected_department", &appData.selected_department);
+		constructor.Bind("courses_entry", &appData.courses_entry);
 		constructor.Bind("selected_tutor", &appData.selected_tutor);
 
-		constructor.BindEventCallback("SetTutor", &DemoWindow::SetTutor, this);
+		constructor.BindEventCallback("AddCourses", &DemoWindow::AddCourses, this);
+		constructor.BindEventCallback("RemoveCourses", &DemoWindow::RemoveCourses, this);
+		constructor.BindEventCallback("AddTutor", &DemoWindow::AddTutor, this);
+		constructor.BindEventCallback("RemoveTutor", &DemoWindow::RemoveTutor, this);
 
 		dataModelHandle = constructor.GetModelHandle();
+
+
+		constructor.Bind("test_int_vector_editable", &appData.testIntVectorEditable);
 
 		appData.selected_tutor.setTarget(&appData.tutors);
     }
@@ -353,8 +484,9 @@ void DemoWindow::ProcessEvent(Rml::Event& event)
 	{
 		Rml::Input::KeyIdentifier key_identifier = (Rml::Input::KeyIdentifier)event.GetParameter<int>("key_identifier", 0);
 
-		if (key_identifier == Rml::Input::KI_ESCAPE)
+		if (key_identifier == Rml::Input::KI_ESCAPE){
 			Backend::RequestExit();
+		}
 	}
 	break;
 
@@ -365,12 +497,4 @@ void DemoWindow::ProcessEvent(Rml::Event& event)
 Rml::ElementDocument* DemoWindow::GetDocument()
 {
 	return document;
-}
-
-void DemoWindow::SubmitForm(Rml::String in_submit_message)
-{
-	if (auto el_output = document->GetElementById("form_output"))
-		el_output->SetInnerRML("");
-	if (auto el_progress = document->GetElementById("submit_progress"))
-		el_progress->SetProperty("display", "block");
 }

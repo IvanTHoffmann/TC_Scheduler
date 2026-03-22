@@ -9,7 +9,7 @@
 
 <body template="window">
 
-<tabset id="menu">
+<tabset id="menu" data-model="app_data">
 
 <tab>Summary</tab>
 <panel id="summary">
@@ -35,8 +35,14 @@
 		<template src="tutor_select"/>
 
 		<div data-for="tutor:selected_tutor.accessor">
-			<span><span>Min hours: </span><input type="number" data-value="tutor.min_hours"></input></span>
-			<span><span>Max hours: </span><input type="number" data-value="tutor.max_hours"></input></span>
+			<div>
+				<span>Min hours: {{tutor.min_hours}}</span>
+				<input type="range" data-value="tutor.min_hours" min=0 max=60 step=1/>
+			</div>
+			<div>
+				<span>Max hours: {{tutor.max_hours}}</span>
+				<input type="range" data-value="tutor.max_hours" min=0 max=60 step=1/>
+			</div>
 		</div>
 	</div>
 </panel>
@@ -51,9 +57,9 @@
 				<select name="department_name" data-value="selected_department" onkeydown="cancel_selection_on_escape">
 					<option data-for="department:departments" data-value="it_index">{{department}}</option>
 				</select>
-				<input/>
-				<button class="gradient">Add</button>
-				<button class="gradient">Remove</button>
+				<input type="text" placeholder="All" data-value="courses_entry"/>
+				<button class="gradient" data-event-click="AddCourses">Add</button>
+				<button class="gradient" data-event-click="RemoveCourses">Remove</button>
 			</div>
 			<table>
 				<thead>
@@ -66,9 +72,8 @@
 					<tr data-for="class:tutor.classes">
 						<td>{{departments[class.department_id]}}</td>
 						<td>
-						<span data-if="class.subtractive && class.courses.size == 0">All</span>
-						<span data-if="class.subtractive && class.courses.size > 0">All Except</span>
-						<span data-for="course:class.courses">{{it_index ? ',' : ' '}} {{course}}</span>
+						<span data-if="class.subtractive">All{{class.courses.size ? ' Except ' : ''}}</span>
+						<span data-for="course:class.courses">{{it_index ? ', ' : ''}}{{course}}</span>
 						</td>
 					</tr>
 				</tbody>
@@ -87,6 +92,27 @@
 <tab>Test</tab>
 <panel>
 	<template src="tutor_select"/>
+
+	<!--input type="text" data-value="test_int_vector_editable.scalar"></input-->
+
+	<table>
+		<thead>
+			<tr>
+				<td>Department</td>
+				<td>All Except?</td>
+				<td>Courses</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr data-for="department:departments">
+				<td>{{department}}</td>
+				<td><input type="checkbox"/></td>
+				<td>
+					<input type="text" data-value="test_int_vector_editable.scalar"></input>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </panel>
 </tabset>
 </body>
