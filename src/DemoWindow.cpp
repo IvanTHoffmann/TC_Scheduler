@@ -331,7 +331,7 @@ void DemoWindow::UpdateScheduleGrid() {
 	if (!container)
 		return;
 
-	int selected_tutor = appData.selected_tutor;
+	int selected_tutor = appData.selected_tutor.index;
 
 	std::string html;
 	html += "<div class='schedule-grid'>";
@@ -369,12 +369,13 @@ void DemoWindow::OnTutorChanged() {
 }
 
 void DemoWindow::OnScheduleCellMouseDown(int day, int slot) {
-	if (appData.selected_tutor < 0 || appData.selected_tutor >= (int)appData.tutors.size())
+	int selected_tutor = appData.selected_tutor.index;
+	if (selected_tutor < 0 || selected_tutor >= (int)appData.tutors.size())
 		return;
 
-	uint8_t old_value = GetScheduleValue(appData.selected_tutor, day, slot);
+	uint8_t old_value = GetScheduleValue(selected_tutor, day, slot);
 	uint8_t new_value = old_value ? 0 : 1;
-	SetScheduleValue(appData.selected_tutor, day, slot, new_value);
+	SetScheduleValue(selected_tutor, day, slot, new_value);
 
 	schedule_drag_active = true;
 	schedule_drag_start_day = day;
@@ -401,9 +402,10 @@ void DemoWindow::OnScheduleCellMouseMove(int day, int slot) {
 	int slot0 = std::min(schedule_drag_start_slot, schedule_drag_current_slot);
 	int slot1 = std::max(schedule_drag_start_slot, schedule_drag_current_slot);
 
+	int selected_tutor = appData.selected_tutor.index;
 	for (int d = day0; d <= day1; ++d) {
 		for (int s = slot0; s <= slot1; ++s) {
-			SetScheduleValue(appData.selected_tutor, d, s, schedule_drag_target_state);
+			SetScheduleValue(selected_tutor, d, s, schedule_drag_target_state);
 		}
 	}
 

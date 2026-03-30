@@ -4,7 +4,7 @@
 	<link type="text/rcss" href="window.rcss"/>
 </head>
 <body class="tutor_select">
-    <select data-model="app_data" name="tutor_name" data-value="selected_tutor" onchange="tutor_changed" onkeydown="cancel_selection_on_escape">
+    <select data-model="app_data" name="tutor_name" data-value="selected_tutor.index" onchange="tutor_changed" onkeydown="cancel_selection_on_escape">
         <option value="-1" selected>Choose Tutor</option>
         <option data-for="tutor:tutors" data-value="it_index">{{tutor.last_name}}, {{tutor.first_name}}</option>
     </select>
