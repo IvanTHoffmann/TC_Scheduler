@@ -20,6 +20,7 @@ void DemoEventListener::ProcessEvent(Rml::Event& event)
 
 		event.StopPropagation();
 	}
+<<<<<<< HEAD
 
 	else if (value == "tutor_changed") {
 		demo_window->OnTutorChanged();
@@ -45,10 +46,17 @@ void DemoEventListener::ProcessEvent(Rml::Event& event)
 			demo_window->OnScheduleCellMouseUp(day, slot);
 
 		event.StopPropagation();
+=======
+	/*
+	else if (value == "onChange") {
+		cout << "Changed dropdown: " << value << endl;
+		event.StopPropagation();	
+>>>>>>> 8f4083cbeab573463c2d75a1238abb56e7974fb1
 	}
 	else {
-		cout << "Unrecognised event type: " << value << endl;
+		cout << "Unrecognized event type: " << value << endl;
 	}
+	*/
 }
 
 void DemoEventListener::OnDetach(Rml::Element* /*element*/)

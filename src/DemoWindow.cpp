@@ -4,9 +4,7 @@
 #include "RmlUi/Core/StreamMemory.h"
 #include <RmlUi/Core/Context.h>
 #include <RmlUi/Core/ElementDocument.h>
-#include <RmlUi/Core/Elements/ElementFormControl.h>
 #include <RmlUi/Core/FileInterface.h>
-#include <RmlUi/Core/StyleSheetContainer.h>
 #include <RmlUi_Backend.h>
 #include <RmlUi/Core.h>
 
@@ -23,36 +21,122 @@ typedef uint8_t ServiceIndex_t;
 
 
 template <class _Ty>
-class vectorPtr {
+class SelectedItemInterface;
+
+
+template <class _Ty>
+class vectorInterface {
 	private:
-	vector<_Ty> *v;
+	vector<_Ty> *_target;
+	SelectedItemInterface<_Ty> *_interface;
 
 	public:
 	using value_type = _Ty;
 
-	void Update(vector<_Ty> *new_v){
-		v = new_v;
+	vectorInterface(SelectedItemInterface<_Ty> *interface) : _interface(interface) {}
+
+	void setTarget(vector<_Ty> *newTarget){
+		_target = newTarget;
 	}
 
 	vector<_Ty>::iterator begin(){
-		return v->begin();
+		return _target->begin() + _interface->index;
+	}
+
+	vector<_Ty>::iterator end(){
+		return _target->begin() + _interface->index + size();
 	}
 
 	size_t size(){
-		return v->size();
+		if (_target == nullptr) { return 0; }
+		if (_interface->index < 0) { return 0; }
+		if (_interface->index >= _target->size()) { return 0; }
+		return 1;
 	}
 };
 
+template <class _Ty>
+class SelectedItemInterface {
+	public:
+	vectorInterface<_Ty> accessor;
+	int index;
 
-struct Service{
+	SelectedItemInterface() : accessor(this), index(-1) {}
+
+	void setTarget(vector<_Ty> *newTarget){
+		accessor.setTarget(newTarget);
+	}
+};
+
+struct IntVectorEditable;
+
+class IntVectorScalar {
+	private:
+	IntVectorEditable* _target;
+	vector<int> tmp;
+
+	public:
+	Rml::String buffer;
+
+	IntVectorScalar(IntVectorEditable* target) : _target(target), buffer() {}
+
+	void read(const Rml::Variant& variant);
+};
+
+struct IntVectorEditable{
+	vector<int> data;
+	IntVectorScalar scalar;
+	IntVectorEditable() : scalar(this) {}
+};
+
+void IntVectorScalar::read(const Rml::Variant& variant) {
+	buffer.clear();
+	tmp.clear();
+
+	int value = -1;
+	bool isValid = true;
+	for (const char& c : variant.Get<Rml::String>()) {
+		if (std::isdigit(c)){
+			if ((value != -1) || (c != '0')){
+				if (value == -1){
+					value = 0;
+				}
+				value *= 10;
+				value += c - '0';
+				buffer += c;
+			}
+		}
+		else if ((c == ',' || isspace(c)) && (value != -1)){
+			tmp.push_back(value);
+			value = -1;
+			buffer += ',';
+		}
+		else {
+			isValid = false;
+		}
+	}
+	if (value > 0){
+		tmp.push_back(value);
+	}
+
+	if (isValid){	
+		_target->data.clear();
+		for (const int& i : tmp){
+			_target->data.push_back(i);
+		}
+	}
+}
+
+
+struct Service {
     Rml::String name;
 	int min_hours;
 	int max_hours;
 };
 
-struct ClassList{
-    uint8_t department_id;
-    bool all_except;
+struct ClassList {
+    int department_id;
+    bool subtractive;
     vector<int> courses;
 };
 
@@ -65,23 +149,26 @@ struct WeekSchedule {
 };
 
 struct Tutor {
-    Rml::String first_name, last_name;
+	Rml::String first_name, last_name;
 
-    uint16_t total_hours;
-    uint16_t min_hours;
-    uint16_t max_hours;
+    int total_hours;
+    int min_hours;
+    int max_hours;
 
     WeekSchedule schedule;
     vector<ClassList> classes;
 };
 
 struct AppData {
+	IntVectorEditable testIntVectorEditable;
+
 	string window_title;
     vector<Tutor> tutors;
-	vectorPtr<ClassList> selectedTutorClasses;
+	SelectedItemInterface<Tutor> selected_tutor;
 
-	int selected_tutor;
+	//int selected_tutor;
 	int selected_department;
+	Rml::String courses_entry;
 
 	// CONFIG
 	vector<array<int, 2>> resolutionOptions;
@@ -142,7 +229,6 @@ bool DemoWindow::load() {
 	int resolution_id = settings["resolution"].int_value();
 	appData.resolution[0] = appData.resolutionOptions[resolution_id][0];
 	appData.resolution[1] = appData.resolutionOptions[resolution_id][1];
-
 	
 	Json::array schedules = jsonDocument["schedules"].array_items();
 	Json schedule = schedules[0];
@@ -174,10 +260,13 @@ bool DemoWindow::load() {
 			for (int seg = 0; seg < 96; ++seg)
 				tutor.schedule.days[d].segments[seg] = 0;
 
+		tutor.classes.clear();
 		for (const Json class_json : tutor_json["classes"].array_items()){
 			ClassList classList;
 			classList.department_id = class_json["department_id"].int_value();
-			classList.all_except = class_json["all_except"].bool_value();
+			classList.subtractive = class_json["subtractive"].bool_value();
+			
+			classList.courses.clear();
 			for (const Json course_json : class_json["courses"].array_items()){
 				classList.courses.push_back(course_json.int_value());
 			}
@@ -186,8 +275,6 @@ bool DemoWindow::load() {
 
 		appData.tutors.push_back(tutor);
 	}
-
-
 
     return true;
 }
@@ -330,6 +417,68 @@ void DemoWindow::OnScheduleCellMouseUp(int day, int slot) {
 	schedule_drag_active = false;
 	UpdateScheduleGrid();
 }
+void DemoWindow::AddCourses(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
+	if (arguments.size() != 0){
+		return;
+	}
+
+	vector<int> courses;
+
+
+	for (Tutor& tutor : appData.selected_tutor.accessor){
+		cout << "Tutor name: " << tutor.first_name << endl;
+
+		for (ClassList& classList : tutor.classes) {
+			if (classList.department_id == appData.selected_department){
+				cout << "Add courses: ";
+				if (appData.courses_entry.empty()) {
+					cout << "All";
+				} else {
+					cout << appData.courses_entry;
+				}
+				cout << endl;
+
+				dataModelHandle.DirtyAllVariables();
+
+				return;
+			}
+		}
+
+		ClassList newClassList;
+		newClassList.department_id = appData.selected_department;
+		newClassList.subtractive = appData.courses_entry.empty();
+
+		tutor.classes.push_back(newClassList);
+
+		dataModelHandle.DirtyAllVariables();
+	}
+}
+
+void DemoWindow::RemoveCourses(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
+	if (arguments.size() != 0){
+		return;
+	}
+
+	if (appData.selected_tutor.accessor.size()){
+		cout << "Tutor name: " << appData.selected_tutor.accessor.begin()[0].first_name << endl;
+		if (appData.courses_entry.empty()){
+			cout << "Remove courses: " << "All" << endl;
+		}
+		else {
+			cout << "Remove courses: " << appData.courses_entry << endl;
+		}
+	}
+}
+
+void DemoWindow::AddTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
+	
+}
+
+void DemoWindow::RemoveTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
+	
+}
+
+
 
 bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 {
@@ -340,10 +489,26 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 		constructor.RegisterArray<vector<Rml::String>>();
 		constructor.RegisterArray<vector<int>>();
 
+		constructor.RegisterScalar<IntVectorScalar>(
+			[](const IntVectorScalar& int_vector_scalar, Rml::Variant& variant) { 
+				variant = int_vector_scalar.buffer; 
+			},
+    		// This setter will not set if the input is invalid
+    		[](IntVectorScalar& int_vector_scalar, const Rml::Variant& variant) {
+				int_vector_scalar.read(variant);
+			}
+		);
+
+		if (auto handle = constructor.RegisterStruct<IntVectorEditable>())
+		{
+			handle.RegisterMember("data", &IntVectorEditable::data);
+			handle.RegisterMember("scalar", &IntVectorEditable::scalar);
+		}
+
 		if (auto handle = constructor.RegisterStruct<ClassList>())
 		{
 			handle.RegisterMember("department_id", &ClassList::department_id);
-			handle.RegisterMember("all_except", &ClassList::all_except);
+			handle.RegisterMember("subtractive", &ClassList::subtractive);
 			handle.RegisterMember("courses", &ClassList::courses);
 		}
 
@@ -368,17 +533,42 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 		}
 
 		constructor.RegisterArray<vector<Service>>();
-		constructor.RegisterArray<vectorPtr<ClassList>>();
+
+		//*
+		constructor.RegisterTransformFunc("tutor_min_hours", [](const Rml::VariantList& arguments) -> Rml::Variant {
+			const Rml::Variant variant = arguments[0];
+			return variant;
+			//return Rml::Variant(appData.tutors[index].min_hours);
+		});
+		//*/
+
+		constructor.RegisterArray<vectorInterface<ClassList>>();
+
+		constructor.RegisterArray<vectorInterface<Tutor>>();
+		if (auto handle = constructor.RegisterStruct<SelectedItemInterface<Tutor>>())
+		{
+			handle.RegisterMember("index", &SelectedItemInterface<Tutor>::index);
+			handle.RegisterMember("accessor", &SelectedItemInterface<Tutor>::accessor);
+		}
 
 		constructor.Bind("departments", &appData.departments);
 		constructor.Bind("services", &appData.services);
 		constructor.Bind("tutors", &appData.tutors);
 		constructor.Bind("selected_department", &appData.selected_department);
+		constructor.Bind("courses_entry", &appData.courses_entry);
 		constructor.Bind("selected_tutor", &appData.selected_tutor);
-		//constructor.Bind("selected_tutor_classes", &appData.selectedTutorClasses);
 
-		//dataModelHandle = constructor.GetModelHandle();
-		//dataModelHandle.DirtyVariable("names");
+		constructor.BindEventCallback("AddCourses", &DemoWindow::AddCourses, this);
+		constructor.BindEventCallback("RemoveCourses", &DemoWindow::RemoveCourses, this);
+		constructor.BindEventCallback("AddTutor", &DemoWindow::AddTutor, this);
+		constructor.BindEventCallback("RemoveTutor", &DemoWindow::RemoveTutor, this);
+
+		dataModelHandle = constructor.GetModelHandle();
+
+
+		constructor.Bind("test_int_vector_editable", &appData.testIntVectorEditable);
+
+		appData.selected_tutor.setTarget(&appData.tutors);
     }
 
 	using namespace Rml;
@@ -421,8 +611,9 @@ void DemoWindow::ProcessEvent(Rml::Event& event)
 	{
 		Rml::Input::KeyIdentifier key_identifier = (Rml::Input::KeyIdentifier)event.GetParameter<int>("key_identifier", 0);
 
-		if (key_identifier == Rml::Input::KI_ESCAPE)
+		if (key_identifier == Rml::Input::KI_ESCAPE){
 			Backend::RequestExit();
+		}
 	}
 	break;
 
@@ -441,12 +632,4 @@ void DemoWindow::ProcessEvent(Rml::Event& event)
 Rml::ElementDocument* DemoWindow::GetDocument()
 {
 	return document;
-}
-
-void DemoWindow::SubmitForm(Rml::String in_submit_message)
-{
-	if (auto el_output = document->GetElementById("form_output"))
-		el_output->SetInnerRML("");
-	if (auto el_progress = document->GetElementById("submit_progress"))
-		el_progress->SetProperty("display", "block");
 }

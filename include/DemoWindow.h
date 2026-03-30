@@ -43,6 +43,11 @@ public:
 	uint8_t GetScheduleValue(int tutor_index, int day, int slot);
 	void SetScheduleValue(int tutor_index, int day, int slot, uint8_t value);
 
+	void AddCourses(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
+	void RemoveCourses(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
+	void AddTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
+	void RemoveTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
+
 private:
 	Rml::ElementDocument* document = nullptr;
 	Rml::ElementDocument* iframe = nullptr;
