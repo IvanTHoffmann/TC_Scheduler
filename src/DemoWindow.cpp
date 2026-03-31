@@ -308,6 +308,76 @@ static Rml::String FormatTimeSlot(int slot) {
 	return buf;
 }
 
+static int CountTutorScheduleSlots(int tutor_index) {
+	if (tutor_index < 0 || tutor_index >= (int)appData.tutors.size())
+		return 0;
+
+	int count = 0;
+	for (int day = 0; day < 7; ++day) {
+		for (int slot = 0; slot < 22; ++slot) {
+			int segment = GetScheduleSegment(slot);
+			count += appData.tutors[tutor_index].schedule.days[day].segments[segment] ? 1 : 0;
+		}
+	}
+	return count;
+}
+
+static std::string FormatTutorHours(int slot_count) {
+	int whole_hours = slot_count / 2;
+	bool half = (slot_count % 2) != 0;
+	char buf[16];
+	if (half)
+		sprintf(buf, "%d.5", whole_hours);
+	else
+		sprintf(buf, "%d", whole_hours);
+	return std::string(buf);
+}
+
+Rml::String DemoWindow::GetSlotElementId(int day, int slot) const {
+	char buf[32];
+	sprintf(buf, "slot_%d_%d", day, slot);
+	return buf;
+}
+
+void DemoWindow::BuildScheduleGrid() {
+	if (!document)
+		return;
+
+	Rml::Element* container = document->GetElementById("schedule_grid_container");
+	if (!container)
+		return;
+
+	std::string html = "<div class='schedule-grid'>";
+
+	// Header row: time slots
+	html += "<div class='schedule-row schedule-header'><div class='slot day-label'></div>";
+	for (int slot = 0; slot < 22; ++slot) {
+		html += "<div class='slot'>";
+		html += FormatTimeSlot(slot);
+		html += "</div>";
+	}
+	html += "</div>";
+
+	static const char* days[7] = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+	for (int day = 0; day < 7; ++day) {
+		html += "<div class='schedule-row'>";
+		html += "<div class='slot day-label'>";
+		html += days[day];
+		html += "</div>";
+		for (int slot = 0; slot < 22; ++slot) {
+			Rml::String id = GetSlotElementId(day, slot);
+			char buf[256];
+			sprintf(buf, "<div id='%s' class='slot' data-day='%d' data-slot='%d' onmousedown='schedule_slot' onmouseover='schedule_slot' onmouseup='schedule_slot'></div>", id.c_str(), day, slot);
+			html += buf;
+		}
+		html += "</div>";
+	}
+
+	html += "</div>";
+	container->SetInnerRML(html);
+	schedule_grid_built = true;
+}
+
 uint8_t DemoWindow::GetScheduleValue(int tutor_index, int day, int slot) {
 	if (tutor_index < 0 || tutor_index >= (int)appData.tutors.size() || day < 0 || day >= 7 || slot < 0 || slot >= 22) {
 		return 0;
@@ -327,41 +397,32 @@ void DemoWindow::UpdateScheduleGrid() {
 	if (!document)
 		return;
 
-	Rml::Element* container = document->GetElementById("schedule_grid_container");
-	if (!container)
-		return;
+	if (!schedule_grid_built)
+		BuildScheduleGrid();
 
 	int selected_tutor = appData.selected_tutor.index;
-
-	std::string html;
-	html += "<div class='schedule-grid'>";
-
-	// Header row: time slots
-	html += "<div class='schedule-row schedule-header'><div class='slot day-label'></div>";
-	for (int slot = 0; slot < 22; ++slot) {
-		html += "<div class='slot'>";
-		html += FormatTimeSlot(slot);
-		html += "</div>";
+	int scheduled_slots = CountTutorScheduleSlots(selected_tutor);
+	std::string scheduled_hours = FormatTutorHours(scheduled_slots);
+	std::string summary_text;
+	if (selected_tutor >= 0 && selected_tutor < (int)appData.tutors.size()) {
+		summary_text = "Scheduled hours: " + scheduled_hours + " hr";
+	} else {
+		summary_text = "No tutor selected";
 	}
-	html += "</div>";
 
-	static const char* days[7] = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+	if (auto summary_el = document->GetElementById("schedule_hours_summary")) {
+		summary_el->SetInnerRML(summary_text);
+	}
+
 	for (int day = 0; day < 7; ++day) {
-		html += "<div class='schedule-row'>";
-		html += "<div class='slot day-label'>";
-		html += days[day];
-		html += "</div>";
 		for (int slot = 0; slot < 22; ++slot) {
 			bool selected = selected_tutor >= 0 && selected_tutor < (int)appData.tutors.size() && GetScheduleValue(selected_tutor, day, slot);
-			char buf[256];
-			sprintf(buf, "<div class='slot %s' data-day='%d' data-slot='%d' onmousedown='schedule_slot' onmousemove='schedule_slot' onmouseup='schedule_slot'> </div>", selected ? "selected" : "", day, slot);
-			html += buf;
+			Rml::Element* slot_el = document->GetElementById(GetSlotElementId(day, slot));
+			if (!slot_el)
+				continue;
+			slot_el->SetClass("selected", selected);
 		}
-		html += "</div>";
 	}
-
-	html += "</div>";
-	container->SetInnerRML(html);
 }
 
 void DemoWindow::OnTutorChanged() {
@@ -378,10 +439,6 @@ void DemoWindow::OnScheduleCellMouseDown(int day, int slot) {
 	SetScheduleValue(selected_tutor, day, slot, new_value);
 
 	schedule_drag_active = true;
-	schedule_drag_start_day = day;
-	schedule_drag_start_slot = slot;
-	schedule_drag_current_day = day;
-	schedule_drag_current_slot = slot;
 	schedule_drag_target_state = new_value;
 
 	UpdateScheduleGrid();
@@ -394,28 +451,15 @@ void DemoWindow::OnScheduleCellMouseMove(int day, int slot) {
 	if (day < 0 || day >= 7 || slot < 0 || slot >= 22)
 		return;
 
-	schedule_drag_current_day = day;
-	schedule_drag_current_slot = slot;
-
-	int day0 = std::min(schedule_drag_start_day, schedule_drag_current_day);
-	int day1 = std::max(schedule_drag_start_day, schedule_drag_current_day);
-	int slot0 = std::min(schedule_drag_start_slot, schedule_drag_current_slot);
-	int slot1 = std::max(schedule_drag_start_slot, schedule_drag_current_slot);
-
 	int selected_tutor = appData.selected_tutor.index;
-	for (int d = day0; d <= day1; ++d) {
-		for (int s = slot0; s <= slot1; ++s) {
-			SetScheduleValue(selected_tutor, d, s, schedule_drag_target_state);
-		}
-	}
+	if (selected_tutor < 0 || selected_tutor >= (int)appData.tutors.size())
+		return;
 
+	SetScheduleValue(selected_tutor, day, slot, schedule_drag_target_state);
 	UpdateScheduleGrid();
 }
 
 void DemoWindow::OnScheduleCellMouseUp(int day, int slot) {
-	if (!schedule_drag_active)
-		return;
-
 	schedule_drag_active = false;
 	UpdateScheduleGrid();
 }
@@ -479,8 +523,6 @@ void DemoWindow::AddTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml:
 void DemoWindow::RemoveTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
 	
 }
-
-
 
 bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 {
@@ -620,10 +662,6 @@ void DemoWindow::ProcessEvent(Rml::Event& event)
 	break;
 
 	case EventId::Mouseup:
-		schedule_drag_active = false;
-		break;
-
-	case EventId::Mouseout:
 		schedule_drag_active = false;
 		break;
 

@@ -39,7 +39,7 @@ void DemoEventListener::ProcessEvent(Rml::Event& event)
 
 		if (event.GetId() == Rml::EventId::Mousedown)
 			demo_window->OnScheduleCellMouseDown(day, slot);
-		else if (event.GetId() == Rml::EventId::Mousemove)
+		else if (event.GetId() == Rml::EventId::Mousemove || event.GetId() == Rml::EventId::Mouseover)
 			demo_window->OnScheduleCellMouseMove(day, slot);
 		else if (event.GetId() == Rml::EventId::Mouseup)
 			demo_window->OnScheduleCellMouseUp(day, slot);

@@ -65,7 +65,6 @@ int main(int /*argc*/, char** /*argv*/)
 	demo_window.GetDocument()->AddEventListener(Rml::EventId::Keydown, &demo_window);
 	demo_window.GetDocument()->AddEventListener(Rml::EventId::Keyup, &demo_window);
 	demo_window.GetDocument()->AddEventListener(Rml::EventId::Mouseup, &demo_window);
-	demo_window.GetDocument()->AddEventListener(Rml::EventId::Mouseout, &demo_window);
 	//demo_window.GetDocument()->AddEventListener(Rml::EventId::Animationend, &demo_window);
 
 	bool running = true;

@@ -40,6 +40,8 @@ public:
 	void OnScheduleCellMouseMove(int day, int slot);
 	void OnScheduleCellMouseUp(int day, int slot);
 	void UpdateScheduleGrid();
+	void BuildScheduleGrid();
+	Rml::String GetSlotElementId(int day, int slot) const;
 	uint8_t GetScheduleValue(int tutor_index, int day, int slot);
 	void SetScheduleValue(int tutor_index, int day, int slot, uint8_t value);
 
@@ -56,9 +58,6 @@ private:
 	Json jsonDocument;
 
 	bool schedule_drag_active = false;
-	int schedule_drag_start_day = 0;
-	int schedule_drag_start_slot = 0;
-	int schedule_drag_current_day = 0;
-	int schedule_drag_current_slot = 0;
+	bool schedule_grid_built = false;
 	bool schedule_drag_target_state = true;
 };
