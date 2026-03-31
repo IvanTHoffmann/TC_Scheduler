@@ -40,6 +40,7 @@ public:
 	void OnScheduleCellMouseMove(int day, int slot);
 	void OnScheduleCellMouseUp(int day, int slot);
 	void UpdateScheduleGrid();
+	void UpdateScheduleSummary();
 	void BuildScheduleGrid();
 	Rml::String GetSlotElementId(int day, int slot) const;
 	uint8_t GetScheduleValue(int tutor_index, int day, int slot);
@@ -48,6 +49,7 @@ public:
 	void AddCourses(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
 	void RemoveCourses(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
 	void ResetSchedule(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
+	void ScheduleLimitsChanged(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
 	void AddTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
 	void RemoveTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
 

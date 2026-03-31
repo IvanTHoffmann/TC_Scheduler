@@ -33,18 +33,20 @@
 	<p class="title">Manage Schedules</p>
 	<div data-model="app_data">
 		<template src="tutor_select"/>
-		<div id="schedule_hours_summary" class="schedule-summary">Total: 0 hr</div>
-		<button class="gradient" data-event-click="ResetSchedule">Reset Grid</button>
+		<div class="schedule-toolbar">
+			<button class="gradient" data-event-click="ResetSchedule">Reset Grid</button>
+			<div id="schedule_hours_summary" class="schedule-summary">Total: 0 hr</div>
+		</div>
 		<div id="schedule_grid_container"></div>
 
 		<div data-for="tutor:selected_tutor.accessor">
 			<div>
 				<span>Min hours: {{tutor.min_hours}}</span>
-				<input type="range" data-value="tutor.min_hours" min=0 max=60 step=1/>
+				<input type="range" data-value="tutor.min_hours" min=0 max=60 step=1 data-event-change="ScheduleLimitsChanged" data-event-input="ScheduleLimitsChanged"/>
 			</div>
 			<div>
 				<span>Max hours: {{tutor.max_hours}}</span>
-				<input type="range" data-value="tutor.max_hours" min=0 max=60 step=1/>
+				<input type="range" data-value="tutor.max_hours" min=0 max=60 step=1 data-event-change="ScheduleLimitsChanged" data-event-input="ScheduleLimitsChanged"/>
 			</div>
 		</div>
 	</div>

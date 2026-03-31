@@ -130,16 +130,30 @@ p.title
 	margin-top: 14dp;
 }
 
+.schedule-toolbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 10dp;
+}
+
 .schedule-summary {
 	font-size: 14dp;
 	font-weight: bold;
 	color: #fff;
-	margin-bottom: 10dp;
+	margin-bottom: 0;
 	padding: 6dp 8dp;
 	background-color: #1e1e1e;
 	opacity: 0.95;
 	border: 1dp #555;
 	border-radius: 4dp;
+	min-width: 100dp;
+	text-align: center;
+}
+
+.schedule-summary.invalid {
+	background-color: #8b0000;
+	border: 1dp #b33;
 }
 .schedule-grid .schedule-row {
 	display: flex;

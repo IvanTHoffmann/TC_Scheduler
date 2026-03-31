@@ -523,19 +523,9 @@ void DemoWindow::UpdateScheduleGrid() {
 	if (!schedule_grid_built)
 		BuildScheduleGrid();
 
-	int selected_tutor = appData.selected_tutor.index;
-	int scheduled_slots = CountTutorScheduleSlots(selected_tutor);
-	std::string scheduled_hours = FormatTutorHours(scheduled_slots);
-	std::string summary_text;
-	if (selected_tutor >= 0 && selected_tutor < (int)appData.tutors.size()) {
-		summary_text = "Total: " + scheduled_hours + " hr";
-	} else {
-		summary_text = "Total: 0 hr";
-	}
+	UpdateScheduleSummary();
 
-	if (auto summary_el = document->GetElementById("schedule_hours_summary")) {
-		summary_el->SetInnerRML(summary_text);
-	}
+	int selected_tutor = appData.selected_tutor.index;
 
 	for (int day = 0; day < 7; ++day) {
 		for (int slot = 0; slot < 22; ++slot) {
@@ -546,6 +536,35 @@ void DemoWindow::UpdateScheduleGrid() {
 			slot_el->SetClass("selected", selected);
 		}
 	}
+}
+
+void DemoWindow::UpdateScheduleSummary() {
+	if (!document)
+		return;
+
+	int selected_tutor = appData.selected_tutor.index;
+	int scheduled_slots = CountTutorScheduleSlots(selected_tutor);
+	std::string scheduled_hours = FormatTutorHours(scheduled_slots);
+	std::string summary_text;
+	bool invalid_summary = false;
+	if (selected_tutor >= 0 && selected_tutor < (int)appData.tutors.size()) {
+		summary_text = "Total: " + scheduled_hours + " hr";
+		int min_slots = appData.tutors[selected_tutor].min_hours * 2;
+		int max_slots = appData.tutors[selected_tutor].max_hours * 2;
+		invalid_summary = scheduled_slots < min_slots || scheduled_slots > max_slots;
+	} else {
+		summary_text = "Total: 0 hr";
+	}
+
+	if (auto summary_el = document->GetElementById("schedule_hours_summary")) {
+		summary_el->SetInnerRML(summary_text);
+		summary_el->SetClass("invalid", invalid_summary);
+	}
+}
+
+void DemoWindow::ScheduleLimitsChanged(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
+	// Only refresh the summary state when min/max sliders change.
+	UpdateScheduleSummary();
 }
 
 void DemoWindow::OnTutorChanged() {
@@ -748,6 +767,7 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 		constructor.BindEventCallback("AddCourses", &DemoWindow::AddCourses, this);
 		constructor.BindEventCallback("RemoveCourses", &DemoWindow::RemoveCourses, this);
 		constructor.BindEventCallback("ResetSchedule", &DemoWindow::ResetSchedule, this);
+		constructor.BindEventCallback("ScheduleLimitsChanged", &DemoWindow::ScheduleLimitsChanged, this);
 		constructor.BindEventCallback("AddTutor", &DemoWindow::AddTutor, this);
 		constructor.BindEventCallback("RemoveTutor", &DemoWindow::RemoveTutor, this);
 
@@ -787,6 +807,9 @@ void DemoWindow::Update()
 	if (iframe){
 		iframe->UpdateDocument();
 	}
+
+	// Always keep the total hours summary in sync with slider changes.
+	UpdateScheduleSummary();
 }
 
 void DemoWindow::ProcessEvent(Rml::Event& event)
