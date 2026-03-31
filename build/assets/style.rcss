@@ -129,6 +129,17 @@ p.title
 	padding: 4dp;
 	margin-top: 14dp;
 }
+
+.schedule-summary {
+	font-size: 14dp;
+	font-weight: bold;
+	color: #fff;
+	margin-bottom: 10dp;
+	padding: 6dp 8dp;
+	background: rgba(30, 30, 30, 0.95);
+	border: 1dp solid #555;
+	border-radius: 4dp;
+}
 .schedule-grid .schedule-row {
 	display: flex;
 }

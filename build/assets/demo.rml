@@ -33,6 +33,7 @@
 	<p class="title">Manage Schedules</p>
 	<div data-model="app_data">
 		<template src="tutor_select"/>
+		<div id="schedule_hours_summary" class="schedule-summary">Total: 0 hr</div>
 		<div id="schedule_grid_container"></div>
 
 		<div data-for="tutor:selected_tutor.accessor">

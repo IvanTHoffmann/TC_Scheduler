@@ -405,9 +405,9 @@ void DemoWindow::UpdateScheduleGrid() {
 	std::string scheduled_hours = FormatTutorHours(scheduled_slots);
 	std::string summary_text;
 	if (selected_tutor >= 0 && selected_tutor < (int)appData.tutors.size()) {
-		summary_text = "Scheduled hours: " + scheduled_hours + " hr";
+		summary_text = "Total: " + scheduled_hours + " hr";
 	} else {
-		summary_text = "No tutor selected";
+		summary_text = "Total: 0 hr";
 	}
 
 	if (auto summary_el = document->GetElementById("schedule_hours_summary")) {
