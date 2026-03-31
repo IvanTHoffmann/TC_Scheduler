@@ -55,11 +55,11 @@
 		<div data-for="tutor:selected_tutor.accessor">
 			<div>
 				<select name="department_name" data-value="selected_department" onkeydown="cancel_selection_on_escape">
-					<option data-for="department:departments" data-value="it_index">{{department}}</option>
+					<option data-for="department:departments" data-value="it_index">{{department.name}}</option>
 				</select>
 				<input type="text" placeholder="All" data-value="courses_entry"/>
-				<button class="gradient" data-event-click="AddCourses">Add</button>
-				<button class="gradient" data-event-click="RemoveCourses">Remove</button>
+				<!--button class="gradient" data-event-click="AddCourses">Add</button>
+				<button class="gradient" data-event-click="RemoveCourses">Remove</button-->
 			</div>
 			<table>
 				<thead>
@@ -69,11 +69,11 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr data-for="class:tutor.classes">
-						<td>{{departments[class.department_id]}}</td>
+					<tr data-for="classList:tutor.classes">
+						<td>{{classList.department_name}}</td>
 						<td>
-						<span data-if="class.subtractive">All{{class.courses.size ? ' Except ' : ''}}</span>
-						<span data-for="course:class.courses">{{it_index ? ', ' : ''}}{{course}}</span>
+						<span data-if="classList.subtractive">All{{classList.courses.size ? ' Except ' : ''}}</span>
+						<span data-for="course:classList.courses">{{it_index ? ', ' : ''}}{{course}}</span>
 						</td>
 					</tr>
 				</tbody>
@@ -93,22 +93,27 @@
 <panel>
 	<template src="tutor_select"/>
 
-	<!--input type="text" data-value="test_int_vector_editable.scalar"></input-->
-
-	<table>
+	<table data-for="tutor:selected_tutor.accessor">
 		<thead>
 			<tr>
 				<td>Department</td>
-				<td>All Except?</td>
+				<td>Test</td>
+				<td>All / All Except</td>
 				<td>Courses</td>
 			</tr>
 		</thead>
 		<tbody>
 			<tr data-for="department:departments">
-				<td>{{department}}</td>
-				<td><input type="checkbox"/></td>
+				<td>{{department.name}}</td>
 				<td>
-					<input type="text" data-value="test_int_vector_editable.scalar"></input>
+					<span data-if="department.edit_subtractive">All{{department.edit_courses.data.size ? ' Except ' : ''}}</span>
+					<span data-for="course:department.edit_courses.data">{{it_index ? ', ' : ''}}{{course}}</span>
+				</td>
+				<td>
+					<input type="checkbox" data-value="department.edit_subtractive"/>
+				</td>
+				<td>
+					<input data-value="department.edit_courses.scalar"></input>
 				</td>
 			</tr>
 		</tbody>
