@@ -1,0 +1,172 @@
+#ifndef DATAMODELTYPES_H
+#define DATAMODELTYPES_H
+
+#include <RmlUi/Core.h>
+
+#include <vector>
+#include <map>
+
+using namespace std;
+
+
+typedef uint8_t ServiceIndex_t;
+typedef int DepartmentID_t;
+
+
+template <class _Ty>
+class SelectedItemInterface;
+
+
+template <class _Ty>
+class VectorInterface {
+	private:
+	vector<_Ty> *_target;
+	SelectedItemInterface<_Ty> *_interface;
+
+	public:
+	using value_type = _Ty;
+
+	VectorInterface(SelectedItemInterface<_Ty> *interface);
+
+	void setTarget(vector<_Ty> *newTarget);
+
+	vector<_Ty>::iterator begin();
+	vector<_Ty>::iterator end();
+
+	size_t size();
+};
+
+template <class _Ty>
+VectorInterface<_Ty>::VectorInterface(SelectedItemInterface<_Ty> *interface) : _interface(interface) {}
+
+template <class _Ty>
+void VectorInterface<_Ty>::setTarget(vector<_Ty> *newTarget){
+    _target = newTarget;
+}
+
+template <class _Ty>
+vector<_Ty>::iterator VectorInterface<_Ty>::begin(){
+    return _target->begin() + _interface->index;
+}
+
+template <class _Ty>
+vector<_Ty>::iterator VectorInterface<_Ty>::end(){
+    return _target->begin() + _interface->index + size();
+}
+
+template <class _Ty>
+size_t VectorInterface<_Ty>::size() {
+    if (_target == nullptr) { return 0; }
+    if (_interface->index < 0) { return 0; }
+    if (_interface->index >= _target->size()) { return 0; }
+    return 1;
+}
+
+
+template <class _Ty>
+class SelectedItemInterface {
+	public:
+	VectorInterface<_Ty> accessor;
+	int index;
+
+	SelectedItemInterface();
+	void setTarget(vector<_Ty> *newTarget);
+};
+
+template <class _Ty>
+SelectedItemInterface<_Ty>::SelectedItemInterface() : accessor(this), index(-1) {}
+
+template <class _Ty>
+void SelectedItemInterface<_Ty>::setTarget(vector<_Ty> *newTarget){
+    accessor.setTarget(newTarget);
+}
+
+struct IntVectorEditable;
+
+class IntVectorScalar {
+
+	private:
+	vector<int> *_target;
+
+	public:
+	Rml::String buffer;
+
+	void setTarget(vector<int> *newTarget);
+	void set(const Rml::Variant& variant);
+};
+
+struct IntVectorEditable {
+    vector<int> data;
+	IntVectorScalar scalar;
+
+	IntVectorEditable();
+	IntVectorEditable(const IntVectorEditable& src);
+};
+
+void Get_IntVectorScalar(const IntVectorScalar& int_vector_scalar, Rml::Variant& variant);
+void Set_IntVectorScalar(IntVectorScalar& int_vector_scalar, const Rml::Variant& variant);
+
+struct Department {
+	Rml::String name;
+
+    // used for editing tutor class lists
+    bool edit_subtractive;
+    IntVectorEditable edit_courses;
+};
+
+struct Service {
+    Rml::String name;
+	int min_hours;
+	int max_hours;
+};
+
+struct ClassList {
+    Rml::String department_name;
+    bool subtractive;
+    vector<int> courses;
+};
+
+struct DaySchedule {
+    array<ServiceIndex_t, 96> segments;
+};
+
+struct WeekSchedule {
+    array<DaySchedule, 7> days;
+};
+
+struct Tutor {
+	Rml::String first_name, last_name;
+
+    int total_hours;
+    int min_hours;
+    int max_hours;
+
+    WeekSchedule schedule;
+    vector<ClassList> classes;
+};
+
+struct AppData {
+	Rml::String window_title;
+    vector<Tutor> tutors;
+	SelectedItemInterface<Tutor> selected_tutor;
+
+	int selected_department;
+	Rml::String courses_entry;
+
+	// CONFIG
+	vector<array<int, 2>> resolutionOptions;
+    int resolution[2];
+    float fontSize;
+    int schedule_id;
+
+	// INDIVIDUAL
+	vector<Department> departments;
+	vector<Service> services;
+    
+	// SUMMARY
+	vector<Rml::String> filters;
+};
+
+
+
+#endif
