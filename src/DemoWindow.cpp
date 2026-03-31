@@ -182,7 +182,21 @@ struct AppData {
     
 	// SUMMARY
 	vector<Rml::String> filters;
-} appData;
+};
+
+// Helpers for converting between JSON shift times and grid slot indices.
+// Shifts are stored in the JSON as start/end HHMM values, while the grid uses
+// discrete 30-minute slots starting at 08:00.
+static int TimeValueToSlot(int time_value);
+static int SlotToTimeValue(int slot);
+
+// Load a tutor's saved shifts from JSON and mark those slots in the in-memory schedule.
+static void LoadTutorScheduleFromShifts(Tutor &tutor, const Json &tutor_json);
+
+// Convert the current selected schedule slots into a JSON shifts array.
+static Json::array SerializeTutorShifts(const Tutor &tutor);
+
+AppData appData;
 
 
 bool DemoWindow::load() {
@@ -260,6 +274,9 @@ bool DemoWindow::load() {
 			for (int seg = 0; seg < 96; ++seg)
 				tutor.schedule.days[d].segments[seg] = 0;
 
+		// Populate the tutor schedule from saved JSON shift definitions.
+		LoadTutorScheduleFromShifts(tutor, tutor_json);
+
 		tutor.classes.clear();
 		for (const Json class_json : tutor_json["classes"].array_items()){
 			ClassList classList;
@@ -280,7 +297,42 @@ bool DemoWindow::load() {
 }
 
 bool DemoWindow::save(){
-	return false;
+	// Persist any schedule changes back into the JSON document.
+	if (!jsonDocument.is_object())
+		return false;
+
+	Json::object root_obj = jsonDocument.object_items();
+	Json::array schedules = root_obj["schedules"].array_items();
+	if (schedules.empty())
+		return false;
+
+	Json::object schedule_obj = schedules[0].object_items();
+	Json::array tutors_json;
+	Json::array original_tutors = schedule_obj["tutors"].array_items();
+
+	for (size_t tutor_index = 0; tutor_index < appData.tutors.size(); ++tutor_index) {
+		Json::object tutor_obj;
+		if (tutor_index < original_tutors.size()) {
+			tutor_obj = original_tutors[tutor_index].object_items();
+		}
+		tutor_obj["shifts"] = SerializeTutorShifts(appData.tutors[tutor_index]);
+		tutors_json.push_back(tutor_obj);
+	}
+
+	schedule_obj["tutors"] = tutors_json;
+	schedules[0] = schedule_obj;
+	root_obj["schedules"] = schedules;
+
+	Json new_root(root_obj);
+	string output;
+	new_root.dump(output);
+
+	ofstream fout(APPDATA_FILENAME);
+	if (!fout.is_open())
+		return false;
+
+	fout << output;
+	return fout.good();
 }
 
 const string& DemoWindow::getWindowTitle(){
@@ -306,6 +358,77 @@ static Rml::String FormatTimeSlot(int slot) {
 	char buf[8];
 	sprintf(buf, "%02d:%02d", hour, minute);
 	return buf;
+}
+
+static int TimeValueToSlot(int time_value) {
+	// Convert a HHMM integer (e.g. 1330) into a grid slot index.
+	int hour = time_value / 100;
+	int minute = time_value % 100;
+	int total_minutes = hour * 60 + minute;
+	int slot = (total_minutes - 8 * 60) / 30;
+	if (slot < 0) slot = 0;
+	if (slot > 22) slot = 22;
+	return slot;
+}
+
+static int SlotToTimeValue(int slot) {
+	// Convert a schedule grid slot back into an HHMM integer for JSON storage.
+	int total_minutes = 8 * 60 + slot * 30;
+	int hour = total_minutes / 60;
+	int minute = total_minutes % 60;
+	return hour * 100 + minute;
+}
+
+static void LoadTutorScheduleFromShifts(Tutor &tutor, const Json &tutor_json) {
+	// Read each saved shift object and map it to the schedule's slot matrix.
+	for (const Json &shift_json : tutor_json["shifts"].array_items()) {
+		int start = shift_json["start"].int_value();
+		int end = shift_json["end"].int_value();
+		int start_slot = TimeValueToSlot(start);
+		int end_slot = TimeValueToSlot(end);
+		if (end_slot <= start_slot)
+			continue;
+
+		for (const Json &day_json : shift_json["days"].array_items()) {
+			int day = day_json.int_value();
+			if (day < 0 || day >= 7)
+				continue;
+			for (int slot = start_slot; slot < end_slot && slot < 22; ++slot) {
+				int segment = GetScheduleSegment(slot);
+				tutor.schedule.days[day].segments[segment] = 1;
+			}
+		}
+	}
+}
+
+static Json::array SerializeTutorShifts(const Tutor &tutor) {
+	// Build JSON shift objects from contiguous selected slots in the tutor schedule.
+	Json::array shifts_json;
+	for (int day = 0; day < 7; ++day) {
+		int slot = 0;
+		while (slot < 22) {
+			if (!tutor.schedule.days[day].segments[GetScheduleSegment(slot)]) {
+				slot++;
+				continue;
+			}
+
+			int start_slot = slot;
+			while (slot < 22 && tutor.schedule.days[day].segments[GetScheduleSegment(slot)]) {
+				slot++;
+			}
+
+			int end_slot = slot;
+			Json::object shift_obj;
+			Json::array days_json;
+			days_json.push_back(day);
+			shift_obj["days"] = days_json;
+			shift_obj["service_type"] = 0;
+			shift_obj["start"] = SlotToTimeValue(start_slot);
+			shift_obj["end"] = SlotToTimeValue(end_slot);
+			shifts_json.push_back(shift_obj);
+		}
+	}
+	return shifts_json;
 }
 
 static int CountTutorScheduleSlots(int tutor_index) {
@@ -462,6 +585,9 @@ void DemoWindow::OnScheduleCellMouseMove(int day, int slot) {
 void DemoWindow::OnScheduleCellMouseUp(int day, int slot) {
 	schedule_drag_active = false;
 	UpdateScheduleGrid();
+	if (!save()) {
+		cout << "Failed to save schedule shifts" << endl;
+	}
 }
 void DemoWindow::AddCourses(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
 	if (arguments.size() != 0){

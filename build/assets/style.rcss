@@ -124,7 +124,7 @@ p.title
 }
 
 .schedule-grid {
-	border: 1dp solid #777;
+	border: 1dp #777;
 	background-color: #111;
 	padding: 4dp;
 	margin-top: 14dp;
@@ -136,8 +136,9 @@ p.title
 	color: #fff;
 	margin-bottom: 10dp;
 	padding: 6dp 8dp;
-	background: rgba(30, 30, 30, 0.95);
-	border: 1dp solid #555;
+	background-color: #1e1e1e;
+	opacity: 0.95;
+	border: 1dp #555;
 	border-radius: 4dp;
 }
 .schedule-grid .schedule-row {
@@ -148,10 +149,9 @@ p.title
 	width: 80dp;
 	height: 28dp;
 	line-height: 28dp;
-	border: 1dp solid #aaa;
+	border: 1dp #aaa;
 	text-align: center;
 	font-size: 10dp;
-	user-select: none;
 	cursor: pointer;
 	margin: 0;
 	padding: 2dp;
