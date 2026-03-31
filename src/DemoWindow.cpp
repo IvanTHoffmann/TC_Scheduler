@@ -516,6 +516,23 @@ void DemoWindow::RemoveCourses(Rml::DataModelHandle model, Rml::Event& ev, const
 	}
 }
 
+void DemoWindow::ResetSchedule(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
+	if (arguments.size() != 0)
+		return;
+
+	int selected_tutor = appData.selected_tutor.index;
+	if (selected_tutor < 0 || selected_tutor >= (int)appData.tutors.size())
+		return;
+
+	for (int day = 0; day < 7; ++day) {
+		for (int slot = 0; slot < 22; ++slot) {
+			SetScheduleValue(selected_tutor, day, slot, 0);
+		}
+	}
+
+	UpdateScheduleGrid();
+}
+
 void DemoWindow::AddTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
 	
 }
@@ -604,6 +621,7 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 
 		constructor.BindEventCallback("AddCourses", &DemoWindow::AddCourses, this);
 		constructor.BindEventCallback("RemoveCourses", &DemoWindow::RemoveCourses, this);
+		constructor.BindEventCallback("ResetSchedule", &DemoWindow::ResetSchedule, this);
 		constructor.BindEventCallback("AddTutor", &DemoWindow::AddTutor, this);
 		constructor.BindEventCallback("RemoveTutor", &DemoWindow::RemoveTutor, this);
 

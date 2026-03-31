@@ -47,6 +47,7 @@ public:
 
 	void AddCourses(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
 	void RemoveCourses(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
+	void ResetSchedule(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
 	void AddTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
 	void RemoveTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
 
