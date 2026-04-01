@@ -24,7 +24,7 @@ using namespace std;
 AppData appData;
 
 
-bool DemoWindow::load() {
+bool DemoWindow::Load() {
 	ifstream fin;
 	string buf, err;
 
@@ -118,7 +118,7 @@ bool DemoWindow::load() {
     return true;
 }
 
-bool DemoWindow::save(){
+bool DemoWindow::Save(){
 	return false;
 }
 
@@ -134,6 +134,71 @@ int DemoWindow::getHeight(){
 	return appData.resolution[1];
 }
 
+
+// EVENT CALLBACKS
+
+void DemoWindow::ChangedTab(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
+	cout << "changed tab" << endl;
+
+	appData.edit_tutor = false;
+	dataModelHandle.DirtyAllVariables();
+}
+
+
+void DemoWindow::EnableEditTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
+	Tutor* tutor = appData.selected_tutor.accessor.ptr();
+
+	if (tutor == nullptr){
+		return;
+	}
+
+	for (Department& dept: appData.departments){
+		dept.edit_subtractive = false;
+		dept.edit_courses.clear();
+		dept.edit_formatted_courses.syncBuffer();
+	}
+
+	for (const ClassList& classList : tutor->classes){
+		for (Department& dept : appData.departments){
+			if (dept.name == classList.department_name){
+				dept.edit_subtractive = classList.subtractive;
+				copy(classList.courses.begin(), classList.courses.end(), back_inserter(dept.edit_courses));
+				dept.edit_formatted_courses.syncBuffer();
+				break;
+			}
+		}
+	}
+	
+	appData.edit_tutor = true;
+	dataModelHandle.DirtyAllVariables();
+}
+
+void DemoWindow::ConfirmEditTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
+	appData.edit_tutor = false;
+	dataModelHandle.DirtyAllVariables();
+
+	Tutor* tutor = appData.selected_tutor.accessor.ptr();
+
+	if (tutor == nullptr){
+		return;
+	}
+
+	tutor->classes.clear();
+	for (Department& dept: appData.departments){
+		if (dept.edit_subtractive || !dept.edit_courses.empty()){
+			ClassList classList;
+			classList.department_name = dept.name;
+			classList.subtractive = dept.edit_subtractive;
+			copy(dept.edit_courses.begin(), dept.edit_courses.end(), back_inserter(classList.courses));
+			tutor->classes.push_back(classList);
+		}
+	}
+	
+	appData.edit_tutor = false;
+	dataModelHandle.DirtyAllVariables();
+}
+
+
 void DemoWindow::AddTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
 	
 }
@@ -143,6 +208,8 @@ void DemoWindow::RemoveTutor(Rml::DataModelHandle model, Rml::Event& ev, const R
 }
 
 
+// INIT
+
 bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 {
 
@@ -151,36 +218,29 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 
 		constructor.RegisterArray<vector<Rml::String>>();
 
-// Register IntVectorEditable
-
+		// Register IntVectorEditable
+		
 		constructor.RegisterArray<vector<int>>();
-		constructor.RegisterScalar<IntVectorScalar>(Get_IntVectorScalar, Set_IntVectorScalar);
-
-		if (auto handle = constructor.RegisterStruct<IntVectorEditable>()) {
-			handle.RegisterMember("data", &IntVectorEditable::data);
-			handle.RegisterMember("scalar", &IntVectorEditable::scalar);
-		}
-
-// Register vector<Department>
-
+		constructor.RegisterScalar<FormattedIntVector>(Get_IntVectorScalar, Set_IntVectorScalar);
+			
+		// Register vector<Department>
 		if (auto handle = constructor.RegisterStruct<Department>()) {
 			handle.RegisterMember("name", &Department::name);
 			handle.RegisterMember("edit_subtractive", &Department::edit_subtractive);
 			handle.RegisterMember("edit_courses", &Department::edit_courses);
+			handle.RegisterMember("edit_formatted_courses", &Department::edit_formatted_courses);
 		}
 		constructor.RegisterArray<vector<Department>>();
-
-// Register ClassListMap
-
+			
+		// Register vector<ClassList>
 		if (auto handle = constructor.RegisterStruct<ClassList>()) {
 			handle.RegisterMember("department_name", &ClassList::department_name);
 			handle.RegisterMember("subtractive", &ClassList::subtractive);
 			handle.RegisterMember("courses", &ClassList::courses);
 		}
 		constructor.RegisterArray<vector<ClassList>>();
-
-// Register vector<Tutor>
-
+		
+		// Register vector<Tutor>
 		if (auto handle = constructor.RegisterStruct<Tutor>()) {
 			handle.RegisterMember("first_name", &Tutor::first_name);
 			handle.RegisterMember("last_name", &Tutor::last_name);
@@ -189,18 +249,16 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 			handle.RegisterMember("classes", &Tutor::classes);
 		}
 		constructor.RegisterArray<vector<Tutor>>();
-
-// Register vector<Service>
-
+		
+		// Register vector<Service>
 		if (auto handle = constructor.RegisterStruct<Service>()) {
 			handle.RegisterMember("name", &Service::name);
 			handle.RegisterMember("min_hours", &Service::min_hours);
 			handle.RegisterMember("max_hours", &Service::max_hours);
 		}
 		constructor.RegisterArray<vector<Service>>();
-
-// Register VectorInterfaces
-
+		
+		// Register VectorInterfaces
 		constructor.RegisterArray<VectorInterface<ClassList>>();
 		constructor.RegisterArray<VectorInterface<Tutor>>();
 		if (auto handle = constructor.RegisterStruct<SelectedItemInterface<Tutor>>())
@@ -208,15 +266,18 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 			handle.RegisterMember("index", &SelectedItemInterface<Tutor>::index);
 			handle.RegisterMember("accessor", &SelectedItemInterface<Tutor>::accessor);
 		}
-
-// Bind AppData members
+			
+		// Bind AppData members
 		constructor.Bind("departments", &appData.departments);
 		constructor.Bind("services", &appData.services);
 		constructor.Bind("tutors", &appData.tutors);
 		constructor.Bind("selected_department", &appData.selected_department);
-		constructor.Bind("courses_entry", &appData.courses_entry);
 		constructor.Bind("selected_tutor", &appData.selected_tutor);
+		constructor.Bind("edit_tutor", &appData.edit_tutor);
 
+		constructor.BindEventCallback("ChangedTab", &DemoWindow::ChangedTab, this);
+		constructor.BindEventCallback("EnableEditTutor", &DemoWindow::EnableEditTutor, this);
+		constructor.BindEventCallback("ConfirmEditTutor", &DemoWindow::ConfirmEditTutor, this);
 		constructor.BindEventCallback("AddTutor", &DemoWindow::AddTutor, this);
 		constructor.BindEventCallback("RemoveTutor", &DemoWindow::RemoveTutor, this);
 
@@ -228,8 +289,9 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 	using namespace Rml;
 
 	document = context->LoadDocument("assets/demo.rml");
-	if (!document)
+	if (!document){
 		return false;
+	}
 
 	document->GetElementById("title")->SetInnerRML(title);
 
@@ -261,16 +323,16 @@ void DemoWindow::ProcessEvent(Rml::Event& event)
 	switch (event.GetId())
 	{
 	case EventId::Keydown:
-	{
 		Rml::Input::KeyIdentifier key_identifier = (Rml::Input::KeyIdentifier)event.GetParameter<int>("key_identifier", 0);
 
 		if (key_identifier == Rml::Input::KI_ESCAPE){
+			Save();
 			Backend::RequestExit();
 		}
-	}
-	break;
+		break;
 
-	default: break;
+	default: 
+		break;
 	}
 }
 

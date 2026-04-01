@@ -11,7 +11,7 @@
 
 <tabset id="menu" data-model="app_data">
 
-<tab>Summary</tab>
+<tab data-event-click="ChangedTab">Summary</tab>
 <panel id="summary">
 	<p class="title" align:"center">Summary Page</p>
 	
@@ -28,7 +28,7 @@
 
 </panel>
 
-<tab>Manage Schedules</tab>
+<tab data-event-click="ChangedTab">Manage Schedules</tab>
 <panel id="page_manage_schedules">
 	<p class="title">Manage Schedules</p>
 	<div data-model="app_data">
@@ -47,78 +47,85 @@
 	</div>
 </panel>
 
-<tab>Manage Classes</tab>
+<tab data-event-click="ChangedTab">Manage Classes</tab>
 <panel id="page_manage_classes">
-	<p class="title">Manage Classes</p>
-	<div data-model="app_data">
-		<template src="tutor_select"/>
-		<div data-for="tutor:selected_tutor.accessor">
-			<div>
-				<select name="department_name" data-value="selected_department" onkeydown="cancel_selection_on_escape">
-					<option data-for="department:departments" data-value="it_index">{{department.name}}</option>
-				</select>
-				<input type="text" placeholder="All" data-value="courses_entry"/>
-				<!--button class="gradient" data-event-click="AddCourses">Add</button>
-				<button class="gradient" data-event-click="RemoveCourses">Remove</button-->
-			</div>
-			<table>
-				<thead>
-					<tr>
-						<td>Department</td>
-						<td>Courses</td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr data-for="classList:tutor.classes">
-						<td>{{classList.department_name}}</td>
-						<td>
+	<div data-if="!edit_tutor">
+		<p class="title">View Tutor Info</p>
+		<span>
+			<template src="tutor_select"/>
+			<button data-for="selected_tutor.accessor" class="gradient" data-event-click="EnableEditTutor">Edit</button>
+		</span>
+		<table data-for="tutor:selected_tutor.accessor">
+			<thead>
+				<tr>
+					<td>Department</td>
+					<td>Courses</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-for="classList:tutor.classes">
+					<td>{{classList.department_name}}</td>
+					<td>
 						<span data-if="classList.subtractive">All{{classList.courses.size ? ' Except ' : ''}}</span>
 						<span data-for="course:classList.courses">{{it_index ? ', ' : ''}}{{course}}</span>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div data-if="edit_tutor" data-for="tutor:selected_tutor.accessor">
+		<p class="title">Edit Tutor Info</p>
+
+		<div>
+			<span>First Name:</span>
+			<input type="text" data-value="tutor.first_name"/>
+			<span>   Last Name:</span>
+			<input type="text" data-value="tutor.last_name"/>
+			<button class="gradient" data-event-click="ConfirmEditTutor">Confirm</button>
 		</div>
-	</div> <!-- End of tutor info container -->
+
+		<table>
+			<thead>
+				<tr>
+					<td style="width:10%">Department</td>
+					<td style="width:10%">All / All Except</td>
+					<td>Courses</td>
+					<td>Output</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-for="department:departments">
+					<td>{{department.name}}</td>
+					<td>
+						<input type="checkbox" data-checked="department.edit_subtractive"/>
+					</td>
+					<td>
+						<input data-value="department.edit_formatted_courses"></input>
+					</td>
+					<td>
+						<span data-if="department.edit_subtractive">All{{department.edit_courses.size ? ' Except ' : ''}}</span>
+						<span data-for="course:department.edit_courses">{{it_index ? ', ' : ''}}{{course}}</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </panel>
 
-<tab>Configure</tab>
+<tab data-event-click="ChangedTab">Configure</tab>
 <panel>
 	<div>
 		This is the configuration page where you will be able to control the settings of the application.
 	</div>
 </panel>
 
-<tab>Test</tab>
+<tab data-event-click="ChangedTab">Test</tab>
 <panel>
-	<template src="tutor_select"/>
-
-	<table data-for="tutor:selected_tutor.accessor">
-		<thead>
-			<tr>
-				<td>Department</td>
-				<td>Test</td>
-				<td>All / All Except</td>
-				<td>Courses</td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr data-for="department:departments">
-				<td>{{department.name}}</td>
-				<td>
-					<span data-if="department.edit_subtractive">All{{department.edit_courses.data.size ? ' Except ' : ''}}</span>
-					<span data-for="course:department.edit_courses.data">{{it_index ? ', ' : ''}}{{course}}</span>
-				</td>
-				<td>
-					<input type="checkbox" data-value="department.edit_subtractive"/>
-				</td>
-				<td>
-					<input data-value="department.edit_courses.scalar"></input>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+	
+	
 </panel>
+
 </tabset>
 </body>
 </rml>

@@ -4,6 +4,7 @@
 #include <RmlUi/Core.h>
 
 #include <vector>
+#include <array>
 #include <map>
 
 using namespace std;
@@ -33,6 +34,7 @@ class VectorInterface {
 	vector<_Ty>::iterator begin();
 	vector<_Ty>::iterator end();
 
+	_Ty* ptr();
 	size_t size();
 };
 
@@ -52,6 +54,11 @@ vector<_Ty>::iterator VectorInterface<_Ty>::begin(){
 template <class _Ty>
 vector<_Ty>::iterator VectorInterface<_Ty>::end(){
     return _target->begin() + _interface->index + size();
+}
+
+template <class _Ty>
+_Ty* VectorInterface<_Ty>::ptr(){
+	return size() ? &(_target->at(_interface->index)) : nullptr;
 }
 
 template <class _Ty>
@@ -81,37 +88,31 @@ void SelectedItemInterface<_Ty>::setTarget(vector<_Ty> *newTarget){
     accessor.setTarget(newTarget);
 }
 
-struct IntVectorEditable;
-
-class IntVectorScalar {
-
+class FormattedIntVector {
 	private:
 	vector<int> *_target;
 
 	public:
 	Rml::String buffer;
 
+	void syncBuffer();
 	void setTarget(vector<int> *newTarget);
-	void set(const Rml::Variant& variant);
+	void read(const Rml::Variant& variant);
 };
 
-struct IntVectorEditable {
-    vector<int> data;
-	IntVectorScalar scalar;
-
-	IntVectorEditable();
-	IntVectorEditable(const IntVectorEditable& src);
-};
-
-void Get_IntVectorScalar(const IntVectorScalar& int_vector_scalar, Rml::Variant& variant);
-void Set_IntVectorScalar(IntVectorScalar& int_vector_scalar, const Rml::Variant& variant);
+void Get_IntVectorScalar(const FormattedIntVector& int_vector_scalar, Rml::Variant& variant);
+void Set_IntVectorScalar(FormattedIntVector& int_vector_scalar, const Rml::Variant& variant);
 
 struct Department {
 	Rml::String name;
 
     // used for editing tutor class lists
     bool edit_subtractive;
-    IntVectorEditable edit_courses;
+	vector<int> edit_courses;
+	FormattedIntVector edit_formatted_courses;
+
+	Department();
+	Department(const Department& src);
 };
 
 struct Service {
@@ -145,6 +146,7 @@ struct Tutor {
     vector<ClassList> classes;
 };
 
+
 struct AppData {
 	Rml::String window_title;
     vector<Tutor> tutors;
@@ -160,6 +162,7 @@ struct AppData {
     int schedule_id;
 
 	// INDIVIDUAL
+	bool edit_tutor;
 	vector<Department> departments;
 	vector<Service> services;
     

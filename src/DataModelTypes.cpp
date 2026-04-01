@@ -2,10 +2,10 @@
 
 
 
-void IntVectorScalar::set(const Rml::Variant& variant) {
+void FormattedIntVector::read(const Rml::Variant& variant) {
+	// Sanitize input and place 
 	buffer.clear();
 
-	bool isValid = true;
 	char last = ',';
 	for (char c : variant.Get<Rml::String>()) {
 		c = isspace(c) ? ',' : c;
@@ -17,48 +17,52 @@ void IntVectorScalar::set(const Rml::Variant& variant) {
 			buffer += c;
 			last = c;
 		}
-		else {
-			isValid = false;
-		}
 	}
 
-	if (isValid){
-		_target->clear();
+	_target->clear();
 
-		int value = 0;
-		for (char c: buffer){
-			if (c == ',') {
-				_target->push_back(value);
-				value = 0;
-			}
-			else {
-				value = (value * 10) + (c - '0');
-			}
-		}
-		if (value) {
+	int value = 0;
+	for (char c: buffer){
+		if (c == ',') {
 			_target->push_back(value);
+			value = 0;
 		}
+		else {
+			value = (value * 10) + (c - '0');
+		}
+	}
+	if (value) {
+		_target->push_back(value);
 	}
 }
 
-void Get_IntVectorScalar(const IntVectorScalar& int_vector_scalar, Rml::Variant& variant){
+void Get_IntVectorScalar(const FormattedIntVector& int_vector_scalar, Rml::Variant& variant){
 	variant = int_vector_scalar.buffer;
 }
 
-void Set_IntVectorScalar(IntVectorScalar& int_vector_scalar, const Rml::Variant& variant){
-	int_vector_scalar.set(variant);
+void Set_IntVectorScalar(FormattedIntVector& int_vector_scalar, const Rml::Variant& variant){
+	int_vector_scalar.read(variant);
 }
 
-void IntVectorScalar::setTarget(vector<int> *newTarget){
+void FormattedIntVector::syncBuffer(){
+	buffer.clear();
+	for (int i : *_target){
+		buffer += to_string(i) + ',';
+	}
+}
+
+void FormattedIntVector::setTarget(vector<int> *newTarget){
 	_target = newTarget;
 }
 
-IntVectorEditable::IntVectorEditable(){
-	scalar.setTarget(&data);
+Department::Department(){
+	edit_formatted_courses.setTarget(&edit_courses);
 }
 
-IntVectorEditable::IntVectorEditable(const IntVectorEditable& src){
-	data = src.data;
-	scalar = src.scalar;
-	scalar.setTarget(&data);
+Department::Department(const Department& src){
+	name = src.name;
+	edit_subtractive = src.edit_subtractive;
+	edit_courses = src.edit_courses;
+	edit_formatted_courses = src.edit_formatted_courses;
+	edit_formatted_courses.setTarget(&edit_courses);
 }

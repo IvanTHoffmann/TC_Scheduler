@@ -20,8 +20,8 @@ public:
 	int getWidth();
 	int getHeight();
 
-	bool load();
-	bool save();
+	bool Load();
+	bool Save();
 	
 	bool Initialize(const Rml::String& title, Rml::Context* context);
 	void Shutdown();
@@ -33,6 +33,10 @@ public:
 	Rml::ElementDocument* GetDocument();
 
 	void SubmitForm(Rml::String in_submit_message);
+
+	void ChangedTab(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
+	void EnableEditTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
+	void ConfirmEditTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
 
 	void AddTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
 	void RemoveTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);

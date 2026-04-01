@@ -46,7 +46,7 @@ div#title_bar div#icon
 div#content
 {
 	position: relative;
-	/* background-color: #bbb; */
+	color: #393131;
 }
 tabset
 {
@@ -56,10 +56,10 @@ tabs
 {
 	display: block;
 	position: fixed;
-	clip: none;
 	text-align: right;
+	clip: none;
 	top: -47dp;
-	left: 205dp;
+	left: 0dp;
 	right: 10dp;
 }
 tab
@@ -68,6 +68,7 @@ tab
 	padding: 0 10dp;
 	line-height: 40dp;
 	display: inline-block;
+	clip:none;
 
 	font-size: 12dp;
 	color: #ddd;
@@ -97,11 +98,6 @@ panel
 	margin-left: auto;
 	margin-right: auto;
 	/* max-width: 500dp; */
-}
-
-panel#welcome
-{
-	display: inline-block;
 }
 h1
 {
@@ -147,19 +143,6 @@ p.title
 #decorators button.gradient:hover
 {
 	border-color: #F9EFA3;
-}
-
-#decorators .image-alien
-{
-	width: 64dp;
-	height: 64dp;
-	decorator: image( /assets/high_scores_alien_1.tga );
-}
-#decorators .image-invader
-{
-	width: 51dp;
-	height: 39dp;
-	decorator: image( icon-invader );
 }
 .side-by-side
 {
@@ -237,7 +220,7 @@ p.title
 	margin: 0 30dp 30dp;
 	text-align: center;
 	font-size: 35dp;
-	color: #b33;
+	color: rgb(0, 0, 0);
 }
 #font_effects h1
 {
