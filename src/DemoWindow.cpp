@@ -138,8 +138,6 @@ int DemoWindow::getHeight(){
 // EVENT CALLBACKS
 
 void DemoWindow::ChangedTab(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
-	cout << "changed tab" << endl;
-
 	appData.edit_tutor = false;
 	dataModelHandle.DirtyAllVariables();
 }
@@ -174,9 +172,6 @@ void DemoWindow::EnableEditTutor(Rml::DataModelHandle model, Rml::Event& ev, con
 }
 
 void DemoWindow::ConfirmEditTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
-	appData.edit_tutor = false;
-	dataModelHandle.DirtyAllVariables();
-
 	Tutor* tutor = appData.selected_tutor.accessor.ptr();
 
 	if (tutor == nullptr){
@@ -320,19 +315,21 @@ void DemoWindow::ProcessEvent(Rml::Event& event)
 {
 	using namespace Rml;
 
-	switch (event.GetId())
-	{
-	case EventId::Keydown:
-		Rml::Input::KeyIdentifier key_identifier = (Rml::Input::KeyIdentifier)event.GetParameter<int>("key_identifier", 0);
+	switch (event.GetId()) {
+		case EventId::Keydown:
+		{
+			Rml::Input::KeyIdentifier key_identifier = (Rml::Input::KeyIdentifier)event.GetParameter<int>("key_identifier", 0);
 
-		if (key_identifier == Rml::Input::KI_ESCAPE){
-			Save();
-			Backend::RequestExit();
+			if (key_identifier == Rml::Input::KI_ESCAPE){
+				Save();
+				Backend::RequestExit();
+			}
+			break;
 		}
-		break;
-
-	default: 
-		break;
+		default:
+		{
+			break;
+		}
 	}
 }
 

@@ -84,9 +84,9 @@
 	checkbox-checked-hover: 437px 90px 30px 30px;
 	checkbox-checked-active: 467px 90px 30px 30px;
 
-	tableheader-l: 127px 192px 16px 31px;
-	tableheader-c: 143px 192px 2px 31px;
-	tableheader-r: 145px 192px 15px 31px;
+	tableheader-l: 132px 199px 2px 24px;
+	tableheader-c: 136px 199px 15px 24px;
+	tableheader-r: 153px 199px 2px 24px;
 
 	expand: 3px 232px 17px 17px;
 	expand-hover: 21px 232px 17px 17px;
@@ -290,6 +290,7 @@ button:hover, button:focus-visible,
 input.submit:hover, input.submit:focus-visible
 {
 	decorator: image(button-hover);
+	font-effect: blur(3dp #ffffff);
 }
 
 button:active,
@@ -437,7 +438,11 @@ select selectbox option
 select selectbox option:nth-child(even),
 tr:nth-child(even)
 {
-	background: #FFFFFFA0;
+	background: #d0d0d0a0;
+}
+tr:nth-child(odd)
+{
+	background: #dddddd9e;
 }
 select selectbox option:checked
 {

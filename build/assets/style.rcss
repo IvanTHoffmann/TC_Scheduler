@@ -137,12 +137,12 @@ p.title
 }
 #decorators button.gradient.horizontal
 {
-	decorator: horizontal-gradient( #DB6565 #F1B58A );
-	border-color: #DB6565;
+	decorator: horizontal-gradient( #cebdbd #bea99a );
+	border-color: #9f9f9f;
 }
 #decorators button.gradient:hover
 {
-	border-color: #F9EFA3;
+	border-color: #524f3a;
 }
 .side-by-side
 {

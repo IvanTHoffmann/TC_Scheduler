@@ -17,7 +17,7 @@ int main(int /*argc*/, char** /*argv*/)
 #endif
 {
 	DemoWindow demo_window;
-	demo_window.load();
+	demo_window.Load();
 
 	// Initializes the shell which provides common functionality used by the included samples.
 	if (!Shell::Initialize())
