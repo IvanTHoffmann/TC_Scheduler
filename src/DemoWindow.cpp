@@ -56,21 +56,11 @@ bool DemoWindow::Load() {
 
 	appData.window_title = settings["window_title"].string_value();
 	appData.schedule_id = settings["startup_schedule"].int_value();
-
-	Json::array resolution_options = settings["resolution_options"].array_items();
-	array<int, 2> resolutionOption;
-	for (const Json res : resolution_options){
-		resolutionOption[0] = res["w"].int_value();
-		resolutionOption[1] = res["h"].int_value();
-		appData.resolutionOptions.push_back(resolutionOption);
-	}
-
-	int resolution_id = settings["resolution"].int_value();
-	appData.resolution[0] = appData.resolutionOptions[resolution_id][0];
-	appData.resolution[1] = appData.resolutionOptions[resolution_id][1];
+	appData.resolution[0] = settings["resolution"]["w"].int_value();
+	appData.resolution[1] = settings["resolution"]["h"].int_value();
 	
 	Json::array schedules = jsonDocument["schedules"].array_items();
-	Json schedule = schedules[0];
+	Json schedule = schedules[appData.schedule_id];
 	
 	Json::array departments = schedule["departments"].array_items();
 	Department department;
@@ -269,6 +259,7 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 		constructor.Bind("selected_department", &appData.selected_department);
 		constructor.Bind("selected_tutor", &appData.selected_tutor);
 		constructor.Bind("edit_tutor", &appData.edit_tutor);
+		constructor.Bind("dev_enable", &appData.dev_enable);
 
 		constructor.BindEventCallback("ChangedTab", &DemoWindow::ChangedTab, this);
 		constructor.BindEventCallback("EnableEditTutor", &DemoWindow::EnableEditTutor, this);
@@ -288,7 +279,7 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 		return false;
 	}
 
-	document->GetElementById("title")->SetInnerRML(title);
+	//document->GetElementById("title")->SetInnerRML(title);
 
 	document->Show();
 
