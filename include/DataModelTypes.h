@@ -155,8 +155,8 @@ struct AppData {
 	int selected_department;
 	Rml::String courses_entry;
 
-	// CONFIG
-	vector<array<int, 2>> resolutionOptions;
+	// PREFERENCES
+	bool dev_enable;
     int resolution[2];
     float fontSize;
     int schedule_id;

@@ -28,15 +28,15 @@
 	icon-lives:   383px 152px 51px 39px;
 	icon-score:   434px 152px 51px 39px;
 
-	window-tl: 0px 0px 133px 140px;
-	window-t:  134px 0px 1px 140px;
-	window-tr: 136px 0px 10px 140px;
-	window-l:  0px 139px 10px 1px;
-	window-c:  11px 139px 1px 1px;
-	window-r:  10px 139px -10px 1px; /* mirrored left */
-	window-bl: 0px 140px 11px 11px;
-	window-b:  11px 140px 1px 11px;
-	window-br: 136px 140px 10px 11px;
+	window-tl: 0px 0px 231px 64px;
+	window-t:  231px 0px 1px 64px;
+	window-tr: 232px 0px 1px 64px;
+	window-l:  0px 64px 231px 1px;
+	window-c:  231px 64px 1px 1px;
+	window-r:  232px 64px 1px 1px;
+	window-bl: 0px 65px 231px 1px;
+	window-b:  231px 65px 1px 1px;
+	window-br: 232px 65px 1px 1px;
 
 	button: 247px 0px 159px 45px;
 	button-hover:  247px 45px 159px 45px;
@@ -162,6 +162,7 @@ body.window
 	max-height: 700dp;
 }
 
+/*
 div#title_bar
 {
 	z-index: 1;
@@ -201,12 +202,13 @@ div#title_bar span
 	font-effect: glow(1dp black);
 	decorator: tiled-horizontal( title-bar-l, title-bar-c, title-bar-r );
 }
+*/
 
 div#window
 {
 	width: auto;
 	height: 100%;
-	padding: 10dp 15dp;
+	padding: 0dp 0dp;
 
 	decorator: tiled-box(
 		window-tl, window-t, window-tr,

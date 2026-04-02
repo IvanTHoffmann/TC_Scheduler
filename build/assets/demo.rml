@@ -23,7 +23,6 @@
 		<button class="gradient">Button</button>
 
 		<template src="timetable"/>
-
 	</div>
 
 </panel>
@@ -37,11 +36,11 @@
 		<div data-for="tutor:selected_tutor.accessor">
 			<div>
 				<span>Min hours: {{tutor.min_hours}}</span>
-				<input type="range" data-value="tutor.min_hours" min=0 max=60 step=1/>
+				<input type="range" data-value="tutor.min_hours" min=0 max=60 step=1 />
 			</div>
 			<div>
 				<span>Max hours: {{tutor.max_hours}}</span>
-				<input type="range" data-value="tutor.max_hours" min=0 max=60 step=1/>
+				<input type="range" data-value="tutor.max_hours" min=0 max=60 step=1 />
 			</div>
 		</div>
 	</div>
@@ -113,16 +112,17 @@
 	</div>
 </panel>
 
-<tab data-event-click="ChangedTab">Configure</tab>
+<tab data-event-click="ChangedTab">Preferences</tab>
 <panel>
 	<div>
 		This is the configuration page where you will be able to control the settings of the application.
 	</div>
+
+	<span>Developer Options:<input type="checkbox" data-value="dev_enable"/></span>
 </panel>
 
-<tab data-event-click="ChangedTab">Test</tab>
+<tab data-if="dev_enable" data-event-click="ChangedTab">Tests</tab>
 <panel>
-	
 	
 </panel>
 
