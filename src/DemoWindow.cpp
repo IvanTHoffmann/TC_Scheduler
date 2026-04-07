@@ -35,7 +35,6 @@ static Json::array SerializeTutorShifts(const Tutor &tutor);
 
 AppData appData;
 
-
 bool DemoWindow::Load() {
 	ifstream fin;
 	string buf, err;
@@ -392,6 +391,41 @@ void DemoWindow::UpdateScheduleSummary() {
 	}
 }
 
+void DemoWindow::ResetSchedule(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
+    // 1. Safety check: ensure no extra arguments were passed from the UI
+    if (arguments.size() != 0)
+        return;
+
+    // 2. Use the new Pointer helper to get the currently selected tutor
+    Tutor* tutor = appData.selected_tutor.accessor.ptr();
+    
+    // 3. If no tutor is selected, exit early to prevent a crash
+    if (!tutor) {
+        cout << "ResetSchedule failed: No tutor selected." << endl;
+        return;
+    }
+
+    // 4. Loop through every day and every 30-minute slot
+    for (int day = 0; day < 7; ++day) {
+        for (int slot = 0; slot < 22; ++slot) {
+            // We use the tutor pointer to reach the internal bit-grid directly
+            int segment = GetScheduleSegment(slot);
+            tutor->schedule.days[day].segments[segment] = 0;
+        }
+    }
+
+    // 5. Trigger the visual refresh so the grid boxes turn un-highlighted
+    UpdateScheduleGrid();
+    
+    // 6. Tell RmlUi that data has changed so other UI elements (like total hours) update
+    dataModelHandle.DirtyAllVariables();
+    
+    // 7. Auto-save the now-empty schedule to the JSON file
+    if (!Save()) {
+        cout << "Warning: ResetSchedule could not auto-save to JSON." << endl;
+    }
+}
+
 void DemoWindow::ScheduleLimitsChanged(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
 	// Only refresh the summary state when min/max sliders change.
 	UpdateScheduleSummary();
@@ -505,7 +539,6 @@ void DemoWindow::AddTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml:
 void DemoWindow::RemoveTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
 	
 }
-// INIT
 
 bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 {
