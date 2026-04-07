@@ -1,6 +1,7 @@
 <rml>
 <head>
 <link type="text/template" href="window.rml"/>
+<link type="text/template" href="department_select.rml"/>
 <link type="text/template" href="tutor_select.rml"/>
 <link type="text/template" href="timetable.rml"/>
 <title>Tutoring Center Scheduler</title>
@@ -122,8 +123,27 @@
 	<div>
 		This is the configuration page where you will be able to control the settings of the application.
 	</div>
+	<div>Export Directory:<input type="text" data-value="export_directory"/></div>
+	<div>Developer Options:<input type="checkbox" data-value="dev_enable"/></div>
+</panel>
 
-	<span>Developer Options:<input type="checkbox" data-value="dev_enable"/></span>
+<tab data-event-click="ChangedTab">Export</tab>
+<panel>
+	<div>
+		<button class="gradient" data-event-click="ExportTimetable">Export Timetable</button>
+		<button class="gradient" data-event-click="ExportRolodex">Export Rolodex</button>
+	</div>
+	<div>
+		<template src="tutor_select"/><button data-for="tutor:selected_tutor.accessor" class="gradient" data-event-click="CopyTutorHtml">Copy Tutor Html</button>
+	</div>
+	<div>
+		<template src="department_select"/><button data-for="department:selected_department.accessor" class="gradient" data-event-click="CopySubjectHtml">Copy Subject Html</button>
+	</div>
+	<hr/>
+	<div>
+		<button class="gradient" data-event-click="ExportAll">Export All</button>
+	</div>
+
 </panel>
 
 <tab data-if="dev_enable" data-event-click="ChangedTab">Tests</tab>

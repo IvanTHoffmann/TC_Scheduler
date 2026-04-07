@@ -24,7 +24,7 @@ int main(int /*argc*/, char** /*argv*/)
 		return -1;
 
 	// Constructs the system and render interfaces, creates a window, and attaches the renderer.
-	if (!Backend::Initialize(demo_window.getWindowTitle().c_str(), demo_window.getWidth(), demo_window.getHeight(), true))
+	if (!Backend::Initialize(demo_window.GetWindowTitle().c_str(), demo_window.GetWidth(), demo_window.GetHeight(), true))
 	{
 		Shell::Shutdown();
 		return -1;
@@ -38,7 +38,7 @@ int main(int /*argc*/, char** /*argv*/)
 	Rml::Initialise();
 
 	// Create the main RmlUi context.
-	Rml::Context* context = Rml::CreateContext("main", Rml::Vector2i(demo_window.getWidth(), demo_window.getHeight()));
+	Rml::Context* context = Rml::CreateContext("main", Rml::Vector2i(demo_window.GetWidth(), demo_window.GetHeight()));
 	if (!context)
 	{
 		Rml::Shutdown();
@@ -68,8 +68,7 @@ int main(int /*argc*/, char** /*argv*/)
 	//demo_window.GetDocument()->AddEventListener(Rml::EventId::Animationend, &demo_window);
 
 	bool running = true;
-	while (running)
-	{
+	while (running) {
 		demo_window.Update();
 
 		running = Backend::ProcessEvents(context, &Shell::ProcessKeyDownShortcuts, true);
@@ -83,7 +82,6 @@ int main(int /*argc*/, char** /*argv*/)
 	demo_window.Shutdown();
 
 	Rml::Shutdown();
-
 	Backend::Shutdown();
 	Shell::Shutdown();
 

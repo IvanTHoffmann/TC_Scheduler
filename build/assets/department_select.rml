@@ -1,0 +1,12 @@
+<template name="department_select">
+<head>
+	<link type="text/rcss" href="rml.rcss"/>
+	<link type="text/rcss" href="window.rcss"/>
+</head>
+<body class="department_select">
+    <select data-model="app_data" name="department_name" data-value="selected_department.index" onkeydown="cancel_selection_on_escape">
+        <option selected value=-1>Choose Department</option>
+        <option data-for="department:departments" data-value="it_index">{{department.name}}</option>
+    </select>
+</body>
+</template>

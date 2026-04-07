@@ -19,15 +19,6 @@
 	huditem-c: 229px 55px  1px -55px;
 	huditem-r: 231px 55px 15px -55px;
 
-	icon-help:    128px 152px 51px 39px;
-	icon-invader: 179px 152px 51px 39px;
-	icon-game:    230px 152px 51px 39px;
-	icon-hiscore: 281px 152px 51px 39px;
-	icon-waves:   332px 152px 51px 39px;
-	icon-flag:    336px 191px 51px 39px;
-	icon-lives:   383px 152px 51px 39px;
-	icon-score:   434px 152px 51px 39px;
-
 	window-tl: 0px 0px 231px 64px;
 	window-t:  231px 0px 1px 64px;
 	window-tr: 232px 0px 1px 64px;

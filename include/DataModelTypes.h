@@ -128,10 +128,11 @@ struct Tutor {
 
 struct AppData {
 	Rml::String window_title;
+	Rml::String export_dir;
     vector<Tutor> tutors;
 	SelectedItemInterface<Tutor> selected_tutor;
+	SelectedItemInterface<Department> selected_department;
 
-	int selected_department;
 	Rml::String courses_entry;
 
 	// PREFERENCES

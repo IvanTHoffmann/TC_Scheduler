@@ -76,3 +76,6 @@ Testing/
 *.exe
 *.o
 *.a
+
+# Exported Files
+build/exported_documents/

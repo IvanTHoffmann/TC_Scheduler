@@ -184,7 +184,7 @@ p.title
 }
 #decorators button.gradient
 {
-	decorator: vertical-gradient( #415857 #5990A3 );
+	decorator: vertical-gradient( #377571 #5990A3 );
 	border: 3dp #415857;
 	border-radius: 8dp;
 	margin-right: 12dp;
