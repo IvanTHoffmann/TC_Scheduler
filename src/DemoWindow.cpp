@@ -8,6 +8,7 @@
 #include <RmlUi_Backend.h>
 #include <RmlUi/Core.h>
 
+#include <filesystem>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -33,8 +34,11 @@ static void LoadTutorScheduleFromShifts(Tutor &tutor, const Json &tutor_json);
 // Convert the current selected schedule slots into a JSON shifts array.
 static Json::array SerializeTutorShifts(const Tutor &tutor);
 
+<<<<<<< Updated upstream
 AppData appData;
 
+=======
+>>>>>>> Stashed changes
 bool DemoWindow::Load() {
 	ifstream fin;
 	string buf, err;
@@ -66,6 +70,7 @@ bool DemoWindow::Load() {
 	Json settings = jsonDocument["settings"];
 
 	appData.window_title = settings["window_title"].string_value();
+	appData.export_dir = settings["export_directory"].string_value();
 	appData.schedule_id = settings["startup_schedule"].int_value();
 	appData.resolution[0] = settings["resolution"]["w"].int_value();
 	appData.resolution[1] = settings["resolution"]["h"].int_value();
@@ -125,6 +130,7 @@ bool DemoWindow::Load() {
     return true;
 }
 
+<<<<<<< Updated upstream
 bool DemoWindow::Save(){
 	// Persist any schedule changes back into the JSON document.
 	if (!jsonDocument.is_object())
@@ -162,17 +168,21 @@ bool DemoWindow::Save(){
 
 	fout << output;
 	return fout.good();
+=======
+bool DemoWindow::Save() {
+	return false;
+>>>>>>> Stashed changes
 }
 
-const string& DemoWindow::getWindowTitle(){
+const string& DemoWindow::GetWindowTitle() {
 	return appData.window_title;
 }
 
-int DemoWindow::getWidth(){
+int DemoWindow::GetWidth() {
 	return appData.resolution[0];
 }
 
-int DemoWindow::getHeight(){
+int DemoWindow::GetHeight() {
 	return appData.resolution[1];
 }
 
@@ -475,13 +485,12 @@ void DemoWindow::OnScheduleCellMouseUp(int day, int slot) {
 
 // EVENT CALLBACKS
 
-void DemoWindow::ChangedTab(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
+void DemoWindow::ChangedTab(CALLBACK_PARAMS) {
 	appData.edit_tutor = false;
 	dataModelHandle.DirtyAllVariables();
 }
 
-
-void DemoWindow::EnableEditTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
+void DemoWindow::EnableEditTutor(CALLBACK_PARAMS) {
 	Tutor* tutor = appData.selected_tutor.accessor.ptr();
 
 	if (tutor == nullptr){
@@ -509,7 +518,7 @@ void DemoWindow::EnableEditTutor(Rml::DataModelHandle model, Rml::Event& ev, con
 	dataModelHandle.DirtyAllVariables();
 }
 
-void DemoWindow::ConfirmEditTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
+void DemoWindow::ConfirmEditTutor(CALLBACK_PARAMS) {
 	Tutor* tutor = appData.selected_tutor.accessor.ptr();
 
 	if (tutor == nullptr){
@@ -531,17 +540,96 @@ void DemoWindow::ConfirmEditTutor(Rml::DataModelHandle model, Rml::Event& ev, co
 	dataModelHandle.DirtyAllVariables();
 }
 
-
-void DemoWindow::AddTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
+void DemoWindow::AddTutor(CALLBACK_PARAMS) {
 	
 }
 
-void DemoWindow::RemoveTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments) {
-	
+void DemoWindow::RemoveTutor(CALLBACK_PARAMS) {}
+
+string DemoWindow::GetExportPath(string subDirectory, string filename){
+	filesystem::create_directory(appData.export_dir);
+	string path = appData.export_dir + "/" + subDirectory + "/";
+	filesystem::create_directory(path);
+	return path + filename;
 }
 
+void DemoWindow::ExportTutorPage(CALLBACK_PARAMS) {
+	cout << "Export Tutor Page" << endl;
+}
+
+void DemoWindow::ExportSubjectPage(CALLBACK_PARAMS) {
+	ifstream fin;
+	ofstream fout;
+
+	fin.open("assets/ExportTemplates/subjectPage.html");
+	
+	if (!fin.is_open()){
+		return;
+	}
+
+	string dept_name = appData.selected_department.accessor.begin()->name;
+	
+	fout.open(GetExportPath("BySubject", dept_name + ".html"));
+	if (!fout.is_open()){
+		fin.close();
+		return;
+	}
+
+	// file is ready to be written to
+
+	string dept_services = "Online, In-Person, and in example place";
+	string tutor_links = "";
+	string tutor_link[] = {"<a title=\"","{{tutor_firstname}}","'s Information\" href=\"https://everettcc.instructure.com/courses/1940759/pages/","{{tutor_firstname}}","s-information\" data-api-endpoint=\"https://everettcc.instructure.com/api/v1/courses/1940759/pages/","{{tutor_firstname}}","s-information\" data-api-returntype=\"Page\">","{{tutor_firstname}}","</a>"};
+
+	map<string, string> symbols;
+	symbols["{{department_name}}"] = appData.selected_department.accessor.begin()->name;
+	symbols["{{department_services}}"] = dept_services;
+	symbols["{{tutor_links}}"] = "";
+
+	for (const auto& tutor: appData.tutors) {
+		for (const auto& classList: tutor.classes){
+			if (classList.department_name == dept_name){
+				
+			}
+		} 
+	}
+
+	string line;
+	while(fin >> line){
+
+		auto result = symbols.find(line);
+		if (result != symbols.end()){
+			line = result->second;
+		}
+
+		fout << line << endl;
+	}
+
+	fout.close();
+	fin.close();
+}
+
+void DemoWindow::ExportTimetable(CALLBACK_PARAMS) {
+	cout << "Export Timetable" << endl;
+}
+
+void DemoWindow::ExportRolodex(CALLBACK_PARAMS) {
+	cout << "Export Rolodex" << endl;
+}
+
+void DemoWindow::ExportAll(CALLBACK_PARAMS) {
+	cout << "Export All" << endl;
+}
+
+<<<<<<< Updated upstream
 bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 {
+=======
+
+// INIT
+
+bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context) {
+>>>>>>> Stashed changes
 
 // Create data model
 	if (Rml::DataModelConstructor constructor = context->CreateDataModel("app_data")) {
@@ -560,7 +648,15 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 			handle.RegisterMember("edit_courses", &Department::edit_courses);
 			handle.RegisterMember("edit_formatted_courses", &Department::edit_formatted_courses);
 		}
+
 		constructor.RegisterArray<vector<Department>>();
+
+		constructor.RegisterArray<VectorInterface<Department>>();
+		if (auto handle = constructor.RegisterStruct<SelectedItemInterface<Department>>())
+		{
+			handle.RegisterMember("index", &SelectedItemInterface<Department>::index);
+			handle.RegisterMember("accessor", &SelectedItemInterface<Department>::accessor);
+		}
 			
 		// Register vector<ClassList>
 		if (auto handle = constructor.RegisterStruct<ClassList>()) {
@@ -591,13 +687,15 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 		// Register VectorInterfaces
 		constructor.RegisterArray<VectorInterface<ClassList>>();
 		constructor.RegisterArray<VectorInterface<Tutor>>();
+
 		if (auto handle = constructor.RegisterStruct<SelectedItemInterface<Tutor>>())
 		{
 			handle.RegisterMember("index", &SelectedItemInterface<Tutor>::index);
 			handle.RegisterMember("accessor", &SelectedItemInterface<Tutor>::accessor);
 		}
 			
-		// Bind AppData members
+		// Bind appData members
+		constructor.Bind("export_directory", &appData.export_dir);
 		constructor.Bind("departments", &appData.departments);
 		constructor.Bind("services", &appData.services);
 		constructor.Bind("tutors", &appData.tutors);
@@ -606,6 +704,7 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 		constructor.Bind("edit_tutor", &appData.edit_tutor);
 		constructor.Bind("dev_enable", &appData.dev_enable);
 
+		// Bind Event Callbacks
 		constructor.BindEventCallback("ChangedTab", &DemoWindow::ChangedTab, this);
 		constructor.BindEventCallback("EnableEditTutor", &DemoWindow::EnableEditTutor, this);
 		constructor.BindEventCallback("ConfirmEditTutor", &DemoWindow::ConfirmEditTutor, this);
@@ -613,10 +712,16 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 		constructor.BindEventCallback("ScheduleLimitsChanged", &DemoWindow::ScheduleLimitsChanged, this);
 		constructor.BindEventCallback("AddTutor", &DemoWindow::AddTutor, this);
 		constructor.BindEventCallback("RemoveTutor", &DemoWindow::RemoveTutor, this);
+		constructor.BindEventCallback("CopyTutorHtml", &DemoWindow::ExportTutorPage, this);
+		constructor.BindEventCallback("CopySubjectHtml", &DemoWindow::ExportSubjectPage, this);
+		constructor.BindEventCallback("ExportTimetable", &DemoWindow::ExportTimetable, this);
+		constructor.BindEventCallback("ExportRolodex", &DemoWindow::ExportRolodex, this);
+		constructor.BindEventCallback("ExportAll", &DemoWindow::ExportAll, this);
 
 		dataModelHandle = constructor.GetModelHandle();
 
 		appData.selected_tutor.setTarget(&appData.tutors);
+		appData.selected_department.setTarget(&appData.departments);
     }
 
 	using namespace Rml;
@@ -634,8 +739,7 @@ bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
 	return true;
 }
 
-void DemoWindow::Shutdown()
-{
+void DemoWindow::Shutdown() {
 	if (document)
 	{
 		document->Close();
@@ -643,8 +747,7 @@ void DemoWindow::Shutdown()
 	}
 }
 
-void DemoWindow::Update()
-{
+void DemoWindow::Update() {
 	if (iframe){
 		iframe->UpdateDocument();
 	}
@@ -653,8 +756,7 @@ void DemoWindow::Update()
 	UpdateScheduleSummary();
 }
 
-void DemoWindow::ProcessEvent(Rml::Event& event)
-{
+void DemoWindow::ProcessEvent(Rml::Event& event) {
 	using namespace Rml;
 
 	switch (event.GetId()) {
@@ -679,7 +781,6 @@ void DemoWindow::ProcessEvent(Rml::Event& event)
 	}
 }
 
-Rml::ElementDocument* DemoWindow::GetDocument()
-{
+Rml::ElementDocument* DemoWindow::GetDocument() {
 	return document;
 }
