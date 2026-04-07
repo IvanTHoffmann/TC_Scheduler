@@ -20,8 +20,8 @@ public:
 	int getWidth();
 	int getHeight();
 
-	bool load();
-	bool save();
+	bool Load();
+	bool Save();
 	
 	bool Initialize(const Rml::String& title, Rml::Context* context);
 	void Shutdown();
@@ -46,10 +46,12 @@ public:
 	uint8_t GetScheduleValue(int tutor_index, int day, int slot);
 	void SetScheduleValue(int tutor_index, int day, int slot, uint8_t value);
 
-	void AddCourses(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
-	void RemoveCourses(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
+	void ChangedTab(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
+	void EnableEditTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
+	void ConfirmEditTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
 	void ResetSchedule(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
 	void ScheduleLimitsChanged(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
+
 	void AddTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
 	void RemoveTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
 
