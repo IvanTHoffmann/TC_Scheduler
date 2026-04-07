@@ -37,7 +37,6 @@ public:
 
 	void SubmitForm(Rml::String in_submit_message);
 
-<<<<<<< Updated upstream
 	// Schedule interaction
 	void OnTutorChanged();
 	void OnScheduleCellMouseDown(int day, int slot);
@@ -49,17 +48,13 @@ public:
 	Rml::String GetSlotElementId(int day, int slot) const;
 	uint8_t GetScheduleValue(int tutor_index, int day, int slot);
 	void SetScheduleValue(int tutor_index, int day, int slot, uint8_t value);
+	int CountTutorScheduleSlots(int tutor_index);
 
-	void ChangedTab(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
-	void EnableEditTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
-	void ConfirmEditTutor(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
-	void ResetSchedule(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
-	void ScheduleLimitsChanged(Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments);
-=======
 	void ChangedTab(CALLBACK_PARAMS);
 	void EnableEditTutor(CALLBACK_PARAMS);
 	void ConfirmEditTutor(CALLBACK_PARAMS);
->>>>>>> Stashed changes
+	void ResetSchedule(CALLBACK_PARAMS);
+	void ScheduleLimitsChanged(CALLBACK_PARAMS);
 
 	void AddTutor(CALLBACK_PARAMS);
 	void RemoveTutor(CALLBACK_PARAMS);
@@ -79,11 +74,9 @@ private:
 	Rml::DataModelHandle dataModelHandle;
 	Json jsonDocument;
 
-<<<<<<< Updated upstream
 	bool schedule_drag_active = false;
 	bool schedule_grid_built = false;
 	bool schedule_drag_target_state = true;
-=======
+
 	AppData appData;
->>>>>>> Stashed changes
 };

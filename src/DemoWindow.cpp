@@ -34,11 +34,6 @@ static void LoadTutorScheduleFromShifts(Tutor &tutor, const Json &tutor_json);
 // Convert the current selected schedule slots into a JSON shifts array.
 static Json::array SerializeTutorShifts(const Tutor &tutor);
 
-<<<<<<< Updated upstream
-AppData appData;
-
-=======
->>>>>>> Stashed changes
 bool DemoWindow::Load() {
 	ifstream fin;
 	string buf, err;
@@ -130,7 +125,6 @@ bool DemoWindow::Load() {
     return true;
 }
 
-<<<<<<< Updated upstream
 bool DemoWindow::Save(){
 	// Persist any schedule changes back into the JSON document.
 	if (!jsonDocument.is_object())
@@ -168,10 +162,6 @@ bool DemoWindow::Save(){
 
 	fout << output;
 	return fout.good();
-=======
-bool DemoWindow::Save() {
-	return false;
->>>>>>> Stashed changes
 }
 
 const string& DemoWindow::GetWindowTitle() {
@@ -270,7 +260,7 @@ static Json::array SerializeTutorShifts(const Tutor &tutor) {
 	return shifts_json;
 }
 
-static int CountTutorScheduleSlots(int tutor_index) {
+int DemoWindow::CountTutorScheduleSlots(int tutor_index) {
 	if (tutor_index < 0 || tutor_index >= (int)appData.tutors.size())
 		return 0;
 
@@ -621,15 +611,10 @@ void DemoWindow::ExportAll(CALLBACK_PARAMS) {
 	cout << "Export All" << endl;
 }
 
-<<<<<<< Updated upstream
-bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context)
-{
-=======
 
 // INIT
 
 bool DemoWindow::Initialize(const Rml::String& title, Rml::Context* context) {
->>>>>>> Stashed changes
 
 // Create data model
 	if (Rml::DataModelConstructor constructor = context->CreateDataModel("app_data")) {
