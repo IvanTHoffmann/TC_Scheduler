@@ -45,7 +45,6 @@ public:
 	void UpdateScheduleGrid();
 	void UpdateScheduleSummary();
 	void BuildScheduleGrid();
-	Rml::String GetSlotElementId(int day, int slot) const;
 	uint8_t GetScheduleValue(int tutor_index, int day, int slot);
 	void SetScheduleValue(int tutor_index, int day, int slot, uint8_t value);
 	int CountTutorScheduleSlots(int tutor_index);
