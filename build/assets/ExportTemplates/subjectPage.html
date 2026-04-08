@@ -1,18 +1,16 @@
 <h1>
-    We currently offer 
-{{department_name}}
- support 
-{{department_services}}
-.
+    We currently offer {selected_department_name} support {foreach_service}{service_name}{endloop_service}.
 </h1>
 
 <h1>
-Our 
-{{department_name}}
- tutors are 
-{{tutor_links}}
-<!--<a title="{{tutor_firstname}}'s Information" href="https://everettcc.instructure.com/courses/1940759/pages/{{tutor_firstname}}s-information" data-api-endpoint="https://everettcc.instructure.com/api/v1/courses/1940759/pages/{{tutor_firstname}}s-information" data-api-returntype="Page"> {{tutor_firstname}}</a>-->
-.
+    Our {selected_department_name} {foreach_tutor}
+    <a 
+    title="{tutor_firstname}'s Information" 
+    href="https://everettcc.instructure.com/courses/1940759/pages/{tutor_firstname}s-information" 
+    data-api-endpoint="https://everettcc.instructure.com/api/v1/courses/1940759/pages/{tutor_firstname}s-information" 
+    data-api-returntype="Page">{tutor_firstname}
+    </a>
+    {endloop_tutor}
 </h1>
 
 <h1>
@@ -21,20 +19,22 @@ Our
 
 <p>&nbsp;</p>
 
-<hr/>
+<hr />
 
 <h2>On-Campus Tutoring</h2>
-<p>The Tutoring Center is open for in-person services on campus, in Rooms 104/105 of the Cascade Learning Resource Center. Drop-In Tutoring is available in a variety of subjects--no appointment necessary!</p>
-<p>To learn more about on-campus tutoring, click the button below.</p>
+<p>
+    The Tutoring Center is open for in-person services on campus, in Rooms 104/105 of the Cascade Learning Resource
+    Center. Drop-In Tutoring is available in a variety of subjects--no appointment necessary!
+</p>
+<p>
+    To learn more about on-campus tutoring, click the button below.
+</p>
 
 <p>
-    <a 
-        class="btn btn-primary" 
-        title="On Campus Tutoring" 
-        href="https://everettcc.instructure.com/courses/1940759/pages/on-campus-tutoring-info" 
-        target="_blank" 
-        rel="noopener" 
-        data-api-endpoint="https://everettcc.instructure.com/api/v1/courses/1940759/pages/on-campus-tutoring-info" 
+    <a class="btn btn-primary" title="On Campus Tutoring"
+        href="https://everettcc.instructure.com/courses/1940759/pages/on-campus-tutoring-info" target="_blank"
+        rel="noopener"
+        data-api-endpoint="https://everettcc.instructure.com/api/v1/courses/1940759/pages/on-campus-tutoring-info"
         data-api-returntype="Page">
         On-Campus Tutoring
     </a>
@@ -42,17 +42,16 @@ Our
 
 <div class="text-center">
     <p>&nbsp;</p>
-    <hr/>
+    <hr />
     <h3>eTutoring</h3>
     <p style="text-align: left;">
-        eTutoring is available to all Everett Community College students. With eTutoring you will be connected virtually to a tutor supplied by a consortium of colleges throughout the United States. Most tutors you connect with will not be part of Tutoring Center staff or work for EvCC, but they will know the content and be able to help you!
+        eTutoring is available to all Everett Community College students. With eTutoring you will be connected virtually
+        to a tutor supplied by a consortium of colleges throughout the United States. Most tutors you connect with will
+        not be part of Tutoring Center staff or work for EvCC, but they will know the content and be able to help you!
     </p>
     <p style="text-align: left;">
-        You can find out which subjects are tutored at what days and times by viewing the 
-        <a 
-            class="inline_disabled" 
-            href="https://etutoringonline.org/public/schedule.cfm?sys=13" 
-            target="_blank" 
+        You can find out which subjects are tutored at what days and times by viewing the
+        <a class="inline_disabled" href="https://etutoringonline.org/public/schedule.cfm?sys=13" target="_blank"
             rel="noopener">
             weekly eTutoring schedule
         </a>
@@ -62,28 +61,22 @@ Our
         To learn more about eTutoring, including how to log in, click the button below.
     </p>
     <p style="text-align: left;">
-        <a 
-            class="btn btn-primary" 
-            title="etutoring" 
-            href="https://etutoringonline.org/login.cfm?institutionid=42&amp;returnPage=&amp;institution=EVERETT_COMMUNITY_COLLEGE" 
-            target="_blank" 
-            rel="noopener" 
-            data-api-endpoint="https://etutoringonline.org/login.cfm?institutionid=42&amp;returnPage=&amp;institution=EVERETT_COMMUNITY_COLLEGE" 
+        <a class="btn btn-primary" title="etutoring"
+            href="https://etutoringonline.org/login.cfm?institutionid=42&amp;returnPage=&amp;institution=EVERETT_COMMUNITY_COLLEGE"
+            target="_blank" rel="noopener"
+            data-api-endpoint="https://etutoringonline.org/login.cfm?institutionid=42&amp;returnPage=&amp;institution=EVERETT_COMMUNITY_COLLEGE"
             data-api-returntype="Page">
             eTutoring
         </a>
     </p>
     <div class="text-center">
         <p>&nbsp;</p>
-        <hr/>
+        <hr />
     </div>
     <h3>
-        <a 
-            class="btn btn-primary" 
-            style="font-family: LatoWeb, 'Helvetica Neue', Helvetica, Arial, sans-serif;" 
-            title="Support By Subject" 
-            href="https://everettcc.instructure.com/courses/1940759/modules/5076665" 
-            data-api-endpoint="https://everettcc.instructure.com/api/v1/courses/1940759/modules/5076665" 
+        <a class="btn btn-primary" style="font-family: LatoWeb, 'Helvetica Neue', Helvetica, Arial, sans-serif;"
+            title="Support By Subject" href="https://everettcc.instructure.com/courses/1940759/modules/5076665"
+            data-api-endpoint="https://everettcc.instructure.com/api/v1/courses/1940759/modules/5076665"
             data-api-returntype="Module">
             Back to Support By Subject
         </a>

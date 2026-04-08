@@ -1,0 +1,88 @@
+<p>{selected_tutor_firstname} is a tutor at the Everett Community College Tutoring Center.</p>
+<h3>{selected_tutor_firstname} is best suited to help with:</h3>
+<ul>
+    {foreach_classList}
+    <li>{classList_deptname} {foreach_course}{course_id}{endloop_course}</li>
+    {endloop_classlist}
+</ul>
+<p>&nbsp;</p>
+<p style="text-align: center;">&nbsp;</p>
+<h2>{selected_tutor_firstname}'s Winter 2026 Schedule</h2>
+{if_in_person}
+<table
+    style="border-collapse: collapse; width: 96.1074%; height: 226px; border-style: solid; margin-left: auto; margin-right: auto;"
+    border="3">
+    <caption><span style="font-size: 18pt;"><strong><span style="font-size: 24pt;">In Person&nbsp;</span></strong></span></caption>
+    <tbody>
+        <tr style="height: 97.5px;">
+            {foreach_weekday}
+            <th style="text-align: center; height: 226px; width: 16.7391%;" rowspan="2" scope="col"><span
+                    style="font-size: 18pt;"><strong>{weekday_name}s</strong></span><br />
+                {foreach_in_person_shift}
+                <p><span style="font-size: 14pt;">{shift_duration}</span></p>
+                {endloop_in_person_shift}
+            </th>
+            {endloop_weekday}
+        </tr>
+        <tr style="height: 128.5px;"></tr>
+    </tbody>
+</table>
+{endif_in_person}
+{if_by_appointment}
+<p style="text-align: center;"><span style="font-size: 24pt;"><strong>Zoom Tutoring by Appointment
+        </strong>&nbsp;</span><span style="font-size: 24pt;">&nbsp; &nbsp;&nbsp;</span></p>
+<table style="border-collapse: collapse; width: 96.1074%; height: 226px; margin-left: auto; margin-right: auto;"
+    border="3">
+    <caption></caption>
+    <tbody>
+        <tr>
+            <td style="width: 16.6404%;">
+                <p style="text-align: center;"><strong><span style="font-size: 18pt;">Mondays</span></strong></p>
+                <p style="text-align: center;"><span style="font-size: 18pt;"><span style="font-size: 14pt;">No
+                            Availability</span></span></p>
+            </td>
+            <td style="width: 16.6404%;">
+                <p style="text-align: center;"><a class="inline_disabled"
+                        href="https://everettcc.starfishsolutions.com/starfish-ops/appointments/appointments.html?instuid=13008&amp;mode=calendarsManaged"
+                        target="_blank" rel="noopener"><span
+                            style="font-size: 18pt;"><strong>Tuesdays</strong></span></a></p>
+                <p style="text-align: center;"><span style="font-size: 14pt;">3:00PM - 5:00PM</span></p>
+            </td>
+            <td style="width: 16.6404%;">
+                <p style="text-align: center;"><span style="font-size: 18pt;"><strong>Wednesdays</strong></span>&nbsp;
+                </p>
+                <p style="text-align: center;"><span style="font-size: 14pt;">No Availability</span></p>
+            </td>
+            <td style="width: 16.6404%;">
+                <p style="text-align: center;"><strong><span style="font-size: 18pt;"><a class="inline_disabled"
+                                href="https://everettcc.starfishsolutions.com/starfish-ops/appointments/appointments.html?instuid=13008&amp;mode=calendarsManaged"
+                                target="_blank" rel="noopener">Thursdays</a>&nbsp;</span></strong></p>
+                <p style="text-align: center;"><span style="font-size: 14pt;">3:00PM - 5:00PM</span></p>
+            </td>
+            <td style="width: 16.6404%;">
+                <p style="text-align: center;"><strong><span style="font-size: 18pt;">Fridays</span></strong></p>
+                <p style="text-align: center;"><span style="font-size: 14pt;">No Availability</span></p>
+            </td>
+            <td style="width: 16.6958%;">
+                <p style="text-align: center;"><strong><span style="font-size: 18pt;">Saturdays</span></strong></p>
+                <p style="text-align: center;"><span style="font-size: 14pt;">No Availability&nbsp;</span></p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+{endif_by_appointment}
+<p style="text-align: center;">&nbsp;</p>
+<h4>Contact</h4>
+<p><a href="mailto:{selected_tutor_email}">Send {selected_tutor_firstname} an email</a></p>
+<p><em>This email is for questions about tutoring and technical assistance only. Please do not address content questions
+        to this location.</em></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p style="text-align: center;"><span style="color: #ff6600;"><span style="color: #000000;"><span
+                style="color: #ff6600;"><span style="color: #000000;"><span style="font-size: 18pt;"><a
+                            class="btn btn-primary" title="Support by Tutor"
+                            href="https://everettcc.instructure.com/courses/1940759/modules/5076665"
+                            data-api-endpoint="https://everettcc.instructure.com/api/v1/courses/1940759/modules/5076665"
+                            data-api-returntype="Module">Back To Support by Tutor</a></span></span></span></span></span>
+</p>

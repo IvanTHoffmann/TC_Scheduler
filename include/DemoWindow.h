@@ -5,6 +5,7 @@
 #include <RmlUi/Core/EventListener.h>
 
 #include "DataModelTypes.h"
+#include "Exporter.h"
 
 #include <string>
 #include <json11.hpp>
@@ -20,6 +21,8 @@ using namespace std;
 
 class DemoWindow : public Rml::EventListener {
 public:
+	DemoWindow();
+
 	const string& GetWindowTitle();
 	int GetWidth();
 	int GetHeight();
@@ -58,8 +61,6 @@ public:
 	void AddTutor(CALLBACK_PARAMS);
 	void RemoveTutor(CALLBACK_PARAMS);
 
-	string GetExportPath(string subDirectory, string filename);
-
 	void ExportTutorPage(CALLBACK_PARAMS);
 	void ExportSubjectPage(CALLBACK_PARAMS);
 	void ExportTimetable(CALLBACK_PARAMS);
@@ -78,4 +79,5 @@ private:
 	bool schedule_drag_target_state = true;
 
 	AppData appData;
+	Exporter exporter;
 };

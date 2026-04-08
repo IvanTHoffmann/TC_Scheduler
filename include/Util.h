@@ -1,6 +1,8 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+#include <iostream>
+
 #include <RmlUi/Core.h>
 #include "json11.hpp"
 #include "DataModelTypes.h"
@@ -16,5 +18,8 @@ void LoadTutorScheduleFromShifts(Tutor &tutor, const Json &tutor_json);
 Json::array SerializeTutorShifts(const Tutor &tutor);
 std::string FormatTutorHours(int slot_count);
 Rml::String GetSlotElementId(int day, int slot);
+
+string FormatList(const vector<string>& inStrings);
+bool ReadUntil(istream& inStream, ostream& outStream, char delim);
 
 #endif

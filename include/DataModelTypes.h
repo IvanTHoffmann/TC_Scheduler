@@ -116,7 +116,7 @@ struct WeekSchedule {
 };
 
 struct Tutor {
-	Rml::String first_name, last_name;
+	Rml::String first_name, last_name, email;
 
     int total_hours;
     int min_hours;
