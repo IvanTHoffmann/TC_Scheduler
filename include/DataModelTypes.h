@@ -133,6 +133,9 @@ struct AppData {
 	SelectedItemInterface<Tutor> selected_tutor;
 	SelectedItemInterface<Department> selected_department;
 
+	Rml::String term_season;
+	int term_year;
+
 	Rml::String courses_entry;
 
 	// PREFERENCES

@@ -62,6 +62,8 @@ bool DemoWindow::Load()
 	appData.schedule_id = settings["startup_schedule"].int_value();
 	appData.resolution[0] = settings["resolution"]["w"].int_value();
 	appData.resolution[1] = settings["resolution"]["h"].int_value();
+	appData.term_season = settings["current_term"]["season"].string_value();
+	appData.term_year = settings["current_term"]["year"].int_value();
 
 	Json::array schedules = jsonDocument["schedules"].array_items();
 	Json schedule = schedules[appData.schedule_id];

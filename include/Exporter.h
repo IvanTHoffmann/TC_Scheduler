@@ -45,6 +45,8 @@ class Exporter {
     bool GetCourseList(istream& istr, ostream& ostr);
     bool GetSelectedDepartmentServices(istream& istr, ostream& ostr);
     bool GetTutorFirstName(istream& istr, ostream& ostr);
+    bool GetTermSeason(istream& istr, ostream& ostr);
+    bool GetTermYear(istream& istr, ostream& ostr);
     
     public:
 

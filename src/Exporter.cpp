@@ -97,6 +97,8 @@ Exporter::Exporter(AppData *_appData) : appData(_appData)
     symbols["selected_department_services"] = Exporter::GetSelectedDepartmentServices;
     symbols["foreach_tutor"] = Exporter::Foreach_Tutor;
     symbols["tutor_firstname"] = Exporter::GetTutorFirstName;
+    symbols["term_season"] = Exporter::GetTermSeason;
+    symbols["term_year"] = Exporter::GetTermYear;
 }
 
 void Exporter::ExportTutorPage()
@@ -421,5 +423,17 @@ bool Exporter::GetTutorFirstName(istream &istr, ostream &ostr) {
         return false;
     }
     ostr << iter_tutor->first_name;
+    return true;
+}
+
+bool Exporter::GetTermSeason(istream &istr, ostream &ostr)
+{
+    ostr << appData->term_season;
+    return true;
+}
+
+bool Exporter::GetTermYear(istream &istr, ostream &ostr)
+{
+    ostr << appData->term_year;
     return true;
 }
