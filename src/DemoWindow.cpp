@@ -288,8 +288,9 @@ void DemoWindow::UpdateScheduleGrid()
 
 void DemoWindow::UpdateScheduleSummary()
 {
-	if (!document)
+	if (!document){
 		return;
+	}
 
 	int selected_tutor = appData.selected_tutor.index;
 	int scheduled_slots = CountTutorScheduleSlots(selected_tutor);

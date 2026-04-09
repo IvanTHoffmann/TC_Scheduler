@@ -2,8 +2,8 @@
 <h3>{selected_tutor_firstname} is best suited to help with:</h3>
 <ul>
     {foreach_classList}
-    <li>{classList_deptname} {foreach_course}{course_id}{endloop_course}</li>
-    {endloop_classlist}
+    <li style="white-space:pre">{classList_deptname}&#9;({classList_courses})</li>
+    {endloop_classList}
 </ul>
 <p>&nbsp;</p>
 <p style="text-align: center;">&nbsp;</p>
@@ -16,11 +16,14 @@
     <tbody>
         <tr style="height: 97.5px;">
             {foreach_weekday}
-            <th style="text-align: center; height: 226px; width: 16.7391%;" rowspan="2" scope="col"><span
+            <th style="text-align: center; height: 226px; width: 14.2857%;" rowspan="2" scope="col"><span
                     style="font-size: 18pt;"><strong>{weekday_name}s</strong></span><br />
+
                 {foreach_in_person_shift}
                 <p><span style="font-size: 14pt;">{shift_duration}</span></p>
                 {endloop_in_person_shift}
+
+                Insert {selected_tutor_firstname}'s {weekday_name} schedule here...
             </th>
             {endloop_weekday}
         </tr>

@@ -1,5 +1,5 @@
 <h1>
-    We currently offer {selected_department_name} support {foreach_service}{service_name}{endloop_service}.
+    We currently offer {selected_department_name} support {selected_department_services}.
 </h1>
 
 <h1>
@@ -10,7 +10,7 @@
     data-api-endpoint="https://everettcc.instructure.com/api/v1/courses/1940759/pages/{tutor_firstname}s-information" 
     data-api-returntype="Page">{tutor_firstname}
     </a>
-    {endloop_tutor}
+    {endloop_tutor}.
 </h1>
 
 <h1>
