@@ -231,7 +231,7 @@ bool Exporter::GetClassListDeptName(istream &istr, ostream &ostr)
         return false;
     }
 
-    ostr << setw(4) << left << iter_classList->department_name;
+    ostr << iter_classList->department_name;
     return true;
 }
 
@@ -246,13 +246,15 @@ bool Exporter::GetClassListCourses(istream &istr, ostream &ostr)
     for (int &courseId : iter_classList->courses)
     {
         stringstream course_stream;
-        course_stream << courseId; 
+        course_stream << courseId;
         course_list.push_back(course_stream.str());
     }
 
-    if (iter_classList->subtractive) {
+    if (iter_classList->subtractive)
+    {
         ostr << "All courses";
-        if (iter_classList->courses.size()){
+        if (iter_classList->courses.size())
+        {
             ostr << " except ";
         }
     }
@@ -348,6 +350,7 @@ bool Exporter::Foreach_InPersonShift(istream &istr, ostream &ostr)
     }
 
     // perform replacements in loop body
+    // DaySchedule& day_schedule = tutor.schedule.days[iter_weekday];
     Process(buffer, ostr);
     return true;
 }
@@ -379,12 +382,14 @@ bool Exporter::If_ByAppointment(istream &istr, ostream &ostr)
     return true;
 }
 
-bool Exporter::GetSelectedDepartmentServices(istream &istr, ostream &ostr) {
+bool Exporter::GetSelectedDepartmentServices(istream &istr, ostream &ostr)
+{
 
     return true;
 }
 
-bool Exporter::Foreach_Tutor(istream &istr, ostream &ostr) {    
+bool Exporter::Foreach_Tutor(istream &istr, ostream &ostr)
+{
     if (appData->selected_department.accessor.size() == 0)
     {
         // Warning: No tutor selected
@@ -402,9 +407,12 @@ bool Exporter::Foreach_Tutor(istream &istr, ostream &ostr) {
 
     vector<string> tutor_links;
     // perform replacements in loop body
-    for (Tutor& tutor : appData->tutors){
-        for (const ClassList& classList : tutor.classes) {
-            if (classList.department_name == department.name){
+    for (Tutor &tutor : appData->tutors)
+    {
+        for (const ClassList &classList : tutor.classes)
+        {
+            if (classList.department_name == department.name)
+            {
                 iter_tutor = &tutor;
                 stringstream link_buffer;
                 Process(buffer, link_buffer);
@@ -418,8 +426,10 @@ bool Exporter::Foreach_Tutor(istream &istr, ostream &ostr) {
     return true;
 }
 
-bool Exporter::GetTutorFirstName(istream &istr, ostream &ostr) {
-    if (!iter_tutor){
+bool Exporter::GetTutorFirstName(istream &istr, ostream &ostr)
+{
+    if (!iter_tutor)
+    {
         return false;
     }
     ostr << iter_tutor->first_name;
