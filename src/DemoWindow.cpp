@@ -40,6 +40,7 @@ bool DemoWindow::Load()
 	else
 	{
 		// create a default appdata.json file
+		buf = "{\"schedules\": [{\"budgets\": [],\"departments\": [],\"name\": \"Unnamed Schedule\",\"services\": [],\"tutors\": []}]}";
 	}
 
 	jsonDocument = Json::parse(buf, err);
@@ -50,125 +51,64 @@ bool DemoWindow::Load()
 		cout << "failed to load " << APPDATA_FILENAME << ": " << err << endl;
 		return false;
 	}
-	cout << "loaded " << APPDATA_FILENAME << ": " << jsonDocument.dump().c_str() << endl;
+	// cout << "loaded " << APPDATA_FILENAME << ": " << jsonDocument.dump().c_str() << endl;
 
-	//*/
+	// Load document settings into appData
+	Json settings_json = jsonDocument.object_items().at("settings");
+	appData.LoadSettings(settings_json.object_items());
 
-	// Read document settings into appdata
-	Json settings = jsonDocument["settings"];
+	Json::array schedules_json = jsonDocument.object_items().at("schedules").array_items();
 
-	appData.window_title = settings["window_title"].string_value();
-	appData.export_dir = settings["export_directory"].string_value();
-	appData.schedule_id = settings["startup_schedule"].int_value();
-	appData.resolution[0] = settings["resolution"]["w"].int_value();
-	appData.resolution[1] = settings["resolution"]["h"].int_value();
-	appData.term_season = settings["current_term"]["season"].string_value();
-	appData.term_year = settings["current_term"]["year"].int_value();
-
-	Json::array schedules = jsonDocument["schedules"].array_items();
-	Json schedule = schedules[appData.schedule_id];
-
-	Json::array departments = schedule["departments"].array_items();
-	Department department;
-	for (const Json deptName : departments)
+	appData.schedule_names.clear();
+	for (const Json &schedule : schedules_json)
 	{
-		department.name = deptName.string_value();
-		department.edit_subtractive = false;
-		appData.departments.push_back(department);
+		const string &schedule_name = schedule.object_items().at("name").string_value();
+		appData.schedule_names.push_back(schedule_name);
 	}
 
-	Json::array services = schedule["services"].array_items();
-	Service service;
-	for (const Json service_json : services)
-	{
-		service.name = service_json["name"].string_value();
-		service.min_hours = service_json["min_hours"].int_value();
-		service.max_hours = service_json["max_hours"].int_value();
-		appData.services.push_back(service);
-	}
-
-	Json::array tutors = schedule["tutors"].array_items();
-	for (const Json tutor_json : tutors)
-	{
-		Tutor tutor;
-		tutor.total_hours = 0;
-		tutor.min_hours = tutor_json["min_hours"].int_value();
-		tutor.max_hours = tutor_json["max_hours"].int_value();
-		tutor.first_name = tutor_json["first_name"].string_value();
-		tutor.last_name = tutor_json["last_name"].string_value();
-		tutor.email = tutor_json["email"].string_value();
-
-		for (int d = 0; d < 7; ++d)
-			for (int seg = 0; seg < 96; ++seg)
-				tutor.schedule.days[d].segments[seg] = 0;
-
-		// Populate the tutor schedule from saved JSON shift definitions.
-		LoadTutorScheduleFromShifts(tutor, tutor_json);
-
-		tutor.classes.clear();
-		for (const Json class_json : tutor_json["classes"].array_items())
-		{
-			ClassList classList;
-			classList.department_name = appData.departments[class_json["department_id"].int_value()].name;
-			classList.subtractive = class_json["subtractive"].bool_value();
-
-			classList.courses.clear();
-			for (const Json course_json : class_json["courses"].array_items())
-			{
-				classList.courses.push_back(course_json.int_value());
-			}
-			tutor.classes.push_back(classList);
-		}
-
-		appData.tutors.push_back(tutor);
-	}
+	Json schedule_json = schedules_json.at(appData.schedule_id);
+	appData.LoadSchedule(schedule_json.object_items());
 
 	return true;
 }
 
 bool DemoWindow::Save()
 {
-	// Persist any schedule changes back into the JSON document.
-	if (!jsonDocument.is_object())
-		return false;
+	cout << "Save document" << endl;
 
-	Json::object root_obj = jsonDocument.object_items();
-	Json::array schedules = root_obj["schedules"].array_items();
-	if (schedules.empty())
-		return false;
+	Json::object newDocument = jsonDocument.object_items(); // Make a copy of loaded document
 
-	Json::object schedule_obj = schedules[0].object_items();
-	Json::array tutors_json;
-	Json::array original_tutors = schedule_obj["tutors"].array_items();
+	Json::object settings_json;
+	appData.SaveSettings(settings_json);	 // Save settings to a new json object
+	newDocument["settings"] = settings_json; // Write settings to the new copy of the document
 
-	for (size_t tutor_index = 0; tutor_index < appData.tutors.size(); ++tutor_index)
-	{
-		Json::object tutor_obj;
-		if (tutor_index < original_tutors.size())
-		{
-			tutor_obj = original_tutors[tutor_index].object_items();
-		}
-		tutor_obj["shifts"] = SerializeTutorShifts(appData.tutors[tutor_index]);
-		tutors_json.push_back(tutor_obj);
-	}
+	Json::array schedules_json = newDocument.at("schedules").array_items(); // Make a copy of the schedules array
+	Json::object schedule_json;
+	schedule_json["name"] = appData.schedule_names[appData.schedule_id];
+	appData.SaveSchedule(schedule_json);					// Save the current schedule to a new json object
+	schedules_json.at(appData.schedule_id) = schedule_json; // Write the current schedule to the new copy of the schedules array
+	newDocument["schedules"] = schedules_json;				// Write new schedule array to the new copy of the document
 
-	schedule_obj["tutors"] = tutors_json;
-	schedules[0] = schedule_obj;
-	root_obj["schedules"] = schedules;
-
-	Json new_root(root_obj);
-	string output;
-	new_root.dump(output);
+	jsonDocument = newDocument; // Overwrite the previous document
 
 	ofstream fout(APPDATA_FILENAME);
 	if (!fout.is_open())
+	{
 		return false;
+	}
 
-	fout << output;
+	fout << jsonDocument.dump().c_str();
 	return fout.good();
 }
 
-DemoWindow::DemoWindow() : appData(), exporter(&appData) {}
+DemoWindow::DemoWindow() : appData(), exporter(&appData)
+{
+}
+
+DemoWindow::~DemoWindow()
+{
+	Save();
+}
 
 const string &DemoWindow::GetWindowTitle()
 {
@@ -185,115 +125,14 @@ int DemoWindow::GetHeight()
 	return appData.resolution[1];
 }
 
-int DemoWindow::CountTutorScheduleSlots(int tutor_index)
-{
-	if (tutor_index < 0 || tutor_index >= (int)appData.tutors.size())
-		return 0;
-
-	int count = 0;
-	for (int day = 0; day < 7; ++day)
-	{
-		for (int slot = 0; slot < 22; ++slot)
-		{
-			int segment = GetScheduleSegment(slot);
-			count += appData.tutors[tutor_index].schedule.days[day].segments[segment] ? 1 : 0;
-		}
-	}
-	return count;
-}
-
-void DemoWindow::BuildScheduleGrid()
-{
-	if (!document)
-		return;
-
-	Rml::Element *container = document->GetElementById("schedule_grid_container");
-	if (!container)
-		return;
-
-	std::string html = "<div class='schedule-grid'>";
-
-	// Header row: time slots
-	html += "<div class='schedule-row schedule-header'><div class='slot day-label'></div>";
-	for (int slot = 0; slot < 22; ++slot)
-	{
-		html += "<div class='slot'>";
-		html += FormatTimeSlot(slot);
-		html += "</div>";
-	}
-	html += "</div>";
-
-	static const char *days[7] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
-	for (int day = 0; day < 7; ++day)
-	{
-		html += "<div class='schedule-row'>";
-		html += "<div class='slot day-label'>";
-		html += days[day];
-		html += "</div>";
-		for (int slot = 0; slot < 22; ++slot)
-		{
-			Rml::String id = GetSlotElementId(day, slot);
-			char buf[256];
-			sprintf(buf, "<div id='%s' class='slot' data-day='%d' data-slot='%d' onmousedown='schedule_slot' onmouseover='schedule_slot' onmouseup='schedule_slot'></div>", id.c_str(), day, slot);
-			html += buf;
-		}
-		html += "</div>";
-	}
-
-	html += "</div>";
-	container->SetInnerRML(html);
-	schedule_grid_built = true;
-}
-
-uint8_t DemoWindow::GetScheduleValue(int tutor_index, int day, int slot)
-{
-	if (tutor_index < 0 || tutor_index >= (int)appData.tutors.size() || day < 0 || day >= 7 || slot < 0 || slot >= 22)
-	{
-		return 0;
-	}
-	int segment = GetScheduleSegment(slot);
-	return appData.tutors[tutor_index].schedule.days[day].segments[segment];
-}
-
-void DemoWindow::SetScheduleValue(int tutor_index, int day, int slot, uint8_t value)
-{
-	if (tutor_index < 0 || tutor_index >= (int)appData.tutors.size() || day < 0 || day >= 7 || slot < 0 || slot >= 22)
-		return;
-	int segment = GetScheduleSegment(slot);
-	appData.tutors[tutor_index].schedule.days[day].segments[segment] = value ? 1 : 0;
-}
-
-void DemoWindow::UpdateScheduleGrid()
-{
-	if (!document)
-		return;
-
-	if (!schedule_grid_built)
-		BuildScheduleGrid();
-
-	UpdateScheduleSummary();
-
-	int selected_tutor = appData.selected_tutor.index;
-
-	for (int day = 0; day < 7; ++day)
-	{
-		for (int slot = 0; slot < 22; ++slot)
-		{
-			bool selected = selected_tutor >= 0 && selected_tutor < (int)appData.tutors.size() && GetScheduleValue(selected_tutor, day, slot);
-			Rml::Element *slot_el = document->GetElementById(GetSlotElementId(day, slot));
-			if (!slot_el)
-				continue;
-			slot_el->SetClass("selected", selected);
-		}
-	}
-}
-
 void DemoWindow::UpdateScheduleSummary()
 {
-	if (!document){
+	/*
+	if (!document)
+	{
 		return;
 	}
-
+	
 	int selected_tutor = appData.selected_tutor.index;
 	int scheduled_slots = CountTutorScheduleSlots(selected_tutor);
 	std::string scheduled_hours = FormatTutorHours(scheduled_slots);
@@ -310,52 +149,13 @@ void DemoWindow::UpdateScheduleSummary()
 	{
 		summary_text = "Total: 0 hr";
 	}
-
+	
 	if (auto summary_el = document->GetElementById("schedule_hours_summary"))
 	{
 		summary_el->SetInnerRML(summary_text);
 		summary_el->SetClass("invalid", invalid_summary);
 	}
-}
-
-void DemoWindow::ResetSchedule(Rml::DataModelHandle model, Rml::Event &ev, const Rml::VariantList &arguments)
-{
-	// 1. Safety check: ensure no extra arguments were passed from the UI
-	if (arguments.size() != 0)
-		return;
-
-	// 2. Use the new Pointer helper to get the currently selected tutor
-	Tutor *tutor = appData.selected_tutor.accessor.ptr();
-
-	// 3. If no tutor is selected, exit early to prevent a crash
-	if (!tutor)
-	{
-		cout << "ResetSchedule failed: No tutor selected." << endl;
-		return;
-	}
-
-	// 4. Loop through every day and every 30-minute slot
-	for (int day = 0; day < 7; ++day)
-	{
-		for (int slot = 0; slot < 22; ++slot)
-		{
-			// We use the tutor pointer to reach the internal bit-grid directly
-			int segment = GetScheduleSegment(slot);
-			tutor->schedule.days[day].segments[segment] = 0;
-		}
-	}
-
-	// 5. Trigger the visual refresh so the grid boxes turn un-highlighted
-	UpdateScheduleGrid();
-
-	// 6. Tell RmlUi that data has changed so other UI elements (like total hours) update
-	dataModelHandle.DirtyAllVariables();
-
-	// 7. Auto-save the now-empty schedule to the JSON file
-	if (!Save())
-	{
-		cout << "Warning: ResetSchedule could not auto-save to JSON." << endl;
-	}
+	*/
 }
 
 void DemoWindow::ScheduleLimitsChanged(Rml::DataModelHandle model, Rml::Event &ev, const Rml::VariantList &arguments)
@@ -364,54 +164,20 @@ void DemoWindow::ScheduleLimitsChanged(Rml::DataModelHandle model, Rml::Event &e
 	UpdateScheduleSummary();
 }
 
-void DemoWindow::OnTutorChanged()
-{
-	UpdateScheduleGrid();
-}
-
-void DemoWindow::OnScheduleCellMouseDown(int day, int slot)
-{
-	int selected_tutor = appData.selected_tutor.index;
-	if (selected_tutor < 0 || selected_tutor >= (int)appData.tutors.size())
-		return;
-
-	uint8_t old_value = GetScheduleValue(selected_tutor, day, slot);
-	uint8_t new_value = old_value ? 0 : 1;
-	SetScheduleValue(selected_tutor, day, slot, new_value);
-
-	schedule_drag_active = true;
-	schedule_drag_target_state = new_value;
-
-	UpdateScheduleGrid();
-}
-
-void DemoWindow::OnScheduleCellMouseMove(int day, int slot)
-{
-	if (!schedule_drag_active)
-		return;
-
-	if (day < 0 || day >= 7 || slot < 0 || slot >= 22)
-		return;
-
-	int selected_tutor = appData.selected_tutor.index;
-	if (selected_tutor < 0 || selected_tutor >= (int)appData.tutors.size())
-		return;
-
-	SetScheduleValue(selected_tutor, day, slot, schedule_drag_target_state);
-	UpdateScheduleGrid();
-}
-
-void DemoWindow::OnScheduleCellMouseUp(int day, int slot)
-{
-	schedule_drag_active = false;
-	UpdateScheduleGrid();
-	if (!Save())
-	{
-		cout << "Failed to save schedule shifts" << endl;
-	}
-}
-
 // EVENT CALLBACKS
+
+void DemoWindow::OnTutorChanged(CALLBACK_PARAMS)
+{
+	Tutor *tutor = appData.selected_tutor.accessor.ptr();
+	if (!tutor)
+	{
+		return;
+	}
+
+	cout << "Load Tutor Schedule: " << tutor->first_name << endl;
+	appData.timetable.Load(tutor->schedule);
+	dataModelHandle.DirtyAllVariables();
+}
 
 void DemoWindow::ChangedTab(CALLBACK_PARAMS)
 {
@@ -483,9 +249,12 @@ void DemoWindow::AddTutor(CALLBACK_PARAMS)
 {
 }
 
-void DemoWindow::RemoveTutor(CALLBACK_PARAMS) {}
+void DemoWindow::RemoveTutor(CALLBACK_PARAMS)
+{
+}
 
-void DemoWindow::ExportTutorPage(CALLBACK_PARAMS){
+void DemoWindow::ExportTutorPage(CALLBACK_PARAMS)
+{
 	exporter.ExportTutorPage();
 }
 
@@ -509,11 +278,68 @@ void DemoWindow::ExportAll(CALLBACK_PARAMS)
 	exporter.ExportAll();
 }
 
+void DemoWindow::OnSlotMouseDown(CALLBACK_PARAMS)
+{
+	Tutor *tutor = appData.selected_tutor.accessor.ptr();
+	if (!tutor)
+	{
+		return;
+	}
+
+	int dayIndex = arguments.at(0).Get<int>();
+	int slotIndex = arguments.at(1).Get<int>();
+
+	ServiceIndex_t &serviceIndex = appData.timetable.GetServiceIndex(dayIndex, slotIndex);
+	serviceIndex = appData.selected_service.index;
+
+	schedule_drag_active = true;
+
+	dataModelHandle.DirtyAllVariables();
+}
+
+void DemoWindow::OnSlotMouseOver(CALLBACK_PARAMS)
+{
+	if (schedule_drag_active)
+	{
+		OnSlotMouseDown(model, ev, arguments);
+	}
+}
+
+void DemoWindow::OnSlotMouseUp(CALLBACK_PARAMS)
+{
+	Tutor *tutor = appData.selected_tutor.accessor.ptr();
+	if (!tutor)
+	{
+		return;
+	}
+
+	int dayIndex = arguments.at(0).Get<int>();
+	int slotIndex = arguments.at(1).Get<int>();
+
+	schedule_drag_active = false;
+
+	cout << "Save Tutor: " << tutor->first_name << endl;
+	appData.timetable.Save(tutor->schedule);
+
+	dataModelHandle.DirtyAllVariables();
+}
+
 // INIT
+
+template <typename _Ty>
+void RegisterSelectedRangeInterface(Rml::DataModelConstructor &constructor)
+{
+	constructor.RegisterArray<VectorInterface<_Ty>>();
+	if (auto handle = constructor.RegisterStruct<SelectedRangeInterface<_Ty>>())
+	{
+		handle.RegisterMember("index", &SelectedRangeInterface<_Ty>::index);
+		handle.RegisterMember("size", &SelectedRangeInterface<_Ty>::size);
+		handle.RegisterMember("accessor", &SelectedRangeInterface<_Ty>::accessor);
+	}
+}
 
 bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 {
-
 	// Create data model
 	if (Rml::DataModelConstructor constructor = context->CreateDataModel("app_data"))
 	{
@@ -536,12 +362,7 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 
 		constructor.RegisterArray<vector<Department>>();
 
-		constructor.RegisterArray<VectorInterface<Department>>();
-		if (auto handle = constructor.RegisterStruct<SelectedItemInterface<Department>>())
-		{
-			handle.RegisterMember("index", &SelectedItemInterface<Department>::index);
-			handle.RegisterMember("accessor", &SelectedItemInterface<Department>::accessor);
-		}
+		RegisterSelectedRangeInterface<Department>(constructor);
 
 		// Register vector<ClassList>
 		if (auto handle = constructor.RegisterStruct<ClassList>())
@@ -562,6 +383,8 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 			handle.RegisterMember("classes", &Tutor::classes);
 		}
 		constructor.RegisterArray<vector<Tutor>>();
+		RegisterSelectedRangeInterface<Tutor>(constructor);
+		// constructor.RegisterArray<VectorInterface<ClassList>>();
 
 		// Register vector<Service>
 		if (auto handle = constructor.RegisterStruct<Service>())
@@ -569,17 +392,29 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 			handle.RegisterMember("name", &Service::name);
 			handle.RegisterMember("min_hours", &Service::min_hours);
 			handle.RegisterMember("max_hours", &Service::max_hours);
+			handle.RegisterMember("color", &Service::GetColor);
 		}
 		constructor.RegisterArray<vector<Service>>();
+		RegisterSelectedRangeInterface<Service>(constructor);
 
-		// Register VectorInterfaces
-		constructor.RegisterArray<VectorInterface<ClassList>>();
-		constructor.RegisterArray<VectorInterface<Tutor>>();
-
-		if (auto handle = constructor.RegisterStruct<SelectedItemInterface<Tutor>>())
+		// Register TimetableInterface
+		RegisterSelectedRangeInterface<ServiceIndex_t>(constructor);
+		constructor.RegisterArray<array<SelectedRangeInterface<ServiceIndex_t>, 1>>();
+		if (auto handle = constructor.RegisterStruct<TimetableRow>())
 		{
-			handle.RegisterMember("index", &SelectedItemInterface<Tutor>::index);
-			handle.RegisterMember("accessor", &SelectedItemInterface<Tutor>::accessor);
+			handle.RegisterMember("label", &TimetableRow::label);
+			handle.RegisterMember("slots", &TimetableRow::slots);
+			handle.RegisterMember("view", &TimetableRow::view);
+		}
+		constructor.RegisterArray<array<TimetableRow, 7>>();
+
+		RegisterSelectedRangeInterface<string>(constructor);
+		constructor.RegisterArray<array<SelectedRangeInterface<string>, 1>>();
+		if (auto handle = constructor.RegisterStruct<TimetableInterface>())
+		{
+			handle.RegisterMember("view", &TimetableInterface::view);
+			handle.RegisterMember("rows", &TimetableInterface::rows);
+			handle.RegisterMember("slotsPerHour", &TimetableInterface::slotsPerHour);
 		}
 
 		// Bind appData members
@@ -587,16 +422,18 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 		constructor.Bind("departments", &appData.departments);
 		constructor.Bind("services", &appData.services);
 		constructor.Bind("tutors", &appData.tutors);
-		constructor.Bind("selected_department", &appData.selected_department);
 		constructor.Bind("selected_tutor", &appData.selected_tutor);
+		constructor.Bind("selected_department", &appData.selected_department);
+		constructor.Bind("selected_service", &appData.selected_service);
+		constructor.Bind("total_hours", &appData.total_hours);
 		constructor.Bind("edit_tutor", &appData.edit_tutor);
 		constructor.Bind("dev_enable", &appData.dev_enable);
+		constructor.Bind("timetable", &appData.timetable);
 
 		// Bind Event Callbacks
 		constructor.BindEventCallback("ChangedTab", &DemoWindow::ChangedTab, this);
 		constructor.BindEventCallback("EnableEditTutor", &DemoWindow::EnableEditTutor, this);
 		constructor.BindEventCallback("ConfirmEditTutor", &DemoWindow::ConfirmEditTutor, this);
-		constructor.BindEventCallback("ResetSchedule", &DemoWindow::ResetSchedule, this);
 		constructor.BindEventCallback("ScheduleLimitsChanged", &DemoWindow::ScheduleLimitsChanged, this);
 		constructor.BindEventCallback("AddTutor", &DemoWindow::AddTutor, this);
 		constructor.BindEventCallback("RemoveTutor", &DemoWindow::RemoveTutor, this);
@@ -605,11 +442,55 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 		constructor.BindEventCallback("ExportTimetable", &DemoWindow::ExportTimetable, this);
 		constructor.BindEventCallback("ExportRolodex", &DemoWindow::ExportRolodex, this);
 		constructor.BindEventCallback("ExportAll", &DemoWindow::ExportAll, this);
+		constructor.BindEventCallback("OnTutorChanged", &DemoWindow::OnTutorChanged, this);
+		constructor.BindEventCallback("OnSlotMouseDown", &DemoWindow::OnSlotMouseDown, this);
+		constructor.BindEventCallback("OnSlotMouseOver", &DemoWindow::OnSlotMouseOver, this);
+		constructor.BindEventCallback("OnSlotMouseUp", &DemoWindow::OnSlotMouseUp, this);
+
+		// Register a transform function for getting service colors
+		AppData &app_data_var = appData;
+		Rml::DataTransformFunc func = [app_data_var](const Rml::VariantList &arguments) -> Rml::Variant
+		{
+			if (arguments.empty())
+			{
+				return {};
+			}
+
+			const ServiceIndex_t &service_type = arguments[0].Get<ServiceIndex_t>();
+
+			Rml::String colorString;
+
+			if (0 <= service_type && service_type < app_data_var.services.size())
+			{
+				colorString = ToString(app_data_var.services.at(service_type).color);
+			}
+			else
+			{
+				colorString = ToString(Rml::Colourb(255, 255, 255));
+			}
+
+
+			return Rml::Variant(colorString);
+		};
+		constructor.RegisterTransformFunc("GetServiceColor", func);
 
 		dataModelHandle = constructor.GetModelHandle();
 
 		appData.selected_tutor.setTarget(&appData.tutors);
 		appData.selected_department.setTarget(&appData.departments);
+		appData.selected_tutor.size = 1;	  // only one tutor can be selected at a time
+		appData.selected_department.size = 1; // only one department can be selected at a time
+
+		appData.timetable.rows[0].SetLabel("Mon");
+		appData.timetable.rows[1].SetLabel("Tue");
+		appData.timetable.rows[2].SetLabel("Wed");
+		appData.timetable.rows[3].SetLabel("Thu");
+		appData.timetable.rows[4].SetLabel("Fri");
+		appData.timetable.rows[5].SetLabel("Sat");
+		appData.timetable.rows[6].SetLabel("Sun");
+
+		appData.timetable.SetStartHour(6);
+		appData.timetable.SetEndHour(20);
 	}
 
 	using namespace Rml;
@@ -622,7 +503,6 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 
 	// document->GetElementById("title")->SetInnerRML(title);
 
-	UpdateScheduleGrid();
 	document->Show();
 
 	return true;
@@ -660,7 +540,6 @@ void DemoWindow::ProcessEvent(Rml::Event &event)
 
 		if (key_identifier == Rml::Input::KI_ESCAPE)
 		{
-			Save();
 			Backend::RequestExit();
 		}
 	}

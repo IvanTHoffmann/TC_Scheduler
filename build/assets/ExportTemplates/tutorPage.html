@@ -1,10 +1,13 @@
 <p>{selected_tutor_firstname} is a tutor at the Everett Community College Tutoring Center.</p>
 <h3>{selected_tutor_firstname} is best suited to help with:</h3>
-<ul>
+<table>
     {foreach_classList}
-    <li style="white-space:pre">{classList_deptname}&#9;({classList_courses})</li>
+    <tr>
+        <td width="70px">{classList_deptname}</td>
+        <td>{classList_courses}</td>
+    <tr>
     {endloop_classList}
-</ul>
+</table>
 <p>&nbsp;</p>
 <p style="text-align: center;">&nbsp;</p>
 <h2>{selected_tutor_firstname}'s {term_season} {term_year} Schedule</h2>
@@ -16,14 +19,11 @@
     <tbody>
         <tr style="height: 97.5px;">
             {foreach_weekday}
-            <th style="text-align: center; height: 226px; width: 14.2857%;" rowspan="2" scope="col"><span
-                    style="font-size: 18pt;"><strong>{weekday_name}s</strong></span><br />
-
+            <th style="text-align: center; height: 226px; width: 14.2857%;" rowspan="2" scope="col">
+                <strong style="font-size: 18pt;">{weekday_name}s</strong><br/>
                 {foreach_in_person_shift}
-                <p><span style="font-size: 14pt;">{shift_duration}</span></p>
+                <p style="font-size: 14pt;">{shift_duration}</p>
                 {endloop_in_person_shift}
-
-                Insert {selected_tutor_firstname}'s {weekday_name} schedule here...
             </th>
             {endloop_weekday}
         </tr>
