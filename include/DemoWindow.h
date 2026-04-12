@@ -22,6 +22,7 @@ using namespace std;
 class DemoWindow : public Rml::EventListener {
 public:
 	DemoWindow();
+	~DemoWindow();
 
 	const string& GetWindowTitle();
 	int GetWidth();
@@ -41,21 +42,13 @@ public:
 	void SubmitForm(Rml::String in_submit_message);
 
 	// Schedule interaction
-	void OnTutorChanged();
-	void OnScheduleCellMouseDown(int day, int slot);
-	void OnScheduleCellMouseMove(int day, int slot);
-	void OnScheduleCellMouseUp(int day, int slot);
-	void UpdateScheduleGrid();
 	void UpdateScheduleSummary();
-	void BuildScheduleGrid();
-	uint8_t GetScheduleValue(int tutor_index, int day, int slot);
-	void SetScheduleValue(int tutor_index, int day, int slot, uint8_t value);
 	int CountTutorScheduleSlots(int tutor_index);
-
+	
+	void OnTutorChanged(CALLBACK_PARAMS);
 	void ChangedTab(CALLBACK_PARAMS);
 	void EnableEditTutor(CALLBACK_PARAMS);
 	void ConfirmEditTutor(CALLBACK_PARAMS);
-	void ResetSchedule(CALLBACK_PARAMS);
 	void ScheduleLimitsChanged(CALLBACK_PARAMS);
 
 	void AddTutor(CALLBACK_PARAMS);
@@ -66,6 +59,9 @@ public:
 	void ExportTimetable(CALLBACK_PARAMS);
 	void ExportRolodex(CALLBACK_PARAMS);
 	void ExportAll(CALLBACK_PARAMS);
+	void OnSlotMouseDown(CALLBACK_PARAMS);
+	void OnSlotMouseOver(CALLBACK_PARAMS);
+	void OnSlotMouseUp(CALLBACK_PARAMS);
 
 private:
 	Rml::ElementDocument* document = nullptr;
@@ -75,8 +71,7 @@ private:
 	Json jsonDocument;
 
 	bool schedule_drag_active = false;
-	bool schedule_grid_built = false;
-	bool schedule_drag_target_state = true;
+	ServiceIndex_t schedule_service_brush;
 
 	AppData appData;
 	Exporter exporter;

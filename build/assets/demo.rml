@@ -1,8 +1,9 @@
 <rml>
 <head>
 <link type="text/template" href="window.rml"/>
-<link type="text/template" href="department_select.rml"/>
 <link type="text/template" href="tutor_select.rml"/>
+<link type="text/template" href="department_select.rml"/>
+<link type="text/template" href="service_select.rml"/>
 <link type="text/template" href="timetable.rml"/>
 <title>Tutoring Center Scheduler</title>
 <link type="text/rcss" href="style.rcss"/>
@@ -23,7 +24,7 @@
 		</select>
 		<button class="gradient">Button</button>
 
-		<template src="timetable"/>
+		<!--template src="timetable"/-->
 	</div>
 
 </panel>
@@ -33,11 +34,13 @@
 	<p class="title">Manage Schedules</p>
 	<div data-model="app_data">
 		<template src="tutor_select"/>
+		<template src="service_select"/>
 		<div class="schedule-toolbar">
 			<button class="gradient" data-event-click="ResetSchedule">Reset Grid</button>
-			<div id="schedule_hours_summary" class="schedule-summary">Total: 0 hr</div>
+			<div class="schedule-summary">Total: {{total_hours}} hr</div>
 		</div>
-		<div id="schedule_grid_container"></div>
+
+		<template src="timetable"/>
 
 		<div data-for="tutor:selected_tutor.accessor">
 			<div>

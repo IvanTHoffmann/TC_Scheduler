@@ -1,0 +1,12 @@
+<template name="service_select">
+<head>
+	<link type="text/rcss" href="rml.rcss"/>
+	<link type="text/rcss" href="window.rcss"/>
+</head>
+<body class="service_select" data-model="app_data">
+    <select name="service_name" data-value="selected_service.index" onkeydown="cancel_selection_on_escape">
+        <option value="-1" selected>No Service</option>
+        <option data-for="service:services" data-value="it_index">{{service.name}}</option>
+    </select>
+</body>
+</template>

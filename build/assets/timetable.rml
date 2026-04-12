@@ -3,9 +3,29 @@
 	<link type="text/rcss" href="rml.rcss"/>
 	<link type="text/rcss" href="window.rcss"/>
 </head>
-<body class="timetable">
-
-    <div>This is a timetable</div>
-    
+<body class="timetable" data-model="app_data">
+	<div data-for="selected_tutor.accessor">
+		<table background-color="#000" style="row-gap: 2px; column-gap: 2px">
+			<tr>
+				<td></td>
+				<td colspan=2 data-for="label:timetable.view[0].accessor">{{label}}</td>
+				<td></td>
+			</tr>
+			<tr data-for="row,row_id:timetable.rows">
+				<td colspan=2>({{row_id}}) {{row.label}}</td>
+				<td data-for="slot,slot_id:row.view[0].accessor" class="slot"
+					data-style-background-color="GetServiceColor(slot)"
+					data-event-mousedown="OnSlotMouseDown(row_id, slot_id)"
+					data-event-mouseover="OnSlotMouseOver(row_id, slot_id)" 
+					data-event-mouseup="OnSlotMouseUp(row_id, slot_id)">
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td colspan=2 data-for="label:timetable.view[0].accessor">{{label}}</td>
+				<td></td>
+			</tr>
+		</table>
+	</div>
 </body>
 </template>

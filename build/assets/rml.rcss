@@ -116,8 +116,6 @@ col { display: table-column; }
 
 .slot {
     height: 45px;
-    background-color: #e2dada11;
-    min-width: 70px; /* Ensures cells don't shrink to 0 */
 }
 
 /* Tutoring Type Colors */
