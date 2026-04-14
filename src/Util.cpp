@@ -1,5 +1,7 @@
 #include "Util.h"
 
+#include <iomanip>
+
 // Accepts a vector<string> and returns a string with the format "A, B, C, ..., and N".
 string FormatList(const vector<string> &inStrings)
 {
@@ -36,4 +38,14 @@ bool ReadUntil(istream &inStream, ostream &outStream, char delim)
         outStream << c;
     }
     return false;
+}
+
+string FormatTime(int timeValue)
+{
+    stringstream ss;
+    int hours = timeValue / 100;
+    int minutes = timeValue % 100;
+    int hourValue = (hours - 1) % 12 + 1;
+    ss << hourValue << ":" << setw(2) << setfill('0') << minutes << (hours < 12 ? "am" : "pm");
+    return ss.str();
 }

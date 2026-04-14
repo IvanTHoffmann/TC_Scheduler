@@ -79,6 +79,16 @@ bool Exporter::Invoke(istream &istr, ostream &ostr, const string &symbol)
     return false;
 }
 
+bool Exporter::ServiceIsSelected(int service_type)
+{
+    for (int service_id : service_ids){
+        if (service_type == service_id){
+            return true;
+        }
+    }
+    return false;
+}
+
 Exporter::Exporter(AppData *_appData) : appData(_appData)
 {
     // DEFINE SYMBOLS
@@ -88,12 +98,12 @@ Exporter::Exporter(AppData *_appData) : appData(_appData)
     symbols["foreach_classList"] = Exporter::Foreach_Classlist;
     symbols["classList_deptname"] = Exporter::GetClassListDeptName;
     symbols["classList_courses"] = Exporter::GetClassListCourses;
-    symbols["if_in_person"] = Exporter::If_InPerson;
+    symbols["set_service"] = Exporter::SetService;
+    symbols["if_service"] = Exporter::If_Service;
     symbols["foreach_weekday"] = Exporter::Foreach_Weekday;
     symbols["weekday_name"] = Exporter::GetWeekdayName;
-    symbols["foreach_in_person_shift"] = Exporter::Foreach_InPersonShift;
+    symbols["foreach_service_shift"] = Exporter::Foreach_ServiceShift;
     symbols["shift_duration"] = Exporter::GetShiftDuration;
-    symbols["if_by_appointment"] = Exporter::If_ByAppointment;
     symbols["selected_department_services"] = Exporter::GetSelectedDepartmentServices;
     symbols["foreach_tutor"] = Exporter::Foreach_Tutor;
     symbols["tutor_firstname"] = Exporter::GetTutorFirstName;
@@ -262,9 +272,9 @@ bool Exporter::GetClassListCourses(istream &istr, ostream &ostr)
     return true;
 }
 
-bool Exporter::If_InPerson(istream &istr, ostream &ostr)
+bool Exporter::If_Service(istream &istr, ostream &ostr)
 {
-    if (appData->selected_tutor.accessor.size() == 0)
+    if ((appData->selected_tutor.accessor.size() == 0) || service_ids.empty())
     {
         // Warning: No tutor selected
         return false;
@@ -274,13 +284,57 @@ bool Exporter::If_InPerson(istream &istr, ostream &ostr)
     stringstream buffer;
 
     // Read the loop body into buffer
-    if (!ReadToSymbol(istr, buffer, "endif_in_person"))
+    if (!ReadToSymbol(istr, buffer, "endif_service"))
     {
         return false;
     }
 
-    // perform replacements in loop body
-    Process(buffer, ostr);
+    bool foundInPersonShift = false;
+    for (const DaySchedule& daySchedule : tutor.schedule.days){
+        for (const ShiftSchedule &shift : daySchedule.shifts)
+        {
+            if (ServiceIsSelected(shift.service_type))
+            {
+                // perform replacements in loop body
+                Process(buffer, ostr);
+                return true;
+            }
+        }
+    }
+    return true;
+}
+
+bool Exporter::SetService(istream &istr, ostream &ostr)
+{
+    stringstream buffer;
+    // Read the set body into buffer
+    if (!ReadToSymbol(istr, buffer, "end_set_service"))
+    {
+        return false;
+    }
+
+    stringstream tmpOutStream;
+    stringstream service_str;
+    service_ids.clear();
+    while(ReadToNextSymbol(buffer, tmpOutStream, service_str)) {
+
+        int service_id = 0;
+        for (const Service& service : appData->services){
+            if (service.name == service_str.str()){
+                break;
+            }
+            service_id++;
+        }
+
+        if (service_id == appData->services.size()){
+            cout << "invalid service: " << service_str.str() << endl;
+            return false;
+        }
+        
+        service_ids.push_back(service_id);
+        service_str.str("");
+        service_str.clear();
+    }
     return true;
 }
 
@@ -332,9 +386,9 @@ bool Exporter::GetWeekdayName(istream &istr, ostream &ostr)
     return true;
 }
 
-bool Exporter::Foreach_InPersonShift(istream &istr, ostream &ostr)
+bool Exporter::Foreach_ServiceShift(istream &istr, ostream &ostr)
 {
-    if (appData->selected_tutor.accessor.size() == 0)
+    if ((appData->selected_tutor.accessor.size() == 0) || service_ids.empty())
     {
         // Warning: No tutor selected
         return false;
@@ -344,47 +398,57 @@ bool Exporter::Foreach_InPersonShift(istream &istr, ostream &ostr)
     stringstream buffer;
 
     // Read the loop body into buffer
-    if (!ReadToSymbol(istr, buffer, "endloop_in_person_shift"))
+    if (!ReadToSymbol(istr, buffer, "endloop_service_shift"))
     {
         return false;
     }
 
     // perform replacements in loop body
-    // DaySchedule& day_schedule = tutor.schedule.days[iter_weekday];
-    Process(buffer, ostr);
+    DaySchedule &daySchedule = tutor.schedule.days.at(iter_weekday);
+
+    iter_found_shift = false;
+    for (const ShiftSchedule &shift : daySchedule.shifts)
+    {
+        if (ServiceIsSelected(shift.service_type))
+        {
+            if (iter_found_shift){
+                if (iter_shift.end == shift.start){
+                    // merge shifts into one
+                    iter_shift.end = shift.end;
+                }
+                else{
+                    // perform replacements in loop body
+                    Process(buffer, ostr);
+                    iter_shift = shift;
+                }
+            }
+            else {
+                iter_shift = shift;
+                iter_found_shift = true;
+            }
+        }
+    }
+    
+    Process(buffer, ostr); // Writes the final shift or "No Availability" if iter_found_shift is false
+
     return true;
 }
 
 bool Exporter::GetShiftDuration(istream &istr, ostream &ostr)
 {
-    return true;
-}
-
-bool Exporter::If_ByAppointment(istream &istr, ostream &ostr)
-{
-    if (appData->selected_tutor.accessor.size() == 0)
+    if (iter_found_shift)
     {
-        // Warning: No tutor selected
-        return false;
+        ostr << FormatTime(iter_shift.start) << " - " << FormatTime(iter_shift.end);
     }
-
-    Tutor &tutor = *appData->selected_tutor.accessor.begin();
-    stringstream buffer;
-
-    // Read the loop body into buffer
-    if (!ReadToSymbol(istr, buffer, "endif_by_appointment"))
+    else
     {
-        return false;
+        ostr << "<span style=\"color:#969696;font-size:10pt;\">No Availability</span>";
     }
-
-    // perform replacements in loop body
-    Process(buffer, ostr);
     return true;
 }
 
 bool Exporter::GetSelectedDepartmentServices(istream &istr, ostream &ostr)
 {
-
     return true;
 }
 
@@ -421,7 +485,7 @@ bool Exporter::Foreach_Tutor(istream &istr, ostream &ostr)
         }
     }
 
-    ostr << (tutor_links.size() > 1 ? "tutors are " : "tutor is");
+    ostr << (tutor_links.size() > 1 ? "tutors are " : "tutor is ");
     ostr << FormatList(tutor_links);
     return true;
 }

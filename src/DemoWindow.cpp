@@ -458,19 +458,16 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 
 			const ServiceIndex_t &service_type = arguments[0].Get<ServiceIndex_t>();
 
-			Rml::String colorString;
-
+			Rml::Colourb slotColor;
 			if (0 <= service_type && service_type < app_data_var.services.size())
 			{
-				colorString = ToString(app_data_var.services.at(service_type).color);
+				slotColor = app_data_var.services.at(service_type).color;
 			}
 			else
 			{
-				colorString = ToString(Rml::Colourb(255, 255, 255));
+				slotColor = Rml::Colourb(255, 255, 255);
 			}
-
-
-			return Rml::Variant(colorString);
+			return Rml::Variant(ToString(slotColor));
 		};
 		constructor.RegisterTransformFunc("GetServiceColor", func);
 
@@ -489,7 +486,7 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 		appData.timetable.rows[5].SetLabel("Sat");
 		appData.timetable.rows[6].SetLabel("Sun");
 
-		appData.timetable.SetStartHour(6);
+		appData.timetable.SetStartHour(5);
 		appData.timetable.SetEndHour(20);
 	}
 

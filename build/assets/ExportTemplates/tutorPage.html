@@ -3,7 +3,7 @@
 <table>
     {foreach_classList}
     <tr>
-        <td width="70px">{classList_deptname}</td>
+        <td width="auto">{classList_deptname}&nbsp;&nbsp;&nbsp;</td>
         <td>{classList_courses}</td>
     <tr>
     {endloop_classList}
@@ -11,77 +11,68 @@
 <p>&nbsp;</p>
 <p style="text-align: center;">&nbsp;</p>
 <h2>{selected_tutor_firstname}'s {term_season} {term_year} Schedule</h2>
-{if_in_person}
-<table
-    style="border-collapse: collapse; width: 96.1074%; height: 226px; border-style: solid; margin-left: auto; margin-right: auto;"
-    border="3">
-    <caption><span style="font-size: 18pt;"><strong><span style="font-size: 24pt;">In Person&nbsp;</span></strong></span></caption>
-    <tbody>
-        <tr style="height: 97.5px;">
-            {foreach_weekday}
-            <th style="text-align: center; height: 226px; width: 14.2857%;" rowspan="2" scope="col">
-                <strong style="font-size: 18pt;">{weekday_name}s</strong><br/>
-                {foreach_in_person_shift}
-                <p style="font-size: 14pt;">{shift_duration}</p>
-                {endloop_in_person_shift}
-            </th>
-            {endloop_weekday}
-        </tr>
-        <tr style="height: 128.5px;"></tr>
-    </tbody>
-</table>
-{endif_in_person}
-{if_by_appointment}
-<p style="text-align: center;"><span style="font-size: 24pt;"><strong>Zoom Tutoring by Appointment
-        </strong>&nbsp;</span><span style="font-size: 24pt;">&nbsp; &nbsp;&nbsp;</span></p>
-<table style="border-collapse: collapse; width: 96.1074%; height: 226px; margin-left: auto; margin-right: auto;"
-    border="3">
-    <caption></caption>
-    <tbody>
-        <tr>
-            <td style="width: 16.6404%;">
-                <p style="text-align: center;"><strong><span style="font-size: 18pt;">Mondays</span></strong></p>
-                <p style="text-align: center;"><span style="font-size: 18pt;"><span style="font-size: 14pt;">No
-                            Availability</span></span></p>
-            </td>
-            <td style="width: 16.6404%;">
-                <p style="text-align: center;"><a class="inline_disabled"
-                        href="https://everettcc.starfishsolutions.com/starfish-ops/appointments/appointments.html?instuid=13008&amp;mode=calendarsManaged"
-                        target="_blank" rel="noopener"><span
-                            style="font-size: 18pt;"><strong>Tuesdays</strong></span></a></p>
-                <p style="text-align: center;"><span style="font-size: 14pt;">3:00PM - 5:00PM</span></p>
-            </td>
-            <td style="width: 16.6404%;">
-                <p style="text-align: center;"><span style="font-size: 18pt;"><strong>Wednesdays</strong></span>&nbsp;
-                </p>
-                <p style="text-align: center;"><span style="font-size: 14pt;">No Availability</span></p>
-            </td>
-            <td style="width: 16.6404%;">
-                <p style="text-align: center;"><strong><span style="font-size: 18pt;"><a class="inline_disabled"
-                                href="https://everettcc.starfishsolutions.com/starfish-ops/appointments/appointments.html?instuid=13008&amp;mode=calendarsManaged"
-                                target="_blank" rel="noopener">Thursdays</a>&nbsp;</span></strong></p>
-                <p style="text-align: center;"><span style="font-size: 14pt;">3:00PM - 5:00PM</span></p>
-            </td>
-            <td style="width: 16.6404%;">
-                <p style="text-align: center;"><strong><span style="font-size: 18pt;">Fridays</span></strong></p>
-                <p style="text-align: center;"><span style="font-size: 14pt;">No Availability</span></p>
-            </td>
-            <td style="width: 16.6958%;">
-                <p style="text-align: center;"><strong><span style="font-size: 18pt;">Saturdays</span></strong></p>
-                <p style="text-align: center;"><span style="font-size: 14pt;">No Availability&nbsp;</span></p>
-            </td>
-        </tr>
-    </tbody>
-</table>
-{endif_by_appointment}
+{set_service}{In-Person}{By Appointment}{end_set_service}
+{if_service}
+<p>
+    <table style="border-collapse: collapse; width: 96.1074%; height: 226px; border-style: solid; margin-left: auto; margin-right: auto;" 
+        border="3">
+        <caption style="font-size: 24pt;">
+            <strong>
+                In Person
+            </strong>
+        </caption>
+        <tbody>
+            <tr style="height: 97.5px;">
+                {foreach_weekday}
+                <th style="text-align: center; height: 226px; width: 14.2857%;" rowspan="2" scope="col">
+                    <strong style="font-size: 18pt;">{weekday_name}s</strong>
+                    <br/><br/>
+                    {foreach_service_shift}
+                    <span style="font-size: 14pt;">{shift_duration}</span><br/>
+                    {endloop_service_shift}
+                </th>
+                {endloop_weekday}
+            </tr>
+        </tbody>
+    </table>
+</p>
+{endif_service}
+{set_service}{By Appointment}{end_set_service}
+{if_service}
+<p>
+    <table style="border-collapse: collapse; width: 96.1074%; height: 226px; border-style: solid; margin-left: auto; margin-right: auto;"
+        border="3">
+        <caption style="font-size: 24pt;">
+            <strong>
+                <a class="inline_disabled"
+                    href="https://everettcc.starfishsolutions.com/starfish-ops/appointments/appointments.html?instuid=13008&amp;mode=calendarsManaged"
+                    target="_blank" rel="noopener">
+                    Zoom Tutoring by Appointment
+                </a>
+            </strong>
+        </caption>
+        <tbody>
+            <tr style="height: 97.5px;">
+                {foreach_weekday}
+                <th style="text-align: center; height: 226px; width: 14.2857%;" rowspan="2" scope="col">
+                    <strong style="font-size: 18pt;">{weekday_name}s</strong>
+                <br/><br/>
+                    {foreach_service_shift}
+                    <span style="font-size: 14pt;">{shift_duration}</span><br/>
+                    {endloop_service_shift}
+                </th>
+                {endloop_weekday}
+            </tr>
+        </tbody>
+    </table>
+</p>
+{endif_service}
 <p style="text-align: center;">&nbsp;</p>
 <h4>Contact</h4>
 <p><a href="mailto:{selected_tutor_email}">Send {selected_tutor_firstname} an email</a></p>
 <p><em>This email is for questions about tutoring and technical assistance only. Please do not address content questions
         to this location.</em></p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;</p>
 <p style="text-align: center;"><span style="color: #ff6600;"><span style="color: #000000;"><span
                 style="color: #ff6600;"><span style="color: #000000;"><span style="font-size: 18pt;"><a
                             class="btn btn-primary" title="Support by Tutor"
