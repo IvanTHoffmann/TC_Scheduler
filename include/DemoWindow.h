@@ -42,11 +42,19 @@ public:
 	void SubmitForm(Rml::String in_submit_message);
 
 	// Schedule interaction
+	void UpdateTimetable();
 	void UpdateScheduleSummary();
 	int CountTutorScheduleSlots(int tutor_index);
+
+	void OnClick_SummaryTab(CALLBACK_PARAMS);
+	void OnClick_SchedulesTab(CALLBACK_PARAMS);
+	void OnClick_ClassesTab(CALLBACK_PARAMS);
+
+	void ToggleAllServices(CALLBACK_PARAMS);
+	void ToggleAllDepartments(CALLBACK_PARAMS);
+	void ToggleAllTutors(CALLBACK_PARAMS);
 	
 	void OnTutorChanged(CALLBACK_PARAMS);
-	void ChangedTab(CALLBACK_PARAMS);
 	void EnableEditTutor(CALLBACK_PARAMS);
 	void ConfirmEditTutor(CALLBACK_PARAMS);
 	void ScheduleLimitsChanged(CALLBACK_PARAMS);

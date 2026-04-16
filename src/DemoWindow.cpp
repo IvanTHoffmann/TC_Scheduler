@@ -125,6 +125,70 @@ int DemoWindow::GetHeight()
 	return appData.resolution[1];
 }
 
+void DemoWindow::UpdateTimetable()
+{
+	WeekSchedule filteredSchedule;
+	switch(appData.timetableDisplayMode){
+		case AppData::TimetableDisplayMode::SUMMARY:
+			// summarize data based on active filters
+			for (const Tutor& tutor : appData.tutors){
+				if (!tutor.selected){
+					continue;
+				}
+				
+				// search for shifts that match the search filter
+				bool matches = false;
+				for (const Department& dept : appData.departments){
+					if (!dept.selected){
+						continue;
+					}
+
+					for (const ClassList& classList : tutor.classes){
+						if (classList.department_name == dept.name){
+							matches = true;
+							break;
+						}
+					}
+					if (matches){
+						break;
+					}
+				}
+				if (!matches){
+					continue;
+				}
+
+				int dayId = 0;
+				for (const DaySchedule& day : tutor.schedule.days){
+					for (const ShiftSchedule& shift : day.shifts){
+						if (!appData.services.at(shift.service_type).selected){
+							// this shift's service type is not selected
+							continue;
+						}
+						// This shift is of a selected service type
+						filteredSchedule.days.at(dayId).shifts.push_back(shift);
+					}
+					dayId++;
+				}
+			}
+
+			// load summarized schedule
+			appData.timetable.Load(filteredSchedule);
+			dataModelHandle.DirtyAllVariables();
+			break;
+
+		case AppData::TimetableDisplayMode::INDIVIDUAL:
+			Tutor *tutor = appData.selected_tutor.accessor.ptr();
+			if (!tutor)
+			{
+				return;
+			}
+
+			appData.timetable.Load(tutor->schedule);
+			dataModelHandle.DirtyAllVariables();
+			break;
+	}
+}
+
 void DemoWindow::UpdateScheduleSummary()
 {
 	/*
@@ -158,7 +222,7 @@ void DemoWindow::UpdateScheduleSummary()
 	*/
 }
 
-void DemoWindow::ScheduleLimitsChanged(Rml::DataModelHandle model, Rml::Event &ev, const Rml::VariantList &arguments)
+void DemoWindow::ScheduleLimitsChanged(CALLBACK_PARAMS)
 {
 	// Only refresh the summary state when min/max sliders change.
 	UpdateScheduleSummary();
@@ -168,27 +232,57 @@ void DemoWindow::ScheduleLimitsChanged(Rml::DataModelHandle model, Rml::Event &e
 
 void DemoWindow::OnTutorChanged(CALLBACK_PARAMS)
 {
-	Tutor *tutor = appData.selected_tutor.accessor.ptr();
-	if (!tutor)
-	{
-		return;
-	}
+	UpdateTimetable();
+}
 
-	cout << "Load Tutor Schedule: " << tutor->first_name << endl;
-	appData.timetable.Load(tutor->schedule);
+void DemoWindow::OnClick_SummaryTab(CALLBACK_PARAMS){
+	appData.timetable.editable = false;
+	appData.timetable.colorMode = TimetableInterface::ColorModeEnum::HEATMAP;
+	appData.timetableDisplayMode = AppData::TimetableDisplayMode::SUMMARY;
+	UpdateTimetable();
+}
+
+void DemoWindow::OnClick_SchedulesTab(CALLBACK_PARAMS)
+{
+	appData.timetable.editable = true;
+	appData.timetable.colorMode = TimetableInterface::ColorModeEnum::SERVICE;
+	appData.timetableDisplayMode = AppData::TimetableDisplayMode::INDIVIDUAL;
+	UpdateTimetable();
+}
+
+void DemoWindow::OnClick_ClassesTab(CALLBACK_PARAMS)
+{
+	appData.edit_tutor = false;
 	dataModelHandle.DirtyAllVariables();
 }
 
-void DemoWindow::ChangedTab(CALLBACK_PARAMS)
+void DemoWindow::ToggleAllServices(CALLBACK_PARAMS)
 {
-	appData.edit_tutor = false;
+	for(Service& service : appData.services){
+		service.selected = appData.filter_all_services;
+	}
+	dataModelHandle.DirtyAllVariables();
+}
+
+void DemoWindow::ToggleAllDepartments(CALLBACK_PARAMS)
+{
+	for(Department& department : appData.departments){
+		department.selected = appData.filter_all_departments;
+	}
+	dataModelHandle.DirtyAllVariables();
+}
+
+void DemoWindow::ToggleAllTutors(CALLBACK_PARAMS)
+{
+	for(Tutor& tutor : appData.tutors){
+		tutor.selected = appData.filter_all_tutors;
+	}
 	dataModelHandle.DirtyAllVariables();
 }
 
 void DemoWindow::EnableEditTutor(CALLBACK_PARAMS)
 {
 	Tutor *tutor = appData.selected_tutor.accessor.ptr();
-
 	if (tutor == nullptr)
 	{
 		return;
@@ -222,7 +316,6 @@ void DemoWindow::EnableEditTutor(CALLBACK_PARAMS)
 void DemoWindow::ConfirmEditTutor(CALLBACK_PARAMS)
 {
 	Tutor *tutor = appData.selected_tutor.accessor.ptr();
-
 	if (tutor == nullptr)
 	{
 		return;
@@ -280,6 +373,10 @@ void DemoWindow::ExportAll(CALLBACK_PARAMS)
 
 void DemoWindow::OnSlotMouseDown(CALLBACK_PARAMS)
 {
+	if (!appData.timetable.editable){
+		return;
+	}
+
 	Tutor *tutor = appData.selected_tutor.accessor.ptr();
 	if (!tutor)
 	{
@@ -307,6 +404,10 @@ void DemoWindow::OnSlotMouseOver(CALLBACK_PARAMS)
 
 void DemoWindow::OnSlotMouseUp(CALLBACK_PARAMS)
 {
+	if (!schedule_drag_active){
+		return;
+	}
+
 	Tutor *tutor = appData.selected_tutor.accessor.ptr();
 	if (!tutor)
 	{
@@ -355,6 +456,7 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 		if (auto handle = constructor.RegisterStruct<Department>())
 		{
 			handle.RegisterMember("name", &Department::name);
+			handle.RegisterMember("selected", &Department::selected);
 			handle.RegisterMember("edit_subtractive", &Department::edit_subtractive);
 			handle.RegisterMember("edit_courses", &Department::edit_courses);
 			handle.RegisterMember("edit_formatted_courses", &Department::edit_formatted_courses);
@@ -378,6 +480,8 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 		{
 			handle.RegisterMember("first_name", &Tutor::first_name);
 			handle.RegisterMember("last_name", &Tutor::last_name);
+			handle.RegisterMember("email", &Tutor::email);
+			handle.RegisterMember("selected", &Tutor::selected);
 			handle.RegisterMember("min_hours", &Tutor::min_hours);
 			handle.RegisterMember("max_hours", &Tutor::max_hours);
 			handle.RegisterMember("classes", &Tutor::classes);
@@ -390,6 +494,7 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 		if (auto handle = constructor.RegisterStruct<Service>())
 		{
 			handle.RegisterMember("name", &Service::name);
+			handle.RegisterMember("selected", &Service::selected);
 			handle.RegisterMember("min_hours", &Service::min_hours);
 			handle.RegisterMember("max_hours", &Service::max_hours);
 			handle.RegisterMember("color", &Service::GetColor);
@@ -398,8 +503,14 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 		RegisterSelectedRangeInterface<Service>(constructor);
 
 		// Register TimetableInterface
-		RegisterSelectedRangeInterface<ServiceIndex_t>(constructor);
-		constructor.RegisterArray<array<SelectedRangeInterface<ServiceIndex_t>, 1>>();
+		if (auto handle = constructor.RegisterStruct<TimetableSlot>())
+		{
+			handle.RegisterMember("value", &TimetableSlot::value);
+		}
+		constructor.RegisterArray<vector<TimetableSlot>>();
+		RegisterSelectedRangeInterface<TimetableSlot>(constructor);
+		constructor.RegisterArray<array<SelectedRangeInterface<TimetableSlot>, 1>>();
+
 		if (auto handle = constructor.RegisterStruct<TimetableRow>())
 		{
 			handle.RegisterMember("label", &TimetableRow::label);
@@ -428,10 +539,18 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 		constructor.Bind("total_hours", &appData.total_hours);
 		constructor.Bind("edit_tutor", &appData.edit_tutor);
 		constructor.Bind("dev_enable", &appData.dev_enable);
+		constructor.Bind("filter_all_services", &appData.filter_all_services);
+		constructor.Bind("filter_all_departments", &appData.filter_all_departments);
+		constructor.Bind("filter_all_tutors", &appData.filter_all_tutors);
 		constructor.Bind("timetable", &appData.timetable);
 
 		// Bind Event Callbacks
-		constructor.BindEventCallback("ChangedTab", &DemoWindow::ChangedTab, this);
+		constructor.BindEventCallback("OnClick_SummaryTab", &DemoWindow::OnClick_SummaryTab, this);
+		constructor.BindEventCallback("OnClick_SchedulesTab", &DemoWindow::OnClick_SchedulesTab, this);
+		constructor.BindEventCallback("OnClick_ClassesTab", &DemoWindow::OnClick_ClassesTab, this);
+		constructor.BindEventCallback("ToggleAllServices", &DemoWindow::ToggleAllServices, this);
+		constructor.BindEventCallback("ToggleAllDepartments", &DemoWindow::ToggleAllDepartments, this);
+		constructor.BindEventCallback("ToggleAllTutors", &DemoWindow::ToggleAllTutors, this);
 		constructor.BindEventCallback("EnableEditTutor", &DemoWindow::EnableEditTutor, this);
 		constructor.BindEventCallback("ConfirmEditTutor", &DemoWindow::ConfirmEditTutor, this);
 		constructor.BindEventCallback("ScheduleLimitsChanged", &DemoWindow::ScheduleLimitsChanged, this);
@@ -469,14 +588,16 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 			}
 			return Rml::Variant(ToString(slotColor));
 		};
-		constructor.RegisterTransformFunc("GetServiceColor", func);
+		constructor.RegisterTransformFunc("GetSlotColor", func);
 
 		dataModelHandle = constructor.GetModelHandle();
 
 		appData.selected_tutor.setTarget(&appData.tutors);
 		appData.selected_department.setTarget(&appData.departments);
+		appData.selected_service.setTarget(&appData.services);
 		appData.selected_tutor.size = 1;	  // only one tutor can be selected at a time
 		appData.selected_department.size = 1; // only one department can be selected at a time
+		appData.selected_service.size = 1; // only one service can be selected at a time
 
 		appData.timetable.rows[0].SetLabel("Mon");
 		appData.timetable.rows[1].SetLabel("Tue");

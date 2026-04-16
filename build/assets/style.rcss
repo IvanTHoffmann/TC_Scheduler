@@ -327,135 +327,6 @@ p.title
 }
 
 
-/***  Animations  ***/
-
-#tweening_area
-{
-	position: relative;
-	margin: 30dp auto;
-	width: 400dp;
-	height: 250dp;
-	border: 1dp #777;
-	background-color: #ccc2;
-	cursor: cross;
-}
-#tweening_area img
-{
-	position: absolute;
-	cursor: pointer;
-	transform: translate(190dp, 100dp);
-}
-
-#transition
-{
-	margin: 20dp auto 30dp;
-	width: 400dp;
-	height: 250dp;
-	border: 1dp #777;
-	background-color: #ccc2;
-	position: relative;
-	overflow: hidden;
-}
-#transition > img
-{
-	position: absolute;
-	top: -50dp;
-	left: 50%;
-	margin-left: -32dp;
-	transition: top left 0.6s back-out, opacity 0.4s, image-color 0.4s 0.3s quadratic-out;
-	opacity: 0;
-	image-color: #fff;
-}
-#transition:hover > img
-{
-	top: 50dp;
-	opacity: 1;
-	image-color: #f61;
-}
-#transition:hover .alien1 { left: 30%; top: 75dp; }
-#transition:hover .alien3 { left: 70%; top: 75dp; }
-#transition .defender
-{
-	transition: image-color 0.3s 0.0s quadratic-out;
-	position: absolute;
-	left: -44dp;
-	top: 150dp; opacity: 1;
-}
-#transition:hover .defender { image-color: #acf;  }
-#transition .ray {
-	transition: top 0.4s back-out, opacity 0.4s cubic-in;
-	position: absolute;
-	top: -130dp;
-	left: 50%;
-	opacity: 0;
-	margin-left: -20dp;
-	width: 40dp;
-	height: 200dp;
-	decorator: vertical-gradient( #daf0 #fef6 );
-}
-#transition:hover .ray
-{
-	opacity: 1;
-	top: 0px;
-}
-
-@keyframes cube-rotate {
-	from { transform: rotate3d(1, -1, 0.3, 0deg);	}
-	to { transform: rotate3d(1, -1, 0.3, 360deg);	}
-}
-
-.cube_container {
-	width: 200dp;
-	height: 200dp;
-	margin: 20dp auto;
-	perspective: 500dp;
-}
-.cube {
-	width: 100%;
-	height: 100%;
-	position: relative;
-	animation: 3s cube-rotate infinite back-in-out;
-}
-.face {
-	left: 50dp; top: 50dp;
-	display: block;
-	position: absolute;
-	width: 100dp;
-	height: 100dp;
-	line-height: 100dp;
-	font-size: 60dp;
-	color: white;
-	text-align: center;
-}
-/* Define each face based on direction */
-.face.front {
-	background: rgba(0, 0, 0, 160);
-	transform: translateZ(50dp);
-}
-.face.front:hover {
-	background: rgba(255, 255, 0, 120);
-}
-.face.back {
-	background: rgba(0, 255, 0, 255);
-	color: black;
-	transform: rotateY(180deg) translateZ(50dp);
-}
-.face.right {
-	background: rgba(196, 0, 0, 200);
-	transform: rotateY(90deg) translateZ(50dp);
-}
-.face.left {
-	background: rgba(0, 0, 196, 200);
-	transform: rotateY(-90deg) translateZ(50dp);
-}
-.face.top {
-	background: rgba(196, 196, 0, 200);
-	transform: rotateX(90deg) translateZ(50dp);
-}
-.face.bottom {
-	background: rgba(196, 0, 196, 200);
-	transform: rotateX(-90deg) translateZ(50dp);
-}
 
 
 /***  Forms  ***/
@@ -480,78 +351,6 @@ form h2 {
 	font-weight: bold;
 	margin-top: 0.6em;
 	margin-bottom: 0.4em;
-}
-#rating {
-	display: inline-block;
-	width: 40dp;
-	padding-left: 1em;
-}
-#rating_emoji {
-	color: #ffd40f;
-	font-size: 1.7em;
-}
-progress {
-	margin: 10dp 20dp;
-	display: inline-block;
-	vertical-align: middle;
-}
-#gauge {
-	decorator: image( gauge );
-	width: 100dp;
-	height: 86dp;
-	fill-image: gauge-fill;
-}
-#progress_horizontal {
-	decorator: tiled-horizontal( progress-l, progress-c, progress-r );
-	width: 150dp;
-	height: 34dp;
-}
-#progress_horizontal fill {
-	decorator: tiled-horizontal( progress-fill-l, progress-fill-c, progress-fill-r );
-	margin: 0 7dp;
-	padding-left: 14dp;
-}
-#progress_label {
-	font-size: 18dp;
-	color: #ceb;
-	margin-left: 1em;
-	margin-bottom: 0;
-}
-#gauge_value, #progress_value {
-	font-size: 16dp;
-	color: #4ADB2D;
-	text-align: right;
-	width: 53dp;
-	font-effect: outline( 2dp #555 );
-}
-#gauge_value {
-	margin: 34dp 0 0 18dp;
-}
-#progress_value {
-	margin-left: -20dp;
-	display: inline-block;
-}
-
-
-#form_output
-{
-	border: 1dp #666;
-	font-size: 0.9em;
-	background-color: #ddd;
-	min-height: 180dp;
-	margin-top: 10dp;
-	padding: 5dp 8dp;
-	color: #222;
-	white-space: pre-wrap;
-	overflow: hidden auto;
-}
-
-#controls textarea
-{
-	font-size: 18dp;
-	font-effect: outline(2dp #060);
-	color: #ddd;
-	caret-color: #060;
 }
 #controls textarea selection
 {
@@ -646,6 +445,17 @@ form input, form textarea, form select
 form .nav-auto, form input.checkbox, form input.radio
 {
 	nav: auto;
+}
+
+td.filter_checkbox {
+	width: 30px;
+}
+
+.flex {
+	display: flex;
+}
+.flex > div {
+	flex: 1;
 }
 
 table {

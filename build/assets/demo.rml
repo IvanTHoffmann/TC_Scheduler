@@ -11,28 +11,100 @@
 
 <body template="window">
 
-<tabset id="menu" data-model="app_data">
+<tabset data-model="app_data">
 
-<tab data-event-click="ChangedTab">Summary</tab>
-<panel id="summary">
+<tab data-event-click="OnClick_SummaryTab()">Summary</tab>
+<panel>
 	<p class="title" align:"center">Summary Page</p>
 	
-	<div data-model="app_data">
-		<select name="service_name" onkeydown="cancel_selection_on_escape">
-			<option value="none" selected>Choose Service</option>
-			<option data-for="service:services">{{service.name}}</option>
-		</select>
-		<button class="gradient">Button</button>
+	<div>
+		<button class="gradient" data-event-click="OnTutorChanged">Apply Filter</button>
+		<template src="timetable"/>
 
-		<!--template src="timetable"/-->
+		<br/>
+
+		<div class="flex">
+		<div>
+			<table class="filter_table">
+				<thead>
+					<tr>
+						<td colspan="2">SERVICES</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="filter_checkbox">
+							<input type="checkbox"
+									data-value="filter_all_services" 
+									data-event-change="ToggleAllServices()"/>
+						</td>
+						<td>ALL</td>
+					</tr>
+					<tr data-for="service:services">
+						<td class="filter_checkbox">
+							<input type="checkbox" data-value="service.selected"/>
+						</td>
+						<td>{{service.name}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div>
+			<table class="filter_table">
+				<thead>
+					<tr>
+						<td colspan="2">DEPARTMENTS</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="filter_checkbox">
+							<input type="checkbox" 
+									data-value="filter_all_departments" 
+									data-event-change="ToggleAllDepartments()"/>
+						</td>
+						<td>ALL</td>
+					</tr>
+					<tr data-for="dept:departments">
+						<td class="filter_checkbox"><input type="checkbox" data-value="dept.selected"/></td>
+						<td>{{dept.name}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div>
+			<table class="filter_table">
+				<thead>
+					<tr>
+						<td colspan="2">TUTORS</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="filter_checkbox">
+							<input type="checkbox" 
+									data-value="filter_all_tutors" 
+									data-event-change="ToggleAllTutors()"/>
+						</td>
+						<td>ALL</td>
+					</tr>
+					<tr data-for="tutor:tutors">
+						<td class="filter_checkbox"><input type="checkbox" data-value="tutor.selected"/></td>
+						<td>{{tutor.last_name}}, {{tutor.first_name}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
 	</div>
 
 </panel>
 
-<tab data-event-click="ChangedTab">Manage Schedules</tab>
-<panel id="page_manage_schedules">
+<tab data-event-click="OnClick_SchedulesTab()">Manage Schedules</tab>
+<panel>
 	<p class="title">Manage Schedules</p>
-	<div data-model="app_data">
+	<div>
 		<template src="tutor_select"/>
 		<template src="service_select"/>
 		<div class="schedule-toolbar">
@@ -40,7 +112,9 @@
 			<div class="schedule-summary">Total: {{total_hours}} hr</div>
 		</div>
 
-		<template src="timetable"/>
+		<div data-for="selected_tutor.accessor">
+			<template src="timetable" />
+		</div>
 
 		<div data-for="tutor:selected_tutor.accessor">
 			<div>
@@ -55,31 +129,34 @@
 	</div>
 </panel>
 
-<tab data-event-click="ChangedTab">Manage Classes</tab>
-<panel id="page_manage_classes">
+<tab data-event-click="OnClick_ClassesTab()">Manage Classes</tab>
+<panel>
 	<div data-if="!edit_tutor">
-		<p class="title">View Tutor Info</p>
-		<span>
-			<template src="tutor_select"/>
-			<button data-for="selected_tutor.accessor" class="gradient" data-event-click="EnableEditTutor">Edit</button>
-		</span>
-		<table data-for="tutor:selected_tutor.accessor">
-			<thead>
-				<tr>
-					<td>Department</td>
-					<td>Courses</td>
-				</tr>
-			</thead>
-			<tbody>
-				<tr data-for="classList:tutor.classes">
-					<td>{{classList.department_name}}</td>
-					<td>
-						<span data-if="classList.subtractive">All{{classList.courses.size ? ' Except ' : ''}}</span>
-						<span data-for="course:classList.courses">{{it_index ? ', ' : ''}}{{course}}</span>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+		<p class="title">Manage Classes</p>
+		<div>
+
+			<span>
+				<template src="tutor_select"/>
+				<button data-for="selected_tutor.accessor" class="gradient" data-event-click="EnableEditTutor">Edit</button>
+			</span>
+			<table data-for="tutor:selected_tutor.accessor">
+				<thead>
+					<tr>
+						<td>Department</td>
+						<td>Courses</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr data-for="classList:tutor.classes">
+						<td>{{classList.department_name}}</td>
+						<td>
+							<span data-if="classList.subtractive">All{{classList.courses.size ? ' Except ' : ''}}</span>
+							<span data-for="course:classList.courses">{{it_index ? ', ' : ''}}{{course}}</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 
 	<div data-if="edit_tutor" data-for="tutor:selected_tutor.accessor">
@@ -121,7 +198,7 @@
 	</div>
 </panel>
 
-<tab data-event-click="ChangedTab">Preferences</tab>
+<tab data-event-click="">Preferences</tab>
 <panel>
 	<div>
 		This is the configuration page where you will be able to control the settings of the application.
@@ -130,7 +207,7 @@
 	<div>Developer Options:<input type="checkbox" data-value="dev_enable"/></div>
 </panel>
 
-<tab data-event-click="ChangedTab">Export</tab>
+<tab data-event-click="">Export</tab>
 <panel>
 	<div>
 		<button class="gradient" data-event-click="ExportTimetable">Export Timetable</button>
@@ -149,7 +226,7 @@
 
 </panel>
 
-<tab data-if="dev_enable" data-event-click="ChangedTab">Tests</tab>
+<tab data-if="dev_enable" data-event-click="">Tests</tab>
 <panel>
 	
 </panel>

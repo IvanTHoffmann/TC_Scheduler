@@ -105,6 +105,7 @@ void Set_IntVectorScalar(FormattedIntVector &int_vector_scalar, const Rml::Varia
 struct Department
 {
 	Rml::String name;
+	bool selected; // used for summary page
 
 	// used for editing tutor class lists
 	bool edit_subtractive;
@@ -122,6 +123,8 @@ struct Department
 struct Service
 {
 	Rml::String name;
+	bool selected; // used for summary page
+
 	int min_hours;
 	int max_hours;
 	Rml::Colourb color{255, 0, 0};
@@ -176,6 +179,7 @@ struct WeekSchedule
 struct Tutor
 {
 	Rml::String first_name, last_name, email;
+	bool selected; // used for summary page
 
 	int total_hours;
 	int min_hours;
@@ -189,10 +193,14 @@ struct Tutor
 	void Load(const Json::object &inElement);
 };
 
+struct TimetableSlot {
+	int value; // Can be ServiceIndex or a number of occurances
+};
+
 struct TimetableRow {
 	Rml::String label;
-	vector<ServiceIndex_t> slots;
-	array<SelectedRangeInterface<ServiceIndex_t>,1> view;
+	vector<TimetableSlot> slots;
+	array<SelectedRangeInterface<TimetableSlot>,1> view;
 
 	TimetableRow();
 	void SetLabel(string newLabel);
@@ -211,6 +219,12 @@ class TimetableInterface
 	array<TimetableRow, 7> rows;
 	int slotsPerHour = 2;
 	int minHours = 8;
+	
+	bool editable = false;
+	enum ColorModeEnum {
+		SERVICE,
+		HEATMAP
+	} colorMode;
 
 	TimetableInterface();
 	void SetSlotsPerHour(int newSlotsPerHour);
@@ -230,15 +244,17 @@ class TimetableInterface
 
 struct AppData
 {
+	Rml::String current_tab;
 	Rml::String window_title;
 	Rml::String export_dir;
-	vector<Tutor> tutors;
-	SelectedRangeInterface<Tutor> selected_tutor;
-	SelectedRangeInterface<Department> selected_department;
-	SelectedRangeInterface<Service> selected_service;
-
+	
+	enum TimetableDisplayMode {
+		SUMMARY,
+		INDIVIDUAL
+	} timetableDisplayMode;
 	TimetableInterface timetable;
-
+	// SummaryFilter summary_filter; // flag each item instead
+	
 	// PREFERENCES
 	vector<Rml::String> schedule_names;
 	Rml::String term_season;
@@ -247,16 +263,20 @@ struct AppData
 	bool dev_enable;
 	int resolution[2];
 	float fontSize;
-
+	
 	// INDIVIDUAL
 	int total_hours; // TODO: implement
 	bool edit_tutor;
+	bool filter_all_services;
+	bool filter_all_departments;
+	bool filter_all_tutors;
+	vector<Rml::String> budgets;
 	vector<Department> departments;
 	vector<Service> services;
-	vector<Rml::String> budgets;
-
-	// SUMMARY
-	vector<Rml::String> filters;
+	vector<Tutor> tutors;
+	SelectedRangeInterface<Department> selected_department;
+	SelectedRangeInterface<Service> selected_service;
+	SelectedRangeInterface<Tutor> selected_tutor;
 
 	// SAVE/LOAD
 	void SaveSchedule(Json::object &outElement) const;

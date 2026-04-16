@@ -94,7 +94,7 @@ ServiceIndex_t &TimetableInterface::GetServiceIndex(int dayIndex, int slotIndex)
 {
 	auto& row = rows.at(dayIndex);
 	int globalSlotIndex = row.view[0].index + slotIndex;
-	return row.slots[globalSlotIndex];
+	return row.slots[globalSlotIndex].value;
 }
 
 void TimetableInterface::SetStartHour(int newStartHour)
@@ -161,7 +161,7 @@ void TimetableInterface::Save(WeekSchedule &schedule)
 		int start_slot = 0;
 		for (int end_slot = 0; end_slot <= row.slots.size(); end_slot++)
 		{
-			ServiceIndex_t slotService = ((end_slot == row.slots.size()) ? -1 : row.slots.at(end_slot));
+			ServiceIndex_t slotService = ((end_slot == row.slots.size()) ? -1 : row.slots.at(end_slot).value);
 			if (slotService == shiftService)
 			{
 				// slot matches current shift type
@@ -198,8 +198,8 @@ void TimetableInterface::Load(const WeekSchedule &schedule)
 
 		// reset slots
 		row.slots.resize(24 * slotsPerHour);
-		for (ServiceIndex_t& slot : row.slots){
-			slot = UNSCHEDULED_SLOT;
+		for (TimetableSlot& slot : row.slots){
+			slot.value = UNSCHEDULED_SLOT;
 		}
 		
 		// load shifts
@@ -212,7 +212,7 @@ void TimetableInterface::Load(const WeekSchedule &schedule)
 			}
 			for (int slot = start_slot; slot < end_slot; ++slot)
 			{
-				row.slots.at(slot) = shift.service_type;
+				row.slots.at(slot).value = shift.service_type;
 			}
 		}
 	}

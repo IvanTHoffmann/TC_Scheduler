@@ -4,7 +4,7 @@
 	<link type="text/rcss" href="window.rcss"/>
 </head>
 <body class="timetable" data-model="app_data">
-	<div data-for="selected_tutor.accessor">
+	<div>
 		<table background-color="#000" style="row-gap: 2px; column-gap: 2px">
 			<tr>
 				<td></td>
@@ -12,9 +12,9 @@
 				<td></td>
 			</tr>
 			<tr data-for="row,row_id:timetable.rows">
-				<td colspan=2>({{row_id}}) {{row.label}}</td>
+				<td colspan=2>{{row.label}}</td>
 				<td data-for="slot,slot_id:row.view[0].accessor" class="slot"
-					data-style-background-color="GetServiceColor(slot)"
+					data-style-background-color="GetSlotColor(slot.value)"
 					data-event-mousedown="OnSlotMouseDown(row_id, slot_id)"
 					data-event-mouseover="OnSlotMouseOver(row_id, slot_id)" 
 					data-event-mouseup="OnSlotMouseUp(row_id, slot_id)">
