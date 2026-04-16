@@ -34,17 +34,18 @@
 				<tbody>
 					<tr>
 						<td class="filter_checkbox">
-							<input type="checkbox"
-									data-value="filter_all_services" 
-									data-event-change="ToggleAllServices()"/>
+							<button class="gradient" data-event-click="SetSelectedServices(true)">Select All</button>
 						</td>
-						<td>ALL</td>
-					</tr>
-					<tr data-for="service:services">
 						<td class="filter_checkbox">
-							<input type="checkbox" data-value="service.selected"/>
+							<button class="gradient" data-event-click="SetSelectedServices(false)">Deselect All</button>
 						</td>
-						<td>{{service.name}}</td>
+					</tr>
+					<tr data-for="service:services"
+						data-event-click="service.selected = !service.selected" 
+						data-style-background="service.selected ? 'rgb(120, 255, 120)' : '#ffffff'">
+						<td colspan="2">
+							{{service.name}}
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -59,15 +60,18 @@
 				<tbody>
 					<tr>
 						<td class="filter_checkbox">
-							<input type="checkbox" 
-									data-value="filter_all_departments" 
-									data-event-change="ToggleAllDepartments()"/>
+							<button class="gradient" data-event-click="SetSelectedDepartments(true)">Select All</button>
 						</td>
-						<td>ALL</td>
+						<td class="filter_checkbox">
+							<button class="gradient" data-event-click="SetSelectedDepartments(false)">Deselect All</button>
+						</td>
 					</tr>
-					<tr data-for="dept:departments">
-						<td class="filter_checkbox"><input type="checkbox" data-value="dept.selected"/></td>
-						<td>{{dept.name}}</td>
+					<tr data-for="dept:departments"
+						data-event-click="dept.selected = !dept.selected" 
+						data-style-background="dept.selected ? 'rgb(120, 255, 120)' : '#ffffff'">
+						<td colspan="2">
+							{{dept.name}}
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -82,15 +86,18 @@
 				<tbody>
 					<tr>
 						<td class="filter_checkbox">
-							<input type="checkbox" 
-									data-value="filter_all_tutors" 
-									data-event-change="ToggleAllTutors()"/>
+							<button class="gradient" data-event-click="SetSelectedTutors(true)">Select All</button>
 						</td>
-						<td>ALL</td>
+						<td class="filter_checkbox">
+							<button class="gradient" data-event-click="SetSelectedTutors(false)">Deselect All</button>
+						</td>
 					</tr>
-					<tr data-for="tutor:tutors">
-						<td class="filter_checkbox"><input type="checkbox" data-value="tutor.selected"/></td>
-						<td>{{tutor.last_name}}, {{tutor.first_name}}</td>
+					<tr data-for="tutor:tutors" 
+						data-event-click="tutor.selected = !tutor.selected" 
+						data-style-background="tutor.selected ? 'rgb(120, 255, 120)' : '#ffffff'">
+						<td colspan="2">
+							{{tutor.last_name}}, {{tutor.first_name}}
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -165,13 +172,14 @@
 		<div>
 			<span>First Name:</span>
 			<input type="text" data-value="tutor.first_name" style="width:20%;"/>
-			<span>   Last Name:</span>
+			<span>Last Name:</span>
 			<input type="text" data-value="tutor.last_name" style="width:20%;"/>
-			<span>   Email:</span>
+			<span>Email:</span>
 			<input type="text" data-value="tutor.email" style="width:20%;"/>
+		</div>
+		<div>
 			<button class="gradient" data-event-click="ConfirmEditTutor">Confirm</button>
 		</div>
-
 		<table>
 			<thead>
 				<tr>

@@ -256,26 +256,41 @@ void DemoWindow::OnClick_ClassesTab(CALLBACK_PARAMS)
 	dataModelHandle.DirtyAllVariables();
 }
 
-void DemoWindow::ToggleAllServices(CALLBACK_PARAMS)
+void DemoWindow::SetSelectedServices(CALLBACK_PARAMS)
 {
+	if (arguments.size() == 0){
+		return;
+	}
+
+	bool selected = arguments.at(0).Get<bool>();
 	for(Service& service : appData.services){
-		service.selected = appData.filter_all_services;
+		service.selected = selected;
 	}
 	dataModelHandle.DirtyAllVariables();
 }
 
-void DemoWindow::ToggleAllDepartments(CALLBACK_PARAMS)
+void DemoWindow::SetSelectedDepartments(CALLBACK_PARAMS)
 {
+	if (arguments.size() == 0){
+		return;
+	}
+
+	bool selected = arguments.at(0).Get<bool>();
 	for(Department& department : appData.departments){
-		department.selected = appData.filter_all_departments;
+		department.selected = selected;
 	}
 	dataModelHandle.DirtyAllVariables();
 }
 
-void DemoWindow::ToggleAllTutors(CALLBACK_PARAMS)
+void DemoWindow::SetSelectedTutors(CALLBACK_PARAMS)
 {
+	if (arguments.size() == 0){
+		return;
+	}
+
+	bool selected = arguments.at(0).Get<bool>();
 	for(Tutor& tutor : appData.tutors){
-		tutor.selected = appData.filter_all_tutors;
+		tutor.selected = selected;
 	}
 	dataModelHandle.DirtyAllVariables();
 }
@@ -539,18 +554,15 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 		constructor.Bind("total_hours", &appData.total_hours);
 		constructor.Bind("edit_tutor", &appData.edit_tutor);
 		constructor.Bind("dev_enable", &appData.dev_enable);
-		constructor.Bind("filter_all_services", &appData.filter_all_services);
-		constructor.Bind("filter_all_departments", &appData.filter_all_departments);
-		constructor.Bind("filter_all_tutors", &appData.filter_all_tutors);
 		constructor.Bind("timetable", &appData.timetable);
 
 		// Bind Event Callbacks
 		constructor.BindEventCallback("OnClick_SummaryTab", &DemoWindow::OnClick_SummaryTab, this);
 		constructor.BindEventCallback("OnClick_SchedulesTab", &DemoWindow::OnClick_SchedulesTab, this);
 		constructor.BindEventCallback("OnClick_ClassesTab", &DemoWindow::OnClick_ClassesTab, this);
-		constructor.BindEventCallback("ToggleAllServices", &DemoWindow::ToggleAllServices, this);
-		constructor.BindEventCallback("ToggleAllDepartments", &DemoWindow::ToggleAllDepartments, this);
-		constructor.BindEventCallback("ToggleAllTutors", &DemoWindow::ToggleAllTutors, this);
+		constructor.BindEventCallback("SetSelectedServices", &DemoWindow::SetSelectedServices, this);
+		constructor.BindEventCallback("SetSelectedDepartments", &DemoWindow::SetSelectedDepartments, this);
+		constructor.BindEventCallback("SetSelectedTutors", &DemoWindow::SetSelectedTutors, this);
 		constructor.BindEventCallback("EnableEditTutor", &DemoWindow::EnableEditTutor, this);
 		constructor.BindEventCallback("ConfirmEditTutor", &DemoWindow::ConfirmEditTutor, this);
 		constructor.BindEventCallback("ScheduleLimitsChanged", &DemoWindow::ScheduleLimitsChanged, this);
@@ -566,9 +578,9 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 		constructor.BindEventCallback("OnSlotMouseOver", &DemoWindow::OnSlotMouseOver, this);
 		constructor.BindEventCallback("OnSlotMouseUp", &DemoWindow::OnSlotMouseUp, this);
 
-		// Register a transform function for getting service colors
+		// Register transform functions
 		AppData &app_data_var = appData;
-		Rml::DataTransformFunc func = [app_data_var](const Rml::VariantList &arguments) -> Rml::Variant
+		Rml::DataTransformFunc GetSlotColor = [app_data_var](const Rml::VariantList &arguments) -> Rml::Variant
 		{
 			if (arguments.empty())
 			{
@@ -588,7 +600,19 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 			}
 			return Rml::Variant(ToString(slotColor));
 		};
-		constructor.RegisterTransformFunc("GetSlotColor", func);
+		constructor.RegisterTransformFunc("GetSlotColor", GetSlotColor);
+
+		Rml::DataTransformFunc GetSelectedColor = [app_data_var](const Rml::VariantList &arguments) -> Rml::Variant
+		{
+			if (arguments.empty())
+			{
+				return {};
+			}
+
+			const bool &selected = arguments[0].Get<bool>();
+			return Rml::Variant(selected ? "#AFA" : "#DDD");
+		};
+		constructor.RegisterTransformFunc("GetSelectedColor", GetSelectedColor);
 
 		dataModelHandle = constructor.GetModelHandle();
 

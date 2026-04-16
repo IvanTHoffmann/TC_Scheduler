@@ -383,6 +383,7 @@ bool Exporter::GetWeekdayName(istream &istr, ostream &ostr)
     default:
         return false;
     }
+    
     return true;
 }
 

@@ -50,9 +50,9 @@ public:
 	void OnClick_SchedulesTab(CALLBACK_PARAMS);
 	void OnClick_ClassesTab(CALLBACK_PARAMS);
 
-	void ToggleAllServices(CALLBACK_PARAMS);
-	void ToggleAllDepartments(CALLBACK_PARAMS);
-	void ToggleAllTutors(CALLBACK_PARAMS);
+	void SetSelectedServices(CALLBACK_PARAMS);
+	void SetSelectedDepartments(CALLBACK_PARAMS);
+	void SetSelectedTutors(CALLBACK_PARAMS);
 	
 	void OnTutorChanged(CALLBACK_PARAMS);
 	void EnableEditTutor(CALLBACK_PARAMS);

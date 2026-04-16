@@ -267,9 +267,6 @@ struct AppData
 	// INDIVIDUAL
 	int total_hours; // TODO: implement
 	bool edit_tutor;
-	bool filter_all_services;
-	bool filter_all_departments;
-	bool filter_all_tutors;
 	vector<Rml::String> budgets;
 	vector<Department> departments;
 	vector<Service> services;
