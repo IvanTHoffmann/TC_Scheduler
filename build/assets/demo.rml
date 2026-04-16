@@ -164,9 +164,11 @@
 
 		<div>
 			<span>First Name:</span>
-			<input type="text" data-value="tutor.first_name"/>
+			<input type="text" data-value="tutor.first_name" style="width:20%;"/>
 			<span>   Last Name:</span>
-			<input type="text" data-value="tutor.last_name"/>
+			<input type="text" data-value="tutor.last_name" style="width:20%;"/>
+			<span>   Email:</span>
+			<input type="text" data-value="tutor.email" style="width:20%;"/>
 			<button class="gradient" data-event-click="ConfirmEditTutor">Confirm</button>
 		</div>
 
