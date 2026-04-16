@@ -442,7 +442,7 @@ bool Exporter::GetShiftDuration(istream &istr, ostream &ostr)
     }
     else
     {
-        ostr << "<span style=\"color:#969696;font-size:10pt;\">No Availability</span>";
+        ostr << "<span style=\"color:#717171;font-size:10pt;\">No Availability</span>";
     }
     return true;
 }

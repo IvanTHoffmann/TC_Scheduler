@@ -1,82 +1,179 @@
-<p>{selected_tutor_firstname} is a tutor at the Everett Community College Tutoring Center.</p>
-<h3>{selected_tutor_firstname} is best suited to help with:</h3>
+<p>
+    {selected_tutor_firstname} is a tutor at the Everett Community College Tutoring Center.
+</p>
+
 <table>
-    {foreach_classList}
-    <tr>
-        <td width="auto">{classList_deptname}&nbsp;&nbsp;&nbsp;</td>
-        <td>{classList_courses}</td>
-    <tr>
-    {endloop_classList}
+
+    <caption>
+        <h3>{selected_tutor_firstname} is best suited to help with:</h3>
+    </caption>
+
+    <thead width="auto">
+        <tr>
+            <th scope="col" style="text-align:left;">
+                Department
+            </th>
+            <th scope="col" style="text-align:left;">
+                Course(s)
+            </th>
+        </tr>
+    </thead>
+
+    <tbody width="auto">
+        {foreach_classList}
+        <tr>
+            <td width="auto">{classList_deptname}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td>{classList_courses}</td>
+        </tr>
+        {endloop_classList}
+    </tbody>
+    
 </table>
-<p>&nbsp;</p>
-<p style="text-align: center;">&nbsp;</p>
-<h2>{selected_tutor_firstname}'s {term_season} {term_year} Schedule</h2>
+
 {set_service}{In-Person}{By Appointment}{end_set_service}
 {if_service}
-<p>
-    <table style="border-collapse: collapse; width: 96.1074%; height: 226px; border-style: solid; margin-left: auto; margin-right: auto;" 
-        border="3">
-        <caption style="font-size: 24pt;">
-            <strong>
-                In Person
-            </strong>
-        </caption>
-        <tbody>
-            <tr style="height: 97.5px;">
-                {foreach_weekday}
-                <th style="text-align: center; height: 226px; width: 14.2857%;" rowspan="2" scope="col">
-                    <strong style="font-size: 18pt;">{weekday_name}s</strong>
-                    <br/><br/>
-                    {foreach_service_shift}
-                    <span style="font-size: 14pt;">{shift_duration}</span><br/>
-                    {endloop_service_shift}
-                </th>
-                {endloop_weekday}
-            </tr>
-        </tbody>
-    </table>
-</p>
+<br/>
+<table style="border-collapse: collapse; width: 100%;" border="3">
+
+    <caption>
+        <h2>{selected_tutor_firstname}'s {term_season} {term_year} in-person schedule</h2>
+    </caption>
+
+    <thead style="font-size: 24pt;">
+        <tr>
+            {foreach_weekday}
+            <th scope="col" display="flex" style="text-align: center; vertical-align: top; width: 14.2857%; padding-top: 20px; padding-bottom: 20px;">
+                <b style="font-size: 18pt;">
+                    {weekday_name}s
+                </b>
+            </th>
+            {endloop_weekday}
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            {foreach_weekday}
+            <td display="flex" style="text-align: center; vertical-align: top; width: 14.2857%; padding-top: 20px; padding-bottom: 20px;">
+                {foreach_service_shift}
+                <p style="font-size: 14pt;">{shift_duration}</p>
+                {endloop_service_shift}
+            </td>
+            {endloop_weekday}
+        </tr>
+    </tbody>
+
+</table>
 {endif_service}
+
+
 {set_service}{By Appointment}{end_set_service}
 {if_service}
-<p>
-    <table style="border-collapse: collapse; width: 96.1074%; height: 226px; border-style: solid; margin-left: auto; margin-right: auto;"
-        border="3">
-        <caption style="font-size: 24pt;">
-            <strong>
-                <a class="inline_disabled"
-                    href="https://everettcc.starfishsolutions.com/starfish-ops/appointments/appointments.html?instuid=13008&amp;mode=calendarsManaged"
-                    target="_blank" rel="noopener">
-                    Zoom Tutoring by Appointment
-                </a>
-            </strong>
-        </caption>
-        <tbody>
-            <tr style="height: 97.5px;">
-                {foreach_weekday}
-                <th style="text-align: center; height: 226px; width: 14.2857%;" rowspan="2" scope="col">
-                    <strong style="font-size: 18pt;">{weekday_name}s</strong>
-                <br/><br/>
-                    {foreach_service_shift}
-                    <span style="font-size: 14pt;">{shift_duration}</span><br/>
-                    {endloop_service_shift}
-                </th>
-                {endloop_weekday}
-            </tr>
-        </tbody>
-    </table>
-</p>
+<br/>
+<table style="border-collapse: collapse; width: 100%;" border="3">
+
+    <caption>
+        <h2>
+            {selected_tutor_firstname}'s {term_season} {term_year} online appointment schedule
+            <br/>
+            (<a class="inline_disabled"
+                href="https://everettcc.instructure.com/courses/1940759/pages/zoom-tutoring-appointments?module_item_id=43681589"
+                target="_blank" rel="noopener">Click here to schedule an online appointment</a>)
+        </h2>
+    </caption>
+
+    <thead style="font-size: 24pt;">
+        <tr>
+            {foreach_weekday}
+            <th scope="col" display="flex" style="text-align: center; vertical-align: top; width: 14.2857%; padding-top: 20px; padding-bottom: 20px;">
+                <b style="font-size: 18pt;">
+                    {weekday_name}s
+                </b>
+            </th>
+            {endloop_weekday}
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            {foreach_weekday}
+            <td display="flex" style="text-align: center; vertical-align: top; width: 14.2857%; padding-top: 20px; padding-bottom: 20px;">
+                {foreach_service_shift}
+                <p style="font-size: 14pt;">{shift_duration}</p>
+                {endloop_service_shift}
+            </td>
+            {endloop_weekday}
+        </tr>
+    </tbody>
+
+</table>
 {endif_service}
-<p style="text-align: center;">&nbsp;</p>
-<h4>Contact</h4>
-<p><a href="mailto:{selected_tutor_email}">Send {selected_tutor_firstname} an email</a></p>
-<p><em>This email is for questions about tutoring and technical assistance only. Please do not address content questions
-        to this location.</em></p>
-<p>&nbsp;&nbsp;&nbsp;</p>
-<p style="text-align: center;"><span style="color: #ff6600;"><span style="color: #000000;"><span
-                style="color: #ff6600;"><span style="color: #000000;"><span style="font-size: 18pt;"><a
-                            class="btn btn-primary" title="Support by Tutor"
-                            href="https://everettcc.instructure.com/courses/1940759/modules/5076665"
-                            data-api-endpoint="https://everettcc.instructure.com/api/v1/courses/1940759/modules/5076665"
-                            data-api-returntype="Module">Back To Support by Tutor</a></span></span></span></span></span>
+
+{set_service}{eTutoring}{end_set_service}
+{if_service}
+<br/>
+<table style="border-collapse: collapse; width: 100%;" border="3">
+
+    <caption>
+        <h2>
+            {selected_tutor_firstname}'s {term_season} {term_year} eTutoring schedule
+            <br/>
+            (<a class="inline_disabled"
+                href="https://etutoringonline.org/login.cfm?institutionid=42&returnPage=&institution=EVERETT_COMMUNITY_COLLEGE"
+                target="_blank" rel="noopener">Click here to explore eTutoring</a>)
+        </h2>
+    </caption>
+
+    <thead style="font-size: 24pt;">
+        <tr>
+            {foreach_weekday}
+            <th scope="col" display="flex" style="text-align: center; vertical-align: top; width: 14.2857%; padding-top: 20px; padding-bottom: 20px;">
+                <b style="font-size: 18pt;">
+                    {weekday_name}s
+                </b>
+            </th>
+            {endloop_weekday}
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            {foreach_weekday}
+            <td display="flex" style="text-align: center; vertical-align: top; width: 14.2857%; padding-top: 20px; padding-bottom: 20px;">
+                {foreach_service_shift}
+                <p style="font-size: 14pt;">{shift_duration}</p>
+                {endloop_service_shift}
+            </td>
+            {endloop_weekday}
+        </tr>
+    </tbody>
+
+</table>
+{endif_service}
+
+<br/>
+
+<h3>
+    Contact
+</h3>
+<p>
+    <a href="mailto:{selected_tutor_email}">Send {selected_tutor_firstname} an email</a>
+</p>
+<p>
+    <em>
+        This email is for questions about tutoring and technical assistance only. Please do not address content questions
+        to this location.
+    </em>
+</p>
+
+&nbsp;&nbsp;&nbsp;
+
+<p style="text-align: center;">
+    <a 
+        class="btn btn-primary" title="Support by Tutor"
+        href="https://everettcc.instructure.com/courses/1940759/modules/5076665"
+        data-api-endpoint="https://everettcc.instructure.com/api/v1/courses/1940759/modules/5076665"
+        data-api-returntype="Module">
+        Back To Support by Tutor
+    </a>
 </p>
