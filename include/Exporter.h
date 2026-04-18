@@ -37,6 +37,7 @@ class Exporter {
 
     // Conditional Symbols
     bool If_Service(istream& istr, ostream& ostr);
+    bool If_Email(istream& istr, ostream& ostr);
 
     // Setter symbols
     bool SetService(istream& istr, ostream& ostr);

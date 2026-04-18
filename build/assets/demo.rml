@@ -13,9 +13,8 @@
 
 <tabset data-model="app_data">
 
-<tab data-event-click="OnClick_SummaryTab()">Summary</tab>
+<tab data-event-click="OnClick_SummaryTab()">Overview</tab>
 <panel>
-	<p class="title" align:"center">Summary Page</p>
 	
 	<div>
 		<button class="gradient" data-event-click="OnTutorChanged">Apply Filter</button>
@@ -24,104 +23,138 @@
 		<br/>
 
 		<div class="flex">
-		<div>
-			<table class="filter_table">
-				<thead>
-					<tr>
-						<td colspan="2">SERVICES</td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td class="filter_checkbox">
-							<button class="gradient" data-event-click="SetSelectedServices(true)">Select All</button>
-						</td>
-						<td class="filter_checkbox">
-							<button class="gradient" data-event-click="SetSelectedServices(false)">Deselect All</button>
-						</td>
-					</tr>
-					<tr data-for="service:services"
-						data-event-click="service.selected = !service.selected" 
-						data-style-background="service.selected ? 'rgb(120, 255, 120)' : '#ffffff'">
-						<td colspan="2">
-							{{service.name}}
-						</td>
-					</tr>
-				</tbody>
-			</table>
+			<div>
+				<table class="filter_table">
+					<thead>
+						<tr>
+							<td colspan="2">SERVICES</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="filter_checkbox">
+								<button class="gradient" style="width:85%" data-event-click="SetSelectedServices(true)">All</button>
+							</td>
+							<td class="filter_checkbox">
+								<button class="gradient" style="width:85%" data-event-click="SetSelectedServices(false)">None</button>
+							</td>
+						</tr>
+						<tr data-for="service:services"
+							data-event-mousedown="service.selected = !service.selected" 
+							data-style-background="service.selected ? 'rgb(120, 255, 120)' : '#ffffff'">
+							<td colspan="2">
+								{{service.name}}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div>
+				<table class="filter_table">
+					<thead>
+						<tr>
+							<td colspan="2">DEPARTMENTS</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="filter_checkbox">
+								<button class="gradient" style="width:85%" data-event-click="SetSelectedDepartments(true)">All</button>
+							</td>
+							<td class="filter_checkbox">
+								<button class="gradient" style="width:85%" data-event-click="SetSelectedDepartments(false)">None</button>
+							</td>
+						</tr>
+						<tr data-for="dept:departments"
+							data-event-mousedown="dept.selected = !dept.selected" 
+							data-style-background="dept.selected ? 'rgb(120, 255, 120)' : '#ffffff'">
+							<td colspan="2">
+								{{dept.name}}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div>
+				<table class="filter_table">
+					<thead>
+						<tr>
+							<td colspan="2">TUTORS</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="filter_checkbox">
+								<button class="gradient" style="width:85%" data-event-click="SetSelectedTutors(true)">All</button>
+							</td>
+							<td class="filter_checkbox">
+								<button class="gradient" style="width:85%" data-event-click="SetSelectedTutors(false)">None</button>
+							</td>
+						</tr>
+						<tr data-for="tutor:tutors" 
+							data-event-mousedown="tutor.selected = !tutor.selected" 
+							data-style-background="tutor.selected ? 'rgb(120, 255, 120)' : '#ffffff'">
+							<td colspan="2">
+								{{tutor.first_name}}, {{tutor.last_name}}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
-		<div>
-			<table class="filter_table">
-				<thead>
-					<tr>
-						<td colspan="2">DEPARTMENTS</td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td class="filter_checkbox">
-							<button class="gradient" data-event-click="SetSelectedDepartments(true)">Select All</button>
-						</td>
-						<td class="filter_checkbox">
-							<button class="gradient" data-event-click="SetSelectedDepartments(false)">Deselect All</button>
-						</td>
-					</tr>
-					<tr data-for="dept:departments"
-						data-event-click="dept.selected = !dept.selected" 
-						data-style-background="dept.selected ? 'rgb(120, 255, 120)' : '#ffffff'">
-						<td colspan="2">
-							{{dept.name}}
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<div>
-			<table class="filter_table">
-				<thead>
-					<tr>
-						<td colspan="2">TUTORS</td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td class="filter_checkbox">
-							<button class="gradient" data-event-click="SetSelectedTutors(true)">Select All</button>
-						</td>
-						<td class="filter_checkbox">
-							<button class="gradient" data-event-click="SetSelectedTutors(false)">Deselect All</button>
-						</td>
-					</tr>
-					<tr data-for="tutor:tutors" 
-						data-event-click="tutor.selected = !tutor.selected" 
-						data-style-background="tutor.selected ? 'rgb(120, 255, 120)' : '#ffffff'">
-						<td colspan="2">
-							{{tutor.last_name}}, {{tutor.first_name}}
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
+
+		<br/>
+		First name:
+		<input type="text" data-value="mod_tutor_first_name" style="width:20%"/>
+		Last name:
+		<input type="text" data-value="mod_tutor_last_name" style="width:20%"/>
+		<button class="gradient" data-event-click="AddTutor">Add Tutor</button>
+		<button class="gradient" data-event-click="RemoveTutor">Remove Tutor</button>
+
+		<br/>
+		Service Name: 
+		<input type="text" data-value="mod_service_name" style="width:20%"/>
+		<button class="gradient" data-event-click="AddService">Add Service</button>
+		<button class="gradient" data-event-click="RemoveService">Remove Service</button>
+
+		<br/>
+		Department Name: 
+		<input type="text" data-value="mod_department_name" style="width:20%"/>
+		<button class="gradient" data-event-click="AddDepartment">Add Department</button>
+		<button class="gradient" data-event-click="RemoveDepartment">Remove Department</button>
 
 	</div>
-
 </panel>
 
 <tab data-event-click="OnClick_SchedulesTab()">Manage Schedules</tab>
 <panel>
-	<p class="title">Manage Schedules</p>
-	<div>
+
+	<div data-if="!edit_tutor">
 		<template src="tutor_select"/>
-		<template src="service_select"/>
+		<br/>
+		<button data-for="selected_tutor.accessor" class="gradient" data-event-click="EnableEditTutor">Edit Tutor</button>
+	</div>
+
+	<div data-if="edit_tutor" data-for="tutor:selected_tutor.accessor">
+		<span>First Name:</span>
+		<input type="text" data-value="tutor.first_name" style="width:20%;"/>
+		<span>Last Name:</span>
+		<input type="text" data-value="tutor.last_name" style="width:20%;"/>
+		<span>Email:</span>
+		<input type="text" data-value="tutor.email" style="width:20%;"/>
+
+		<br/>
+
+		<button class="gradient" data-event-click="ConfirmEditTutor">Confirm</button>
+	</div>
+
+	<div data-for="selected_tutor.accessor">
 		<div class="schedule-toolbar">
 			<button class="gradient" data-event-click="ResetSchedule">Reset Grid</button>
+			<template src="service_select"/>
 			<div class="schedule-summary">Total: {{total_hours}} hr</div>
 		</div>
-
-		<div data-for="selected_tutor.accessor">
-			<template src="timetable" />
-		</div>
+		<template src="timetable" />
 
 		<div data-for="tutor:selected_tutor.accessor">
 			<div>
@@ -134,64 +167,42 @@
 			</div>
 		</div>
 	</div>
-</panel>
 
-<tab data-event-click="OnClick_ClassesTab()">Manage Classes</tab>
-<panel>
+	<br/>
+
 	<div data-if="!edit_tutor">
-		<p class="title">Manage Classes</p>
-		<div>
-
-			<span>
-				<template src="tutor_select"/>
-				<button data-for="selected_tutor.accessor" class="gradient" data-event-click="EnableEditTutor">Edit</button>
-			</span>
-			<table data-for="tutor:selected_tutor.accessor">
-				<thead>
-					<tr>
-						<td>Department</td>
-						<td>Courses</td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr data-for="classList:tutor.classes">
-						<td>{{classList.department_name}}</td>
-						<td>
-							<span data-if="classList.subtractive">All{{classList.courses.size ? ' Except ' : ''}}</span>
-							<span data-for="course:classList.courses">{{it_index ? ', ' : ''}}{{course}}</span>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+		<table data-for="tutor:selected_tutor.accessor">
+			<thead>
+				<tr>
+					<td>Department</td>
+					<td>Courses</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-for="classList:tutor.classes">
+					<td>{{classList.department_name}}</td>
+					<td>
+						<span data-if="classList.subtractive">All{{classList.courses.size ? ' Except ' : ''}}</span>
+						<span data-for="course:classList.courses">{{it_index ? ', ' : ''}}{{course}}</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 
 	<div data-if="edit_tutor" data-for="tutor:selected_tutor.accessor">
-		<p class="title">Edit Tutor Info</p>
-
-		<div>
-			<span>First Name:</span>
-			<input type="text" data-value="tutor.first_name" style="width:20%;"/>
-			<span>Last Name:</span>
-			<input type="text" data-value="tutor.last_name" style="width:20%;"/>
-			<span>Email:</span>
-			<input type="text" data-value="tutor.email" style="width:20%;"/>
-		</div>
-		<div>
-			<button class="gradient" data-event-click="ConfirmEditTutor">Confirm</button>
-		</div>
 		<table>
 			<thead>
 				<tr>
-					<td style="width:10%">Department</td>
-					<td style="width:10%">All / All Except</td>
+					<td style="width:auto">Department</td>
+					<td style="width:auto">All / All Except</td>
 					<td>Courses</td>
 					<td>Output</td>
 				</tr>
 			</thead>
 			<tbody>
 				<tr data-for="department:departments">
-					<td>{{department.name}}</td>
+					<td style="width:auto">{{department.name}}</td>
 					<td>
 						<input type="checkbox" data-checked="department.edit_subtractive"/>
 					</td>

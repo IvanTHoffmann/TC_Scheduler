@@ -209,8 +209,8 @@ struct TimetableRow {
 class TimetableInterface
 {
 	public:
-	vector<string> labels = {"12:00am", "1:00am", "2:00am", "3:00am", "4:00am", "5:00am", "6:00am", "7:00am", "8:00am", "9:00am", "10:00am", "11:00am", 
-						     "12:00pm", "1:00pm", "2:00pm", "3:00pm", "4:00pm", "5:00pm", "6:00pm", "7:00pm", "8:00pm", "9:00pm", "10:00pm", "11:00pm", "12:00am"};
+	vector<string> labels = {"12a", "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", 
+						     "12p", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p", "12a"};
 
 	// View is stored in an array of size 1 because rmlui doesn't allow directly nesting structs.
 	// I think this is a bug. I might look into it later.
@@ -247,6 +247,8 @@ struct AppData
 	Rml::String current_tab;
 	Rml::String window_title;
 	Rml::String export_dir;
+
+	Rml::String mod_tutor_first_name, mod_tutor_last_name, mod_service_name, mod_department_name;
 	
 	enum TimetableDisplayMode {
 		SUMMARY,

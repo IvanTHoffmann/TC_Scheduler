@@ -81,8 +81,10 @@ bool Exporter::Invoke(istream &istr, ostream &ostr, const string &symbol)
 
 bool Exporter::ServiceIsSelected(int service_type)
 {
-    for (int service_id : service_ids){
-        if (service_type == service_id){
+    for (int service_id : service_ids)
+    {
+        if (service_type == service_id)
+        {
             return true;
         }
     }
@@ -100,6 +102,7 @@ Exporter::Exporter(AppData *_appData) : appData(_appData)
     symbols["classList_courses"] = Exporter::GetClassListCourses;
     symbols["set_service"] = Exporter::SetService;
     symbols["if_service"] = Exporter::If_Service;
+    symbols["if_email"] = Exporter::If_Email;
     symbols["foreach_weekday"] = Exporter::Foreach_Weekday;
     symbols["weekday_name"] = Exporter::GetWeekdayName;
     symbols["foreach_service_shift"] = Exporter::Foreach_ServiceShift;
@@ -290,7 +293,8 @@ bool Exporter::If_Service(istream &istr, ostream &ostr)
     }
 
     bool foundInPersonShift = false;
-    for (const DaySchedule& daySchedule : tutor.schedule.days){
+    for (const DaySchedule &daySchedule : tutor.schedule.days)
+    {
         for (const ShiftSchedule &shift : daySchedule.shifts)
         {
             if (ServiceIsSelected(shift.service_type))
@@ -300,6 +304,31 @@ bool Exporter::If_Service(istream &istr, ostream &ostr)
                 return true;
             }
         }
+    }
+    return true;
+}
+
+bool Exporter::If_Email(istream &istr, ostream &ostr)
+{
+    if (appData->selected_tutor.accessor.size() == 0)
+    {
+        // Warning: No tutor selected
+        return false;
+    }
+
+    Tutor &tutor = *appData->selected_tutor.accessor.begin();
+    stringstream buffer;
+
+    // Read the loop body into buffer
+    if (!ReadToSymbol(istr, buffer, "endif_email"))
+    {
+        return false;
+    }
+
+    if (tutor.email.size())
+    {
+        // perform replacements in loop body
+        Process(buffer, ostr);
     }
     return true;
 }
@@ -316,21 +345,25 @@ bool Exporter::SetService(istream &istr, ostream &ostr)
     stringstream tmpOutStream;
     stringstream service_str;
     service_ids.clear();
-    while(ReadToNextSymbol(buffer, tmpOutStream, service_str)) {
+    while (ReadToNextSymbol(buffer, tmpOutStream, service_str))
+    {
 
         int service_id = 0;
-        for (const Service& service : appData->services){
-            if (service.name == service_str.str()){
+        for (const Service &service : appData->services)
+        {
+            if (service.name == service_str.str())
+            {
                 break;
             }
             service_id++;
         }
 
-        if (service_id == appData->services.size()){
+        if (service_id == appData->services.size())
+        {
             cout << "invalid service: " << service_str.str() << endl;
             return false;
         }
-        
+
         service_ids.push_back(service_id);
         service_str.str("");
         service_str.clear();
@@ -383,7 +416,7 @@ bool Exporter::GetWeekdayName(istream &istr, ostream &ostr)
     default:
         return false;
     }
-    
+
     return true;
 }
 
@@ -412,24 +445,28 @@ bool Exporter::Foreach_ServiceShift(istream &istr, ostream &ostr)
     {
         if (ServiceIsSelected(shift.service_type))
         {
-            if (iter_found_shift){
-                if (iter_shift.end == shift.start){
+            if (iter_found_shift)
+            {
+                if (iter_shift.end == shift.start)
+                {
                     // merge shifts into one
                     iter_shift.end = shift.end;
                 }
-                else{
+                else
+                {
                     // perform replacements in loop body
                     Process(buffer, ostr);
                     iter_shift = shift;
                 }
             }
-            else {
+            else
+            {
                 iter_shift = shift;
                 iter_found_shift = true;
             }
         }
     }
-    
+
     Process(buffer, ostr); // Writes the final shift or "No Availability" if iter_found_shift is false
 
     return true;

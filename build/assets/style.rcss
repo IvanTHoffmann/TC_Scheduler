@@ -34,10 +34,12 @@
 body.window
 {
 	inset: 50dp 50dp;
+	/*
 	min-width: 1040dp;
 	min-height: 300dp;
 	max-width: none;
 	max-height: none;
+	*/
 }
 div#title_bar div#icon
 {
@@ -143,7 +145,7 @@ p.title
 	opacity: 0.95;
 	border: 1dp #555;
 	border-radius: 4dp;
-	min-width: 100dp;
+	/* min-width: 100dp; */
 	text-align: center;
 }
 
@@ -406,14 +408,14 @@ form h2 {
 }
 #col_rml_source
 {
-	min-width: 15%;
-	max-width: 85%;
+	/* min-width: 15%;
+	max-width: 85%; */
 }
 #row_source
 {
 	height: 40%;
-	min-height: 15%;
-	max-height: 85%;
+	/* min-height: 15%;
+	max-height: 85%; */
 }
 .slider
 {

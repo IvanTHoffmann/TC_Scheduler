@@ -212,7 +212,14 @@ void TimetableInterface::Load(const WeekSchedule &schedule)
 			}
 			for (int slot = start_slot; slot < end_slot; ++slot)
 			{
-				row.slots.at(slot).value = shift.service_type;
+				switch(colorMode){
+				case ColorModeEnum::SERVICE:
+					row.slots.at(slot).value = shift.service_type;
+					break;
+				case ColorModeEnum::HEATMAP:
+					row.slots.at(slot).value += 1;
+					break;
+				}
 			}
 		}
 	}

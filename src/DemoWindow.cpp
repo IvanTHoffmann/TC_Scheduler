@@ -128,64 +128,76 @@ int DemoWindow::GetHeight()
 void DemoWindow::UpdateTimetable()
 {
 	WeekSchedule filteredSchedule;
-	switch(appData.timetableDisplayMode){
-		case AppData::TimetableDisplayMode::SUMMARY:
-			// summarize data based on active filters
-			for (const Tutor& tutor : appData.tutors){
-				if (!tutor.selected){
+	switch (appData.timetableDisplayMode)
+	{
+	case AppData::TimetableDisplayMode::SUMMARY:
+		// summarize data based on active filters
+		for (const Tutor &tutor : appData.tutors)
+		{
+			if (!tutor.selected)
+			{
+				continue;
+			}
+
+			// search for shifts that match the search filter
+			bool matches = false;
+			for (const Department &dept : appData.departments)
+			{
+				if (!dept.selected)
+				{
 					continue;
 				}
-				
-				// search for shifts that match the search filter
-				bool matches = false;
-				for (const Department& dept : appData.departments){
-					if (!dept.selected){
-						continue;
-					}
 
-					for (const ClassList& classList : tutor.classes){
-						if (classList.department_name == dept.name){
-							matches = true;
-							break;
-						}
-					}
-					if (matches){
+				for (const ClassList &classList : tutor.classes)
+				{
+					if (classList.department_name == dept.name)
+					{
+						matches = true;
 						break;
 					}
 				}
-				if (!matches){
-					continue;
-				}
-
-				int dayId = 0;
-				for (const DaySchedule& day : tutor.schedule.days){
-					for (const ShiftSchedule& shift : day.shifts){
-						if (!appData.services.at(shift.service_type).selected){
-							// this shift's service type is not selected
-							continue;
-						}
-						// This shift is of a selected service type
-						filteredSchedule.days.at(dayId).shifts.push_back(shift);
-					}
-					dayId++;
+				if (matches)
+				{
+					break;
 				}
 			}
-
-			// load summarized schedule
-			appData.timetable.Load(filteredSchedule);
-			dataModelHandle.DirtyAllVariables();
-			break;
-
-		case AppData::TimetableDisplayMode::INDIVIDUAL:
-			Tutor *tutor = appData.selected_tutor.accessor.ptr();
-			if (!tutor)
+			if (!matches)
 			{
-				return;
+				continue;
 			}
 
-			appData.timetable.Load(tutor->schedule);
-			dataModelHandle.DirtyAllVariables();
-			break;
+			int dayId = 0;
+			for (const DaySchedule &day : tutor.schedule.days)
+			{
+				for (const ShiftSchedule &shift : day.shifts)
+				{
+					if (!appData.services.at(shift.service_type).selected)
+					{
+						// this shift's service type is not selected
+						continue;
+					}
+					// This shift is of a selected service type
+					filteredSchedule.days.at(dayId).shifts.push_back(shift);
+				}
+				dayId++;
+			}
+		}
+
+		// load summarized schedule
+		appData.timetable.Load(filteredSchedule);
+		dataModelHandle.DirtyAllVariables();
+		break;
+
+	case AppData::TimetableDisplayMode::INDIVIDUAL:
+		Tutor *tutor = appData.selected_tutor.accessor.ptr();
+		if (!tutor)
+		{
+			return;
+		}
+
+		appData.timetable.Load(tutor->schedule);
+		dataModelHandle.DirtyAllVariables();
+		break;
 	}
 }
 
@@ -196,7 +208,7 @@ void DemoWindow::UpdateScheduleSummary()
 	{
 		return;
 	}
-	
+
 	int selected_tutor = appData.selected_tutor.index;
 	int scheduled_slots = CountTutorScheduleSlots(selected_tutor);
 	std::string scheduled_hours = FormatTutorHours(scheduled_slots);
@@ -213,7 +225,7 @@ void DemoWindow::UpdateScheduleSummary()
 	{
 		summary_text = "Total: 0 hr";
 	}
-	
+
 	if (auto summary_el = document->GetElementById("schedule_hours_summary"))
 	{
 		summary_el->SetInnerRML(summary_text);
@@ -235,7 +247,8 @@ void DemoWindow::OnTutorChanged(CALLBACK_PARAMS)
 	UpdateTimetable();
 }
 
-void DemoWindow::OnClick_SummaryTab(CALLBACK_PARAMS){
+void DemoWindow::OnClick_SummaryTab(CALLBACK_PARAMS)
+{
 	appData.timetable.editable = false;
 	appData.timetable.colorMode = TimetableInterface::ColorModeEnum::HEATMAP;
 	appData.timetableDisplayMode = AppData::TimetableDisplayMode::SUMMARY;
@@ -244,6 +257,7 @@ void DemoWindow::OnClick_SummaryTab(CALLBACK_PARAMS){
 
 void DemoWindow::OnClick_SchedulesTab(CALLBACK_PARAMS)
 {
+	appData.edit_tutor = false;
 	appData.timetable.editable = true;
 	appData.timetable.colorMode = TimetableInterface::ColorModeEnum::SERVICE;
 	appData.timetableDisplayMode = AppData::TimetableDisplayMode::INDIVIDUAL;
@@ -252,18 +266,19 @@ void DemoWindow::OnClick_SchedulesTab(CALLBACK_PARAMS)
 
 void DemoWindow::OnClick_ClassesTab(CALLBACK_PARAMS)
 {
-	appData.edit_tutor = false;
-	dataModelHandle.DirtyAllVariables();
+	// TODO: remove
 }
 
 void DemoWindow::SetSelectedServices(CALLBACK_PARAMS)
 {
-	if (arguments.size() == 0){
+	if (arguments.size() == 0)
+	{
 		return;
 	}
 
 	bool selected = arguments.at(0).Get<bool>();
-	for(Service& service : appData.services){
+	for (Service &service : appData.services)
+	{
 		service.selected = selected;
 	}
 	dataModelHandle.DirtyAllVariables();
@@ -271,12 +286,14 @@ void DemoWindow::SetSelectedServices(CALLBACK_PARAMS)
 
 void DemoWindow::SetSelectedDepartments(CALLBACK_PARAMS)
 {
-	if (arguments.size() == 0){
+	if (arguments.size() == 0)
+	{
 		return;
 	}
 
 	bool selected = arguments.at(0).Get<bool>();
-	for(Department& department : appData.departments){
+	for (Department &department : appData.departments)
+	{
 		department.selected = selected;
 	}
 	dataModelHandle.DirtyAllVariables();
@@ -284,12 +301,14 @@ void DemoWindow::SetSelectedDepartments(CALLBACK_PARAMS)
 
 void DemoWindow::SetSelectedTutors(CALLBACK_PARAMS)
 {
-	if (arguments.size() == 0){
+	if (arguments.size() == 0)
+	{
 		return;
 	}
 
 	bool selected = arguments.at(0).Get<bool>();
-	for(Tutor& tutor : appData.tutors){
+	for (Tutor &tutor : appData.tutors)
+	{
 		tutor.selected = selected;
 	}
 	dataModelHandle.DirtyAllVariables();
@@ -345,6 +364,7 @@ void DemoWindow::ConfirmEditTutor(CALLBACK_PARAMS)
 			classList.department_name = dept.name;
 			classList.subtractive = dept.edit_subtractive;
 			copy(dept.edit_courses.begin(), dept.edit_courses.end(), back_inserter(classList.courses));
+			sort(classList.courses.begin(), classList.courses.end());
 			tutor->classes.push_back(classList);
 		}
 	}
@@ -355,10 +375,94 @@ void DemoWindow::ConfirmEditTutor(CALLBACK_PARAMS)
 
 void DemoWindow::AddTutor(CALLBACK_PARAMS)
 {
+	if (appData.mod_tutor_first_name.size() == 0 || appData.mod_tutor_last_name.size() == 0)
+	{
+		return;
+	}
+
+	appData.tutors.push_back({});
+
+	appData.tutors.back().first_name = appData.mod_tutor_first_name;
+	appData.tutors.back().last_name = appData.mod_tutor_last_name;
+
+	sort(appData.tutors.begin(), appData.tutors.end(), 
+	[](const Tutor& a, const Tutor& b) { 
+		return (a.first_name < b.first_name) || ((a.first_name == b.first_name) && (a.last_name == b.last_name)); });
+
+	appData.mod_tutor_first_name = "";
+	appData.mod_tutor_last_name = "";
+
+	dataModelHandle.DirtyAllVariables();
 }
 
 void DemoWindow::RemoveTutor(CALLBACK_PARAMS)
 {
+	for (auto tutor = appData.tutors.begin(); tutor != appData.tutors.end(); tutor++)
+	{
+		if ((tutor->first_name == appData.mod_tutor_first_name) && (tutor->last_name == appData.mod_tutor_last_name))
+		{
+			appData.tutors.erase(tutor);
+			appData.mod_tutor_first_name = "";
+			appData.mod_tutor_last_name = "";
+			dataModelHandle.DirtyAllVariables();
+			break;
+		}
+	}
+}
+
+void DemoWindow::AddService(CALLBACK_PARAMS)
+{
+	if (appData.mod_service_name.size() == 0)
+	{
+		return;
+	}
+	appData.services.push_back({});
+	appData.services.back().name = appData.mod_service_name;
+	
+	appData.mod_service_name = "";
+	dataModelHandle.DirtyAllVariables();
+}
+
+void DemoWindow::RemoveService(CALLBACK_PARAMS)
+{
+	for (auto service = appData.services.begin(); service != appData.services.end(); service++)
+	{
+		if (service->name == appData.mod_service_name)
+		{
+			appData.services.erase(service);
+			dataModelHandle.DirtyAllVariables();
+			break;
+		}
+	}
+}
+
+void DemoWindow::AddDepartment(CALLBACK_PARAMS)
+{
+	if (appData.mod_department_name.size() == 0)
+	{
+		return;
+	}
+	appData.departments.push_back({});
+	appData.departments.back().name = appData.mod_department_name;
+	
+	sort(appData.departments.begin(), appData.departments.end(), 
+	[](const Department& a, const Department& b) { return a.name < b.name; });
+	
+	appData.mod_department_name = "";
+	dataModelHandle.DirtyAllVariables();
+}
+
+void DemoWindow::RemoveDepartment(CALLBACK_PARAMS)
+{
+	for (auto department = appData.departments.begin(); department != appData.departments.end(); department++)
+	{
+		if (department->name == appData.mod_department_name)
+		{
+			appData.departments.erase(department);
+			dataModelHandle.DirtyAllVariables();
+			break;
+		}
+	}
 }
 
 void DemoWindow::ExportTutorPage(CALLBACK_PARAMS)
@@ -388,38 +492,38 @@ void DemoWindow::ExportAll(CALLBACK_PARAMS)
 
 void DemoWindow::OnSlotMouseDown(CALLBACK_PARAMS)
 {
-	if (!appData.timetable.editable){
-		return;
-	}
-
-	Tutor *tutor = appData.selected_tutor.accessor.ptr();
-	if (!tutor)
-	{
-		return;
-	}
+	schedule_drag_button = ev.GetParameter("button", -1);
 
 	int dayIndex = arguments.at(0).Get<int>();
 	int slotIndex = arguments.at(1).Get<int>();
-
-	ServiceIndex_t &serviceIndex = appData.timetable.GetServiceIndex(dayIndex, slotIndex);
-	serviceIndex = appData.selected_service.index;
-
-	schedule_drag_active = true;
-
-	dataModelHandle.DirtyAllVariables();
+	ColorSlot(dayIndex, slotIndex);
 }
 
 void DemoWindow::OnSlotMouseOver(CALLBACK_PARAMS)
 {
-	if (schedule_drag_active)
-	{
-		OnSlotMouseDown(model, ev, arguments);
-	}
+	int dayIndex = arguments.at(0).Get<int>();
+	int slotIndex = arguments.at(1).Get<int>();
+	ColorSlot(dayIndex, slotIndex);
 }
 
-void DemoWindow::OnSlotMouseUp(CALLBACK_PARAMS)
+void DemoWindow::OnTimetableMouseOut(CALLBACK_PARAMS)
 {
-	if (!schedule_drag_active){
+	if (ev.GetPhase() != Rml::EventPhase::Target)
+	{
+		return;
+	}
+	OnTimetableMouseUp(model, ev, arguments);
+}
+
+void DemoWindow::OnTimetableMouseUp(CALLBACK_PARAMS)
+{
+	if (schedule_drag_button == -1)
+	{
+		return;
+	}
+
+	if (appData.timetableDisplayMode != AppData::TimetableDisplayMode::INDIVIDUAL)
+	{
 		return;
 	}
 
@@ -429,13 +533,35 @@ void DemoWindow::OnSlotMouseUp(CALLBACK_PARAMS)
 		return;
 	}
 
-	int dayIndex = arguments.at(0).Get<int>();
-	int slotIndex = arguments.at(1).Get<int>();
+	schedule_drag_button = -1;
 
-	schedule_drag_active = false;
-
-	cout << "Save Tutor: " << tutor->first_name << endl;
 	appData.timetable.Save(tutor->schedule);
+
+	dataModelHandle.DirtyAllVariables();
+}
+
+void DemoWindow::ColorSlot(int dayIndex, int slotIndex)
+{
+
+	if (!appData.timetable.editable)
+	{
+		return;
+	}
+
+	// cout << "color: " << schedule_drag_button << endl;
+
+	ServiceIndex_t &serviceIndex = appData.timetable.GetServiceIndex(dayIndex, slotIndex);
+	switch (schedule_drag_button)
+	{
+	case 0: // left
+		serviceIndex = appData.selected_service.index;
+		break;
+	case 1: // right
+		serviceIndex = -1;
+		break;
+	default:
+		return;
+	}
 
 	dataModelHandle.DirtyAllVariables();
 }
@@ -555,6 +681,10 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 		constructor.Bind("edit_tutor", &appData.edit_tutor);
 		constructor.Bind("dev_enable", &appData.dev_enable);
 		constructor.Bind("timetable", &appData.timetable);
+		constructor.Bind("mod_tutor_first_name", &appData.mod_tutor_first_name);
+		constructor.Bind("mod_tutor_last_name", &appData.mod_tutor_last_name);
+		constructor.Bind("mod_service_name", &appData.mod_service_name);
+		constructor.Bind("mod_department_name", &appData.mod_department_name);
 
 		// Bind Event Callbacks
 		constructor.BindEventCallback("OnClick_SummaryTab", &DemoWindow::OnClick_SummaryTab, this);
@@ -568,6 +698,10 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 		constructor.BindEventCallback("ScheduleLimitsChanged", &DemoWindow::ScheduleLimitsChanged, this);
 		constructor.BindEventCallback("AddTutor", &DemoWindow::AddTutor, this);
 		constructor.BindEventCallback("RemoveTutor", &DemoWindow::RemoveTutor, this);
+		constructor.BindEventCallback("AddService", &DemoWindow::AddService, this);
+		constructor.BindEventCallback("RemoveService", &DemoWindow::RemoveService, this);
+		constructor.BindEventCallback("AddDepartment", &DemoWindow::AddDepartment, this);
+		constructor.BindEventCallback("RemoveDepartment", &DemoWindow::RemoveDepartment, this);
 		constructor.BindEventCallback("CopyTutorHtml", &DemoWindow::ExportTutorPage, this);
 		constructor.BindEventCallback("CopySubjectHtml", &DemoWindow::ExportSubjectPage, this);
 		constructor.BindEventCallback("ExportTimetable", &DemoWindow::ExportTimetable, this);
@@ -576,43 +710,43 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 		constructor.BindEventCallback("OnTutorChanged", &DemoWindow::OnTutorChanged, this);
 		constructor.BindEventCallback("OnSlotMouseDown", &DemoWindow::OnSlotMouseDown, this);
 		constructor.BindEventCallback("OnSlotMouseOver", &DemoWindow::OnSlotMouseOver, this);
-		constructor.BindEventCallback("OnSlotMouseUp", &DemoWindow::OnSlotMouseUp, this);
+		constructor.BindEventCallback("OnTimetableMouseUp", &DemoWindow::OnTimetableMouseUp, this);
+		constructor.BindEventCallback("OnTimetableMouseOut", &DemoWindow::OnTimetableMouseOut, this);
 
 		// Register transform functions
-		AppData &app_data_var = appData;
-		Rml::DataTransformFunc GetSlotColor = [app_data_var](const Rml::VariantList &arguments) -> Rml::Variant
+		AppData *appData_ptr = &appData;
+		Rml::DataTransformFunc GetSlotColor = [appData_ptr](const Rml::VariantList &arguments) -> Rml::Variant
 		{
 			if (arguments.empty())
 			{
 				return {};
 			}
 
-			const ServiceIndex_t &service_type = arguments[0].Get<ServiceIndex_t>();
+			const int &slot_value = arguments[0].Get<int>();
 
-			Rml::Colourb slotColor;
-			if (0 <= service_type && service_type < app_data_var.services.size())
+			int lerpValue;
+			Rml::Colourb slotColor(255, 255, 255);
+			switch (appData_ptr->timetable.colorMode)
 			{
-				slotColor = app_data_var.services.at(service_type).color;
-			}
-			else
-			{
-				slotColor = Rml::Colourb(255, 255, 255);
+			case TimetableInterface::ColorModeEnum::SERVICE:
+				if (0 <= slot_value && slot_value < appData_ptr->services.size())
+				{
+					slotColor = appData_ptr->services.at(slot_value).color;
+				}
+				break;
+			case TimetableInterface::ColorModeEnum::HEATMAP:
+				if (slot_value != -1)
+				{
+					lerpValue = min(255, 80 * slot_value);
+					slotColor.red = 255 - lerpValue;
+					slotColor.blue = 0;
+					slotColor.green = lerpValue;
+				}
+				break;
 			}
 			return Rml::Variant(ToString(slotColor));
 		};
 		constructor.RegisterTransformFunc("GetSlotColor", GetSlotColor);
-
-		Rml::DataTransformFunc GetSelectedColor = [app_data_var](const Rml::VariantList &arguments) -> Rml::Variant
-		{
-			if (arguments.empty())
-			{
-				return {};
-			}
-
-			const bool &selected = arguments[0].Get<bool>();
-			return Rml::Variant(selected ? "#AFA" : "#DDD");
-		};
-		constructor.RegisterTransformFunc("GetSelectedColor", GetSelectedColor);
 
 		dataModelHandle = constructor.GetModelHandle();
 
@@ -621,7 +755,7 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 		appData.selected_service.setTarget(&appData.services);
 		appData.selected_tutor.size = 1;	  // only one tutor can be selected at a time
 		appData.selected_department.size = 1; // only one department can be selected at a time
-		appData.selected_service.size = 1; // only one service can be selected at a time
+		appData.selected_service.size = 1;	  // only one service can be selected at a time
 
 		appData.timetable.rows[0].SetLabel("Mon");
 		appData.timetable.rows[1].SetLabel("Tue");
@@ -633,6 +767,12 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 
 		appData.timetable.SetStartHour(5);
 		appData.timetable.SetEndHour(20);
+
+		// Prepare the application to disp;lay the summary tab
+		appData.timetable.editable = false;
+		appData.timetable.colorMode = TimetableInterface::ColorModeEnum::HEATMAP;
+		appData.timetableDisplayMode = AppData::TimetableDisplayMode::SUMMARY;
+		UpdateTimetable();
 	}
 
 	using namespace Rml;
@@ -686,9 +826,6 @@ void DemoWindow::ProcessEvent(Rml::Event &event)
 		}
 	}
 	break;
-
-	case EventId::Mouseup:
-		schedule_drag_active = false;
 
 	default:
 	{

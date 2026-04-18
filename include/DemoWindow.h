@@ -61,6 +61,10 @@ public:
 
 	void AddTutor(CALLBACK_PARAMS);
 	void RemoveTutor(CALLBACK_PARAMS);
+	void AddService(CALLBACK_PARAMS);
+	void RemoveService(CALLBACK_PARAMS);
+	void AddDepartment(CALLBACK_PARAMS);
+	void RemoveDepartment(CALLBACK_PARAMS);
 
 	void ExportTutorPage(CALLBACK_PARAMS);
 	void ExportSubjectPage(CALLBACK_PARAMS);
@@ -69,16 +73,19 @@ public:
 	void ExportAll(CALLBACK_PARAMS);
 	void OnSlotMouseDown(CALLBACK_PARAMS);
 	void OnSlotMouseOver(CALLBACK_PARAMS);
-	void OnSlotMouseUp(CALLBACK_PARAMS);
+	void OnTimetableMouseUp(CALLBACK_PARAMS);
+	void OnTimetableMouseOut(CALLBACK_PARAMS);
 
 private:
+	void ColorSlot(int, int);
+
 	Rml::ElementDocument* document = nullptr;
 	Rml::ElementDocument* iframe = nullptr;
 
 	Rml::DataModelHandle dataModelHandle;
 	Json jsonDocument;
 
-	bool schedule_drag_active = false;
+	int schedule_drag_button = -1;
 	ServiceIndex_t schedule_service_brush;
 
 	AppData appData;
