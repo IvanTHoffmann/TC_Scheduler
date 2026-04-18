@@ -53,6 +53,9 @@ public:
 	void SetSelectedServices(CALLBACK_PARAMS);
 	void SetSelectedDepartments(CALLBACK_PARAMS);
 	void SetSelectedTutors(CALLBACK_PARAMS);
+
+	void AddStartTime(CALLBACK_PARAMS);
+	void AddEndTime(CALLBACK_PARAMS);
 	
 	void OnTutorChanged(CALLBACK_PARAMS);
 	void EnableEditTutor(CALLBACK_PARAMS);

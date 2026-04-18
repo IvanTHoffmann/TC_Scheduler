@@ -5,6 +5,11 @@
 </head>
 <body class="timetable" data-model="app_data">
 	<div>
+		<button class="gradient" data-event-click="AddStartTime(-1)">-1hr start</button>
+		<button class="gradient" data-event-click="AddStartTime(1)">+1hr start</button>
+		<button class="gradient" data-event-click="AddEndTime(-1)">-1hr end</button>
+		<button class="gradient" data-event-click="AddEndTime(1)">+1hr end</button>
+		<br/>
 		<table background-color="#000" style="row-gap: 2px; column-gap: 2px"
 				data-event-mouseup="OnTimetableMouseUp()"
 				data-event-mouseout="OnTimetableMouseOut()">

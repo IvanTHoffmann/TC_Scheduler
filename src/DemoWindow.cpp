@@ -314,6 +314,32 @@ void DemoWindow::SetSelectedTutors(CALLBACK_PARAMS)
 	dataModelHandle.DirtyAllVariables();
 }
 
+void DemoWindow::AddStartTime(CALLBACK_PARAMS)
+{
+	if (arguments.size() == 0)
+	{
+		return;
+	}
+
+	int adjustment = arguments[0].Get<int>();
+	int prevStartHour = appData.timetable.GetStartHour();
+	appData.timetable.SetStartHour(prevStartHour + adjustment);
+	dataModelHandle.DirtyAllVariables();
+}
+
+void DemoWindow::AddEndTime(CALLBACK_PARAMS)
+{
+	if (arguments.size() == 0)
+	{
+		return;
+	}
+	
+	int adjustment = arguments[0].Get<int>();
+	int prevEndHour = appData.timetable.GetEndHour();
+	appData.timetable.SetEndHour(prevEndHour + adjustment);
+	dataModelHandle.DirtyAllVariables();
+}
+
 void DemoWindow::EnableEditTutor(CALLBACK_PARAMS)
 {
 	Tutor *tutor = appData.selected_tutor.accessor.ptr();
@@ -712,6 +738,8 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 		constructor.BindEventCallback("OnSlotMouseOver", &DemoWindow::OnSlotMouseOver, this);
 		constructor.BindEventCallback("OnTimetableMouseUp", &DemoWindow::OnTimetableMouseUp, this);
 		constructor.BindEventCallback("OnTimetableMouseOut", &DemoWindow::OnTimetableMouseOut, this);
+		constructor.BindEventCallback("AddStartTime", &DemoWindow::AddStartTime, this);
+		constructor.BindEventCallback("AddEndTime", &DemoWindow::AddEndTime, this);
 
 		// Register transform functions
 		AppData *appData_ptr = &appData;
