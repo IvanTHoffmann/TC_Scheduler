@@ -267,7 +267,9 @@ struct AppData
 	float fontSize;
 	
 	// INDIVIDUAL
-	int total_hours; // TODO: implement
+	float total_hours;
+	Rml::String formatted_total_hours;
+	bool schedule_valid;
 	bool edit_tutor;
 	vector<Rml::String> budgets;
 	vector<Department> departments;

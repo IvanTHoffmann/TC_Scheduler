@@ -152,7 +152,7 @@
 		<div class="schedule-toolbar">
 			<button class="gradient" data-event-click="ResetSchedule">Reset Grid</button>
 			<template src="service_select"/>
-			<div class="schedule-summary">Total: {{total_hours}} hr</div>
+			<div class="schedule-summary" data-style-background-color="schedule_valid ? '#4CAF50' : '#f44336'">Total: {{formatted_total_hours}}</div>
 		</div>
 		<template src="timetable" />
 

@@ -15,12 +15,15 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <sstream>
 
 #include "DataModelTypes.h"
 #include "Util.h"
 
 using namespace json11;
 using namespace std;
+
+const float MINUTES_PER_HOUR = 60.0f;
 
 bool DemoWindow::Load()
 {
@@ -196,48 +199,61 @@ void DemoWindow::UpdateTimetable()
 		}
 
 		appData.timetable.Load(tutor->schedule);
+		UpdateTotalHours();
 		dataModelHandle.DirtyAllVariables();
 		break;
 	}
 }
 
-void DemoWindow::UpdateScheduleSummary()
-{
-	/*
-	if (!document)
-	{
-		return;
-	}
-
-	int selected_tutor = appData.selected_tutor.index;
-	int scheduled_slots = CountTutorScheduleSlots(selected_tutor);
-	std::string scheduled_hours = FormatTutorHours(scheduled_slots);
-	std::string summary_text;
-	bool invalid_summary = false;
-	if (selected_tutor >= 0 && selected_tutor < (int)appData.tutors.size())
-	{
-		summary_text = "Total: " + scheduled_hours + " hr";
-		int min_slots = appData.tutors[selected_tutor].min_hours * 2;
-		int max_slots = appData.tutors[selected_tutor].max_hours * 2;
-		invalid_summary = scheduled_slots < min_slots || scheduled_slots > max_slots;
-	}
-	else
-	{
-		summary_text = "Total: 0 hr";
-	}
-
-	if (auto summary_el = document->GetElementById("schedule_hours_summary"))
-	{
-		summary_el->SetInnerRML(summary_text);
-		summary_el->SetClass("invalid", invalid_summary);
-	}
-	*/
-}
-
 void DemoWindow::ScheduleLimitsChanged(CALLBACK_PARAMS)
 {
 	// Only refresh the summary state when min/max sliders change.
-	UpdateScheduleSummary();
+	UpdateTotalHours();
+}
+
+float DemoWindow::CalculateTotalHours(const WeekSchedule& schedule)
+{
+	float totalMinutes = 0.0f;
+	for (const DaySchedule& day : schedule.days)
+	{
+		for (const ShiftSchedule& shift : day.shifts)
+		{
+			float startMinutes = (shift.start / 100) * MINUTES_PER_HOUR + (shift.start % 100);
+			float endMinutes = (shift.end / 100) * MINUTES_PER_HOUR + (shift.end % 100);
+			totalMinutes += (endMinutes - startMinutes);
+		}
+	}
+	return totalMinutes / MINUTES_PER_HOUR; // Convert to hours
+}
+
+void DemoWindow::UpdateTotalHours()
+{
+	Tutor* tutor = appData.selected_tutor.accessor.ptr();
+	if (tutor)
+	{
+		appData.total_hours = CalculateTotalHours(tutor->schedule);
+		
+		// Check if within valid range
+        appData.schedule_valid = (appData.total_hours >= tutor->min_hours && appData.total_hours <= tutor->max_hours);
+
+		// Format as hours and minutes
+		int totalMinutes = (appData.total_hours * MINUTES_PER_HOUR);
+		int hours = totalMinutes / static_cast<int>(MINUTES_PER_HOUR);
+		int minutes = totalMinutes % static_cast<int>(MINUTES_PER_HOUR);
+		
+		std::stringstream ss;
+		ss << hours << "h " << minutes << "m";
+		appData.formatted_total_hours = ss.str();
+	}
+	else
+	{
+		appData.total_hours = 0.0f;
+		appData.formatted_total_hours = "0h 0m";
+		appData.schedule_valid = true;
+	}
+	dataModelHandle.DirtyVariable("total_hours");
+	dataModelHandle.DirtyVariable("formatted_total_hours");
+	dataModelHandle.DirtyVariable("schedule_valid");
 }
 
 // EVENT CALLBACKS
@@ -563,6 +579,8 @@ void DemoWindow::OnTimetableMouseUp(CALLBACK_PARAMS)
 
 	appData.timetable.Save(tutor->schedule);
 
+	UpdateTotalHours();
+
 	dataModelHandle.DirtyAllVariables();
 }
 
@@ -704,6 +722,7 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 		constructor.Bind("selected_department", &appData.selected_department);
 		constructor.Bind("selected_service", &appData.selected_service);
 		constructor.Bind("total_hours", &appData.total_hours);
+		constructor.Bind("formatted_total_hours", &appData.formatted_total_hours);
 		constructor.Bind("edit_tutor", &appData.edit_tutor);
 		constructor.Bind("dev_enable", &appData.dev_enable);
 		constructor.Bind("timetable", &appData.timetable);
@@ -711,6 +730,7 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 		constructor.Bind("mod_tutor_last_name", &appData.mod_tutor_last_name);
 		constructor.Bind("mod_service_name", &appData.mod_service_name);
 		constructor.Bind("mod_department_name", &appData.mod_department_name);
+		constructor.Bind("schedule_valid", &appData.schedule_valid);
 
 		// Bind Event Callbacks
 		constructor.BindEventCallback("OnClick_SummaryTab", &DemoWindow::OnClick_SummaryTab, this);
@@ -835,7 +855,7 @@ void DemoWindow::Update()
 	}
 
 	// Always keep the total hours summary in sync with slider changes.
-	UpdateScheduleSummary();
+	UpdateTotalHours();
 }
 
 void DemoWindow::ProcessEvent(Rml::Event &event)

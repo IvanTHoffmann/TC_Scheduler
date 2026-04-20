@@ -45,6 +45,8 @@ public:
 	void UpdateTimetable();
 	void UpdateScheduleSummary();
 	int CountTutorScheduleSlots(int tutor_index);
+	float CalculateTotalHours(const WeekSchedule& schedule);
+	void UpdateTotalHours();
 
 	void OnClick_SummaryTab(CALLBACK_PARAMS);
 	void OnClick_SchedulesTab(CALLBACK_PARAMS);
