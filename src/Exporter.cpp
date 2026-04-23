@@ -108,7 +108,7 @@ Exporter::Exporter(AppData *_appData) : appData(_appData)
     symbols["foreach_service_shift"] = Exporter::Foreach_ServiceShift;
     symbols["shift_duration"] = Exporter::GetShiftDuration;
     symbols["selected_department_services"] = Exporter::GetSelectedDepartmentServices;
-    symbols["foreach_tutor"] = Exporter::Foreach_Tutor;
+    symbols["foreach_dept_tutor"] = Exporter::Foreach_Department_Tutor;
     symbols["tutor_firstname"] = Exporter::GetTutorFirstName;
     symbols["term_season"] = Exporter::GetTermSeason;
     symbols["term_year"] = Exporter::GetTermYear;
@@ -333,6 +333,25 @@ bool Exporter::If_Email(istream &istr, ostream &ostr)
     return true;
 }
 
+bool Exporter::If_Dept_Tutors(istream &istr, ostream &ostr)
+{
+    Department* department = appData->selected_department.accessor.ptr();
+    if (department)
+    {
+        // Warning: No tutor selected
+        return false;
+    }
+
+    stringstream buffer;
+    // Read the loop body into buffer
+    if (!ReadToSymbol(istr, buffer, "endif_dept_tutors"))
+    {
+        return false;
+    }
+    
+    return true;
+}
+
 bool Exporter::SetService(istream &istr, ostream &ostr)
 {
     stringstream buffer;
@@ -487,10 +506,11 @@ bool Exporter::GetShiftDuration(istream &istr, ostream &ostr)
 
 bool Exporter::GetSelectedDepartmentServices(istream &istr, ostream &ostr)
 {
+    
     return true;
 }
 
-bool Exporter::Foreach_Tutor(istream &istr, ostream &ostr)
+bool Exporter::Foreach_Department_Tutor(istream &istr, ostream &ostr)
 {
     if (appData->selected_department.accessor.size() == 0)
     {

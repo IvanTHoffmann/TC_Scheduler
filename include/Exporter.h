@@ -33,11 +33,12 @@ class Exporter {
     bool Foreach_Classlist(istream& istr, ostream& ostr);
     bool Foreach_Weekday(istream& istr, ostream& ostr);
     bool Foreach_ServiceShift(istream& istr, ostream& ostr);
-    bool Foreach_Tutor(istream& istr, ostream& ostr);
+    bool Foreach_Department_Tutor(istream& istr, ostream& ostr);
 
     // Conditional Symbols
     bool If_Service(istream& istr, ostream& ostr);
     bool If_Email(istream& istr, ostream& ostr);
+    bool If_Dept_Tutors(istream& istr, ostream& ostr);
 
     // Setter symbols
     bool SetService(istream& istr, ostream& ostr);
