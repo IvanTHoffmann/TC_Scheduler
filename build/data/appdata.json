@@ -1,5 +1,1517 @@
-<<<<<<< Updated upstream
-{"schedules": [{"budgets": [{"name": "Tutoring"}, {"name": "CS"}, {"name": "S&A"}], "departments": ["Accounting", "Biology", "Business", "Chemistry", "Computer Science", "EMS", "Economics", "Engineering", "Engineering Technology", "Japanese", "Math", "Mechatronics", "Nursing", "Philosophy", "Physics", "STEM", "Spanish"], "name": "Tutoring Center", "services": [{"color": [255, 0, 0], "max_hours": 0, "min_hours": 0, "name": "In-Person"}, {"color": [0, 255, 0], "max_hours": 0, "min_hours": 0, "name": "By Appointment"}, {"color": [0, 0, 255], "max_hours": 0, "min_hours": 0, "name": "Online"}, {"color": [255, 255, 0], "max_hours": 0, "min_hours": 0, "name": "eTutoring"}, {"color": [0, 255, 255], "max_hours": 0, "min_hours": 0, "name": "Embedded"}], "tutors": [{"classes": [{"courses": [121, 140, 161], "department_name": "Chemistry", "subtractive": false}, {"courses": [111, 214, 215], "department_name": "Engineering", "subtractive": false}, {"courses": [146, 260, 261], "department_name": "Math", "subtractive": true}, {"courses": [118, 120, 121, 122, 123], "department_name": "Mechatronics", "subtractive": false}, {"courses": [114, 115, 116, 241, 242], "department_name": "Physics", "subtractive": false}], "email": "aweibewright@everettcc.edu", "first_name": "Angel", "last_name": "Wiebe-Wright", "max_hours": 40, "min_hours": 40, "schedule": [[{"end": 1400, "service_type": 0, "start": 1030}, {"end": 1900, "service_type": 0, "start": 1500}], [{"end": 1400, "service_type": 0, "start": 1000}, {"end": 1900, "service_type": 0, "start": 1500}], [{"end": 1400, "service_type": 0, "start": 1000}, {"end": 1900, "service_type": 0, "start": 1500}], [{"end": 1400, "service_type": 0, "start": 1000}, {"end": 1900, "service_type": 0, "start": 1500}], [{"end": 1300, "service_type": 0, "start": 800}, {"end": 1700, "service_type": 0, "start": 1400}], [], []]}, {"classes": [{"courses": [110, 131, 132, 233, 260], "department_name": "Computer Science", "subtractive": false}, {"courses": [141, 146, 151, 152, 152, 163, 261], "department_name": "Math", "subtractive": false}, {"courses": [120], "department_name": "Philosophy", "subtractive": false}], "email": "", "first_name": "Anthony", "last_name": "Do", "max_hours": 35, "min_hours": 4, "schedule": [[{"end": 1000, "service_type": 0, "start": 800}], [{"end": 1130, "service_type": 0, "start": 800}, {"end": 1400, "service_type": 4, "start": 1230}], [{"end": 1000, "service_type": 0, "start": 800}], [{"end": 1400, "service_type": 4, "start": 1230}], [], [], []]}, {"classes": [{"courses": [260], "department_name": "Computer Science", "subtractive": true}, {"courses": [201, 202], "department_name": "Economics", "subtractive": false}, {"courses": [121, 122, 123], "department_name": "Japanese", "subtractive": false}, {"courses": [146, 260], "department_name": "Math", "subtractive": true}, {"courses": [114, 115, 116, 241, 242, 243], "department_name": "Physics", "subtractive": false}], "email": "bvassion@everettcc.edu", "first_name": "Brandon", "last_name": "Vassion", "max_hours": 20, "min_hours": 20, "schedule": [[{"end": 1230, "service_type": 0, "start": 900}, {"end": 1600, "service_type": 0, "start": 1330}, {"end": 1800, "service_type": 1, "start": 1600}], [{"end": 1000, "service_type": 0, "start": 800}, {"end": 1130, "service_type": 4, "start": 1000}, {"end": 1200, "service_type": 0, "start": 1130}, {"end": 1700, "service_type": 0, "start": 1300}], [{"end": 1230, "service_type": 0, "start": 900}, {"end": 1800, "service_type": 0, "start": 1330}], [{"end": 1000, "service_type": 0, "start": 900}, {"end": 1130, "service_type": 4, "start": 1000}, {"end": 1230, "service_type": 0, "start": 1130}, {"end": 1600, "service_type": 0, "start": 1330}, {"end": 1800, "service_type": 1, "start": 1600}], [{"end": 1200, "service_type": 0, "start": 800}, {"end": 1700, "service_type": 0, "start": 1300}], [], []]}, {"classes": [{"courses": [211, 221, 222, 223, 231, 232, 260], "department_name": "Biology", "subtractive": false}, {"courses": [151], "department_name": "EMS", "subtractive": false}, {"courses": [110, 120, 130, 210], "department_name": "Nursing", "subtractive": false}], "email": "", "first_name": "Enrique", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [{"end": 1400, "service_type": 0, "start": 1000}], [], [{"end": 1200, "service_type": 0, "start": 800}], [], [], []]}, {"classes": [{"courses": [121, 140, 161, 162, 163, 261], "department_name": "Chemistry", "subtractive": false}, {"courses": [204, 214, 215, 240], "department_name": "Engineering", "subtractive": false}, {"courses": [], "department_name": "Math", "subtractive": true}, {"courses": [120], "department_name": "Philosophy", "subtractive": false}, {"courses": [], "department_name": "Physics", "subtractive": true}], "email": "enitardy@everettcc.edu", "first_name": "Eric", "last_name": "Nitardy", "max_hours": 20, "min_hours": 20, "schedule": [[{"end": 1130, "service_type": 0, "start": 800}, {"end": 1700, "service_type": 0, "start": 1230}], [{"end": 900, "service_type": 3, "start": 500}, {"end": 1700, "service_type": 0, "start": 1300}], [{"end": 1130, "service_type": 0, "start": 800}, {"end": 1700, "service_type": 0, "start": 1230}], [{"end": 1130, "service_type": 0, "start": 800}, {"end": 1700, "service_type": 0, "start": 1230}], [], [{"end": 1400, "service_type": 0, "start": 1000}], []]}, {"classes": [{"courses": [146, 163, 260, 261, 264], "department_name": "Math", "subtractive": true}], "email": "", "first_name": "Ethan", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [], [{"end": 1200, "service_type": 0, "start": 1000}], [], [], [], []]}, {"classes": [{"courses": [211, 223, 231, 232, 260], "department_name": "Biology", "subtractive": false}, {"courses": [121], "department_name": "Chemistry", "subtractive": false}, {"courses": [146], "department_name": "Math", "subtractive": false}], "email": "", "first_name": "Fidelah", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [{"end": 1700, "service_type": 0, "start": 1500}], [{"end": 1600, "service_type": 0, "start": 1100}], [{"end": 1700, "service_type": 0, "start": 1500}], [], [], []]}, {"classes": [{"courses": [101], "department_name": "Business", "subtractive": false}, {"courses": [161], "department_name": "Chemistry", "subtractive": false}, {"courses": [], "department_name": "Computer Science", "subtractive": true}, {"courses": [146, 261], "department_name": "Math", "subtractive": true}, {"courses": [120], "department_name": "Philosophy", "subtractive": false}, {"courses": [], "department_name": "STEM", "subtractive": true}, {"courses": [121, 122], "department_name": "Spanish", "subtractive": false}], "email": "ihoffmann@everettcc.edu", "first_name": "Ivan", "last_name": "Hoffmann", "max_hours": 20, "min_hours": 20, "schedule": [[{"end": 1500, "service_type": 0, "start": 1000}], [{"end": 1500, "service_type": 0, "start": 1000}], [{"end": 1500, "service_type": 0, "start": 1000}], [{"end": 1500, "service_type": 0, "start": 1000}], [], [], []]}, {"classes": [{"courses": [211, 221, 222, 223, 232, 233, 260], "department_name": "Biology", "subtractive": false}, {"courses": [121, 131, 140, 161, 162, 163, 261, 262, 263], "department_name": "Chemistry", "subtractive": false}], "email": "", "first_name": "Jane", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [], [], [{"end": 1630, "service_type": 0, "start": 1200}], [], [], []]}, {"classes": [{"courses": [110, 112, 201, 202, 203, 250], "department_name": "Accounting", "subtractive": false}], "email": "", "first_name": "Jessica", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [{"end": 1400, "service_type": 0, "start": 900}], [], [{"end": 1400, "service_type": 0, "start": 900}], [], [], []]}, {"classes": [{"courses": [146, 152, 163, 260, 261, 264], "department_name": "Math", "subtractive": true}], "email": "", "first_name": "Kris", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [{"end": 1900, "service_type": 0, "start": 1700}], [], [], [{"end": 1700, "service_type": 0, "start": 1330}], [], []]}, {"classes": [{"courses": [211, 221, 222, 231, 232], "department_name": "Biology", "subtractive": false}, {"courses": [110, 120, 130], "department_name": "Nursing", "subtractive": false}], "email": "", "first_name": "Leah", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [], [], [{"end": 1900, "service_type": 0, "start": 1700}], [], [], []]}, {"classes": [{"courses": [], "department_name": "Engineering Technology", "subtractive": true}, {"courses": [260, 261, 264], "department_name": "Math", "subtractive": true}, {"courses": [], "department_name": "Mechatronics", "subtractive": true}], "email": "", "first_name": "Liliya", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[{"end": 1500, "service_type": 1, "start": 1200}], [{"end": 1500, "service_type": 1, "start": 1200}], [{"end": 1500, "service_type": 0, "start": 1200}], [{"end": 1500, "service_type": 1, "start": 1200}], [{"end": 1830, "service_type": 1, "start": 1530}], [], []]}, {"classes": [{"courses": [110, 201, 202, 203], "department_name": "Accounting", "subtractive": false}, {"courses": [76, 86, 96], "department_name": "Math", "subtractive": false}], "email": "", "first_name": "Lily", "last_name": "Kim", "max_hours": 0, "min_hours": 0, "schedule": [[{"end": 1400, "service_type": 0, "start": 900}], [], [{"end": 1400, "service_type": 0, "start": 900}], [], [], [], []]}, {"classes": [{"courses": [141, 143], "department_name": "Computer Science", "subtractive": false}], "email": "", "first_name": "Logan", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[{"end": 1900, "service_type": 0, "start": 1400}], [], [], [], [], [], []]}, {"classes": [{"courses": [141, 142, 151, 152], "department_name": "Math", "subtractive": false}], "email": "", "first_name": "Maddy", "last_name": "Pulliam", "max_hours": 0, "min_hours": 0, "schedule": [[], [], [], [{"end": 1900, "service_type": 0, "start": 1630}], [{"end": 1400, "service_type": 0, "start": 1100}], [], []]}, {"classes": [{"courses": [141, 142, 146, 151], "department_name": "Math", "subtractive": false}, {"courses": [103], "department_name": "STEM", "subtractive": false}, {"courses": [121, 122, 123], "department_name": "Spanish", "subtractive": false}], "email": "", "first_name": "Mariann", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [{"end": 1900, "service_type": 0, "start": 1400}], [], [], [], [], []]}, {"classes": [{"courses": [110, 131, 132], "department_name": "Computer Science", "subtractive": false}, {"courses": [141, 142, 151], "department_name": "Math", "subtractive": false}], "email": "", "first_name": "Mars", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [], [{"end": 1900, "service_type": 0, "start": 1400}], [], [], [], []]}, {"classes": [{"courses": [110, 201, 202], "department_name": "Accounting", "subtractive": false}, {"courses": [76, 86, 96, 138, 146], "department_name": "Math", "subtractive": false}], "email": "", "first_name": "Misty", "last_name": "Nguyen", "max_hours": 0, "min_hours": 0, "schedule": [[{"end": 1700, "service_type": 0, "start": 1330}], [], [{"end": 1900, "service_type": 0, "start": 1430}], [], [], [], []]}, {"classes": [{"courses": [231, 232], "department_name": "Biology", "subtractive": false}, {"courses": [], "department_name": "Nursing", "subtractive": true}], "email": "", "first_name": "Mitch", "last_name": "Newcomb", "max_hours": 0, "min_hours": 0, "schedule": [[{"end": 1500, "service_type": 0, "start": 1000}], [], [], [], [{"end": 1500, "service_type": 0, "start": 1000}], [{"end": 1400, "service_type": 0, "start": 1000}], []]}, {"classes": [{"courses": [110], "department_name": "Computer Science", "subtractive": false}, {"courses": [163, 260, 261, 264], "department_name": "Math", "subtractive": true}, {"courses": [241], "department_name": "Physics", "subtractive": false}], "email": "", "first_name": "Raymond", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [], [], [], [], [], []]}, {"classes": [{"courses": [111, 121], "department_name": "Engineering", "subtractive": false}, {"courses": [146, 152, 163, 260, 261, 264], "department_name": "Math", "subtractive": true}, {"courses": [114, 241], "department_name": "Physics", "subtractive": false}], "email": "", "first_name": "Sebastian", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [], [], [{"end": 1030, "service_type": 0, "start": 800}], [], [{"end": 1400, "service_type": 0, "start": 1000}], []]}, {"classes": [{"courses": [183, 221, 222], "department_name": "Biology", "subtractive": false}], "email": "", "first_name": "Timothy", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[{"end": 1700, "service_type": 0, "start": 1500}], [], [], [{"end": 1700, "service_type": 0, "start": 1330}], [], [], []]}, {"classes": [{"courses": [], "department_name": "Nursing", "subtractive": true}], "email": "", "first_name": "Trixie", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [{"end": 1500, "service_type": 0, "start": 1200}], [], [], [], [], []]}]}], "settings": {"export_directory": "./exported_documents/", "resolution": {"h": 600, "w": 1200}, "startup_schedule": 0, "term_season": "Spring", "term_year": 2026, "window_title": "Tutoring Center Scheduler"}}
-=======
-{"schedules": [{"budgets": [{"name": "Tutoring"}, {"name": "CS"}, {"name": "S&A"}], "departments": ["Accounting", "Biology", "Business", "Chemistry", "Computer Science", "EMS", "Economics", "Engineering", "Engineering Technology", "Japanese", "Math", "Mechatronics", "Nursing", "Philosophy", "Physics", "STEM", "Spanish"], "name": "Tutoring Center", "services": [{"color": [255, 0, 0], "max_hours": 0, "min_hours": 0, "name": "In-Person"}, {"color": [0, 255, 0], "max_hours": 0, "min_hours": 0, "name": "By Appointment"}, {"color": [0, 0, 255], "max_hours": 0, "min_hours": 0, "name": "Online"}, {"color": [255, 255, 0], "max_hours": 0, "min_hours": 0, "name": "eTutoring"}, {"color": [0, 255, 255], "max_hours": 0, "min_hours": 0, "name": "Embedded"}], "tutors": [{"classes": [{"courses": [121, 140, 161], "department_name": "Chemistry", "subtractive": false}, {"courses": [111, 214, 215], "department_name": "Engineering", "subtractive": false}, {"courses": [146, 260, 261], "department_name": "Math", "subtractive": true}, {"courses": [118, 120, 121, 122, 123], "department_name": "Mechatronics", "subtractive": false}, {"courses": [114, 115, 116, 241, 242], "department_name": "Physics", "subtractive": false}], "email": "aweibewright@everettcc.edu", "first_name": "Angel", "last_name": "Wiebe-Wright", "max_hours": 40, "min_hours": 40, "schedule": [[{"end": 1400, "service_type": 0, "start": 1030}, {"end": 1900, "service_type": 0, "start": 1500}], [{"end": 1400, "service_type": 0, "start": 1000}, {"end": 1900, "service_type": 0, "start": 1500}], [{"end": 1400, "service_type": 0, "start": 1000}, {"end": 1900, "service_type": 0, "start": 1500}], [{"end": 1400, "service_type": 0, "start": 1000}, {"end": 1900, "service_type": 0, "start": 1500}], [{"end": 1300, "service_type": 0, "start": 800}, {"end": 1700, "service_type": 0, "start": 1400}], [], []]}, {"classes": [{"courses": [110, 131, 132, 233, 260], "department_name": "Computer Science", "subtractive": false}, {"courses": [141, 146, 151, 152, 152, 163, 261], "department_name": "Math", "subtractive": false}, {"courses": [120], "department_name": "Philosophy", "subtractive": false}], "email": "", "first_name": "Anthony", "last_name": "Do", "max_hours": 0, "min_hours": 0, "schedule": [[{"end": 1000, "service_type": 0, "start": 800}], [{"end": 1130, "service_type": 0, "start": 800}], [{"end": 1000, "service_type": 0, "start": 800}], [], [], [], []]}, {"classes": [{"courses": [260], "department_name": "Computer Science", "subtractive": true}, {"courses": [201, 202], "department_name": "Economics", "subtractive": false}, {"courses": [121, 122, 123], "department_name": "Japanese", "subtractive": false}, {"courses": [146, 260], "department_name": "Math", "subtractive": true}, {"courses": [114, 115, 116, 241, 242, 243], "department_name": "Physics", "subtractive": false}], "email": "bvassion@everettcc.edu", "first_name": "Brandon", "last_name": "Vassion", "max_hours": 20, "min_hours": 20, "schedule": [[{"end": 1230, "service_type": 0, "start": 900}, {"end": 1600, "service_type": 0, "start": 1330}, {"end": 1800, "service_type": 1, "start": 1600}], [{"end": 1000, "service_type": 0, "start": 800}, {"end": 1130, "service_type": 4, "start": 1000}, {"end": 1200, "service_type": 0, "start": 1130}, {"end": 1700, "service_type": 0, "start": 1300}], [{"end": 1230, "service_type": 0, "start": 900}, {"end": 1800, "service_type": 0, "start": 1330}], [{"end": 1000, "service_type": 0, "start": 900}, {"end": 1130, "service_type": 4, "start": 1000}, {"end": 1230, "service_type": 0, "start": 1130}, {"end": 1600, "service_type": 0, "start": 1330}, {"end": 1800, "service_type": 1, "start": 1600}], [{"end": 1200, "service_type": 0, "start": 800}, {"end": 1700, "service_type": 0, "start": 1300}], [], []]}, {"classes": [{"courses": [211, 221, 222, 223, 231, 232, 260], "department_name": "Biology", "subtractive": false}, {"courses": [151], "department_name": "EMS", "subtractive": false}, {"courses": [110, 120, 130, 210], "department_name": "Nursing", "subtractive": false}], "email": "", "first_name": "Enrique", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [{"end": 1400, "service_type": 0, "start": 1000}], [], [{"end": 1200, "service_type": 0, "start": 800}], [], [], []]}, {"classes": [{"courses": [121, 140, 161, 162, 163, 261], "department_name": "Chemistry", "subtractive": false}, {"courses": [204, 214, 215, 240], "department_name": "Engineering", "subtractive": false}, {"courses": [], "department_name": "Math", "subtractive": true}, {"courses": [120], "department_name": "Philosophy", "subtractive": false}, {"courses": [], "department_name": "Physics", "subtractive": true}], "email": "enitardy@everettcc.edu", "first_name": "Eric", "last_name": "Nitardy", "max_hours": 20, "min_hours": 20, "schedule": [[{"end": 1130, "service_type": 0, "start": 800}, {"end": 1700, "service_type": 0, "start": 1230}], [{"end": 900, "service_type": 3, "start": 500}, {"end": 1700, "service_type": 0, "start": 1300}], [{"end": 1130, "service_type": 0, "start": 800}, {"end": 1700, "service_type": 0, "start": 1230}], [{"end": 1130, "service_type": 0, "start": 800}, {"end": 1700, "service_type": 0, "start": 1230}], [], [{"end": 1400, "service_type": 0, "start": 1000}], []]}, {"classes": [{"courses": [146, 163, 260, 261, 264], "department_name": "Math", "subtractive": true}], "email": "", "first_name": "Ethan", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [], [{"end": 1200, "service_type": 0, "start": 1000}], [], [], [], []]}, {"classes": [{"courses": [211, 223, 231, 232, 260], "department_name": "Biology", "subtractive": false}, {"courses": [121], "department_name": "Chemistry", "subtractive": false}, {"courses": [146], "department_name": "Math", "subtractive": false}], "email": "", "first_name": "Fidelah", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [{"end": 1700, "service_type": 0, "start": 1500}], [{"end": 1600, "service_type": 0, "start": 1100}], [{"end": 1700, "service_type": 0, "start": 1500}], [], [], []]}, {"classes": [{"courses": [101], "department_name": "Business", "subtractive": false}, {"courses": [161], "department_name": "Chemistry", "subtractive": false}, {"courses": [], "department_name": "Computer Science", "subtractive": true}, {"courses": [146, 261], "department_name": "Math", "subtractive": true}, {"courses": [120], "department_name": "Philosophy", "subtractive": false}, {"courses": [], "department_name": "STEM", "subtractive": true}, {"courses": [121, 122], "department_name": "Spanish", "subtractive": false}], "email": "ihoffmann@everettcc.edu", "first_name": "Ivan", "last_name": "Hoffmann", "max_hours": 20, "min_hours": 20, "schedule": [[{"end": 1500, "service_type": 0, "start": 1000}], [{"end": 1500, "service_type": 0, "start": 1000}], [{"end": 1500, "service_type": 0, "start": 1000}], [{"end": 1500, "service_type": 0, "start": 1000}], [], [], []]}, {"classes": [{"courses": [211, 221, 222, 223, 232, 233, 260], "department_name": "Biology", "subtractive": false}, {"courses": [121, 131, 140, 161, 162, 163, 261, 262, 263], "department_name": "Chemistry", "subtractive": false}], "email": "", "first_name": "Jane", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [], [], [{"end": 1630, "service_type": 0, "start": 1200}], [], [], []]}, {"classes": [{"courses": [110, 112, 201, 202, 203, 250], "department_name": "Accounting", "subtractive": false}], "email": "", "first_name": "Jessica", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [{"end": 1400, "service_type": 0, "start": 900}], [], [{"end": 1400, "service_type": 0, "start": 900}], [], [], []]}, {"classes": [{"courses": [146, 152, 163, 260, 261, 264], "department_name": "Math", "subtractive": true}], "email": "", "first_name": "Kris", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [{"end": 1900, "service_type": 0, "start": 1700}], [], [], [{"end": 1700, "service_type": 0, "start": 1330}], [], []]}, {"classes": [{"courses": [211, 221, 222, 231, 232], "department_name": "Biology", "subtractive": false}, {"courses": [110, 120, 130], "department_name": "Nursing", "subtractive": false}], "email": "", "first_name": "Leah", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [], [], [{"end": 1900, "service_type": 0, "start": 1700}], [], [], []]}, {"classes": [{"courses": [], "department_name": "Engineering Technology", "subtractive": true}, {"courses": [260, 261, 264], "department_name": "Math", "subtractive": true}, {"courses": [], "department_name": "Mechatronics", "subtractive": true}], "email": "", "first_name": "Liliya", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[{"end": 1500, "service_type": 1, "start": 1200}], [{"end": 1500, "service_type": 1, "start": 1200}], [{"end": 1500, "service_type": 0, "start": 1200}], [{"end": 1500, "service_type": 1, "start": 1200}], [{"end": 1830, "service_type": 1, "start": 1530}], [], []]}, {"classes": [{"courses": [110, 201, 202, 203], "department_name": "Accounting", "subtractive": false}, {"courses": [76, 86, 96], "department_name": "Math", "subtractive": false}], "email": "", "first_name": "Lily", "last_name": "Kim", "max_hours": 0, "min_hours": 0, "schedule": [[{"end": 1400, "service_type": 0, "start": 900}], [], [{"end": 1400, "service_type": 0, "start": 900}], [], [], [], []]}, {"classes": [{"courses": [141, 143], "department_name": "Computer Science", "subtractive": false}], "email": "", "first_name": "Logan", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[{"end": 1900, "service_type": 0, "start": 1400}], [], [], [], [], [], []]}, {"classes": [{"courses": [141, 142, 151, 152], "department_name": "Math", "subtractive": false}], "email": "", "first_name": "Maddy", "last_name": "Pulliam", "max_hours": 0, "min_hours": 0, "schedule": [[], [], [], [{"end": 1900, "service_type": 0, "start": 1630}], [{"end": 1400, "service_type": 0, "start": 1100}], [], []]}, {"classes": [{"courses": [141, 142, 146, 151], "department_name": "Math", "subtractive": false}, {"courses": [103], "department_name": "STEM", "subtractive": false}, {"courses": [121, 122, 123], "department_name": "Spanish", "subtractive": false}], "email": "", "first_name": "Mariann", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [{"end": 1900, "service_type": 0, "start": 1400}], [], [], [], [], []]}, {"classes": [{"courses": [110, 131, 132], "department_name": "Computer Science", "subtractive": false}, {"courses": [141, 142, 151], "department_name": "Math", "subtractive": false}], "email": "", "first_name": "Mars", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [], [{"end": 1900, "service_type": 0, "start": 1400}], [], [], [], []]}, {"classes": [{"courses": [110, 201, 202], "department_name": "Accounting", "subtractive": false}, {"courses": [76, 86, 96, 138, 146], "department_name": "Math", "subtractive": false}], "email": "", "first_name": "Misty", "last_name": "Nguyen", "max_hours": 0, "min_hours": 0, "schedule": [[{"end": 1700, "service_type": 0, "start": 1330}], [], [{"end": 1900, "service_type": 0, "start": 1430}], [], [], [], []]}, {"classes": [{"courses": [231, 232], "department_name": "Biology", "subtractive": false}, {"courses": [], "department_name": "Nursing", "subtractive": true}], "email": "", "first_name": "Mitch", "last_name": "Newcomb", "max_hours": 0, "min_hours": 0, "schedule": [[{"end": 1500, "service_type": 0, "start": 1000}], [], [], [], [{"end": 1500, "service_type": 0, "start": 1000}], [{"end": 1400, "service_type": 0, "start": 1000}], []]}, {"classes": [{"courses": [110], "department_name": "Computer Science", "subtractive": false}, {"courses": [163, 260, 261, 264], "department_name": "Math", "subtractive": true}, {"courses": [241], "department_name": "Physics", "subtractive": false}], "email": "", "first_name": "Raymond", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [], [], [], [], [], []]}, {"classes": [{"courses": [111, 121], "department_name": "Engineering", "subtractive": false}, {"courses": [146, 152, 163, 260, 261, 264], "department_name": "Math", "subtractive": true}, {"courses": [114, 241], "department_name": "Physics", "subtractive": false}], "email": "", "first_name": "Sebastian", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [], [], [{"end": 1030, "service_type": 0, "start": 800}], [], [{"end": 1400, "service_type": 0, "start": 1000}], []]}, {"classes": [{"courses": [183, 221, 222], "department_name": "Biology", "subtractive": false}], "email": "", "first_name": "Timothy", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[{"end": 1700, "service_type": 0, "start": 1500}], [], [], [{"end": 1700, "service_type": 0, "start": 1330}], [], [], []]}, {"classes": [{"courses": [], "department_name": "Nursing", "subtractive": true}], "email": "", "first_name": "Trixie", "last_name": "_", "max_hours": 0, "min_hours": 0, "schedule": [[], [{"end": 1500, "service_type": 0, "start": 1200}], [], [], [], [], []]}]}], "settings": {"export_directory": "./exported_documents/", "resolution": {"h": 600, "w": 1200}, "startup_schedule": 0, "term_season": "Spring", "term_year": 2026, "window_title": "Tutoring Center Scheduler"}}
->>>>>>> Stashed changes
+{
+    "schedules": [
+        {
+            "budgets": [
+                {
+                    "name": "Tutoring"
+                },
+                {
+                    "name": "CS"
+                },
+                {
+                    "name": "S&A"
+                }
+            ],
+            "departments": [
+                "Accounting",
+                "Biology",
+                "Business",
+                "Chemistry",
+                "Computer Science",
+                "EMS",
+                "Economics",
+                "Engineering",
+                "Engineering Technology",
+                "Japanese",
+                "Math",
+                "Mechatronics",
+                "Nursing",
+                "Philosophy",
+                "Physics",
+                "STEM",
+                "Spanish"
+            ],
+            "name": "Tutoring Center",
+            "services": [
+                {
+                    "color": [
+                        255,
+                        0,
+                        0
+                    ],
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "name": "In-Person"
+                },
+                {
+                    "color": [
+                        0,
+                        255,
+                        0
+                    ],
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "name": "By Appointment"
+                },
+                {
+                    "color": [
+                        0,
+                        0,
+                        255
+                    ],
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "name": "Online"
+                },
+                {
+                    "color": [
+                        255,
+                        255,
+                        0
+                    ],
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "name": "eTutoring"
+                },
+                {
+                    "color": [
+                        0,
+                        255,
+                        255
+                    ],
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "name": "Embedded"
+                }
+            ],
+            "tutors": [
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                121,
+                                140,
+                                161
+                            ],
+                            "department_name": "Chemistry",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                111,
+                                214,
+                                215
+                            ],
+                            "department_name": "Engineering",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                146,
+                                260,
+                                261
+                            ],
+                            "department_name": "Math",
+                            "subtractive": true
+                        },
+                        {
+                            "courses": [
+                                118,
+                                120,
+                                121,
+                                122,
+                                123
+                            ],
+                            "department_name": "Mechatronics",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                114,
+                                115,
+                                116,
+                                241,
+                                242
+                            ],
+                            "department_name": "Physics",
+                            "subtractive": false
+                        }
+                    ],
+                    "email": "aweibewright@everettcc.edu",
+                    "first_name": "Angel",
+                    "last_name": "Wiebe-Wright",
+                    "max_hours": 40,
+                    "min_hours": 40,
+                    "schedule": [
+                        [
+                            {
+                                "end": 1400,
+                                "service_type": 0,
+                                "start": 1030
+                            },
+                            {
+                                "end": 1900,
+                                "service_type": 0,
+                                "start": 1500
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1400,
+                                "service_type": 0,
+                                "start": 1000
+                            },
+                            {
+                                "end": 1900,
+                                "service_type": 0,
+                                "start": 1500
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1400,
+                                "service_type": 0,
+                                "start": 1000
+                            },
+                            {
+                                "end": 1900,
+                                "service_type": 0,
+                                "start": 1500
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1400,
+                                "service_type": 0,
+                                "start": 1000
+                            },
+                            {
+                                "end": 1900,
+                                "service_type": 0,
+                                "start": 1500
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1300,
+                                "service_type": 0,
+                                "start": 800
+                            },
+                            {
+                                "end": 1700,
+                                "service_type": 0,
+                                "start": 1400
+                            }
+                        ],
+                        [],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                110,
+                                131,
+                                132,
+                                233,
+                                260
+                            ],
+                            "department_name": "Computer Science",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                141,
+                                146,
+                                151,
+                                152,
+                                152,
+                                163,
+                                261
+                            ],
+                            "department_name": "Math",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                120
+                            ],
+                            "department_name": "Philosophy",
+                            "subtractive": false
+                        }
+                    ],
+                    "email": "",
+                    "first_name": "Anthony",
+                    "last_name": "Do",
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "schedule": [
+                        [
+                            {
+                                "end": 1000,
+                                "service_type": 0,
+                                "start": 800
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1130,
+                                "service_type": 0,
+                                "start": 800
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1000,
+                                "service_type": 0,
+                                "start": 800
+                            }
+                        ],
+                        [],
+                        [],
+                        [],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                260
+                            ],
+                            "department_name": "Computer Science",
+                            "subtractive": true
+                        },
+                        {
+                            "courses": [
+                                201,
+                                202
+                            ],
+                            "department_name": "Economics",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                121,
+                                122,
+                                123
+                            ],
+                            "department_name": "Japanese",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                146,
+                                260
+                            ],
+                            "department_name": "Math",
+                            "subtractive": true
+                        },
+                        {
+                            "courses": [
+                                114,
+                                115,
+                                116,
+                                241,
+                                242,
+                                243
+                            ],
+                            "department_name": "Physics",
+                            "subtractive": false
+                        }
+                    ],
+                    "email": "bvassion@everettcc.edu",
+                    "first_name": "Brandon",
+                    "last_name": "Vassion",
+                    "max_hours": 20,
+                    "min_hours": 20,
+                    "schedule": [
+                        [
+                            {
+                                "end": 1230,
+                                "service_type": 0,
+                                "start": 900
+                            },
+                            {
+                                "end": 1600,
+                                "service_type": 0,
+                                "start": 1330
+                            },
+                            {
+                                "end": 1800,
+                                "service_type": 1,
+                                "start": 1600
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1000,
+                                "service_type": 0,
+                                "start": 800
+                            },
+                            {
+                                "end": 1130,
+                                "service_type": 4,
+                                "start": 1000
+                            },
+                            {
+                                "end": 1200,
+                                "service_type": 0,
+                                "start": 1130
+                            },
+                            {
+                                "end": 1700,
+                                "service_type": 0,
+                                "start": 1300
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1230,
+                                "service_type": 0,
+                                "start": 900
+                            },
+                            {
+                                "end": 1800,
+                                "service_type": 0,
+                                "start": 1330
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1000,
+                                "service_type": 0,
+                                "start": 900
+                            },
+                            {
+                                "end": 1130,
+                                "service_type": 4,
+                                "start": 1000
+                            },
+                            {
+                                "end": 1230,
+                                "service_type": 0,
+                                "start": 1130
+                            },
+                            {
+                                "end": 1600,
+                                "service_type": 0,
+                                "start": 1330
+                            },
+                            {
+                                "end": 1800,
+                                "service_type": 1,
+                                "start": 1600
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1200,
+                                "service_type": 0,
+                                "start": 800
+                            },
+                            {
+                                "end": 1700,
+                                "service_type": 0,
+                                "start": 1300
+                            }
+                        ],
+                        [],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                211,
+                                221,
+                                222,
+                                223,
+                                231,
+                                232,
+                                260
+                            ],
+                            "department_name": "Biology",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                151
+                            ],
+                            "department_name": "EMS",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                110,
+                                120,
+                                130,
+                                210
+                            ],
+                            "department_name": "Nursing",
+                            "subtractive": false
+                        }
+                    ],
+                    "email": "",
+                    "first_name": "Enrique",
+                    "last_name": "_",
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "schedule": [
+                        [],
+                        [
+                            {
+                                "end": 1400,
+                                "service_type": 0,
+                                "start": 1000
+                            }
+                        ],
+                        [],
+                        [
+                            {
+                                "end": 1200,
+                                "service_type": 0,
+                                "start": 800
+                            }
+                        ],
+                        [],
+                        [],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                121,
+                                140,
+                                161,
+                                162,
+                                163,
+                                261
+                            ],
+                            "department_name": "Chemistry",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                204,
+                                214,
+                                215,
+                                240
+                            ],
+                            "department_name": "Engineering",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [],
+                            "department_name": "Math",
+                            "subtractive": true
+                        },
+                        {
+                            "courses": [
+                                120
+                            ],
+                            "department_name": "Philosophy",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [],
+                            "department_name": "Physics",
+                            "subtractive": true
+                        }
+                    ],
+                    "email": "enitardy@everettcc.edu",
+                    "first_name": "Eric",
+                    "last_name": "Nitardy",
+                    "max_hours": 20,
+                    "min_hours": 20,
+                    "schedule": [
+                        [
+                            {
+                                "end": 1130,
+                                "service_type": 0,
+                                "start": 800
+                            },
+                            {
+                                "end": 1700,
+                                "service_type": 0,
+                                "start": 1230
+                            }
+                        ],
+                        [
+                            {
+                                "end": 900,
+                                "service_type": 3,
+                                "start": 500
+                            },
+                            {
+                                "end": 1700,
+                                "service_type": 0,
+                                "start": 1300
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1130,
+                                "service_type": 0,
+                                "start": 800
+                            },
+                            {
+                                "end": 1700,
+                                "service_type": 0,
+                                "start": 1230
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1130,
+                                "service_type": 0,
+                                "start": 800
+                            },
+                            {
+                                "end": 1700,
+                                "service_type": 0,
+                                "start": 1230
+                            }
+                        ],
+                        [],
+                        [
+                            {
+                                "end": 1400,
+                                "service_type": 0,
+                                "start": 1000
+                            }
+                        ],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                146,
+                                163,
+                                260,
+                                261,
+                                264
+                            ],
+                            "department_name": "Math",
+                            "subtractive": true
+                        }
+                    ],
+                    "email": "",
+                    "first_name": "Ethan",
+                    "last_name": "_",
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "schedule": [
+                        [],
+                        [],
+                        [
+                            {
+                                "end": 1200,
+                                "service_type": 0,
+                                "start": 1000
+                            }
+                        ],
+                        [],
+                        [],
+                        [],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                211,
+                                223,
+                                231,
+                                232,
+                                260
+                            ],
+                            "department_name": "Biology",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                121
+                            ],
+                            "department_name": "Chemistry",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                146
+                            ],
+                            "department_name": "Math",
+                            "subtractive": false
+                        }
+                    ],
+                    "email": "",
+                    "first_name": "Fidelah",
+                    "last_name": "_",
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "schedule": [
+                        [],
+                        [
+                            {
+                                "end": 1700,
+                                "service_type": 0,
+                                "start": 1500
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1600,
+                                "service_type": 0,
+                                "start": 1100
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1700,
+                                "service_type": 0,
+                                "start": 1500
+                            }
+                        ],
+                        [],
+                        [],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                101
+                            ],
+                            "department_name": "Business",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                161
+                            ],
+                            "department_name": "Chemistry",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [],
+                            "department_name": "Computer Science",
+                            "subtractive": true
+                        },
+                        {
+                            "courses": [
+                                146,
+                                261
+                            ],
+                            "department_name": "Math",
+                            "subtractive": true
+                        },
+                        {
+                            "courses": [
+                                120
+                            ],
+                            "department_name": "Philosophy",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [],
+                            "department_name": "STEM",
+                            "subtractive": true
+                        },
+                        {
+                            "courses": [
+                                121,
+                                122
+                            ],
+                            "department_name": "Spanish",
+                            "subtractive": false
+                        }
+                    ],
+                    "email": "ihoffmann@everettcc.edu",
+                    "first_name": "Ivan",
+                    "last_name": "Hoffmann",
+                    "max_hours": 20,
+                    "min_hours": 20,
+                    "schedule": [
+                        [
+                            {
+                                "end": 1500,
+                                "service_type": 0,
+                                "start": 1000
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1500,
+                                "service_type": 0,
+                                "start": 1000
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1500,
+                                "service_type": 0,
+                                "start": 1000
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1500,
+                                "service_type": 0,
+                                "start": 1000
+                            }
+                        ],
+                        [],
+                        [],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                211,
+                                221,
+                                222,
+                                223,
+                                232,
+                                233,
+                                260
+                            ],
+                            "department_name": "Biology",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                121,
+                                131,
+                                140,
+                                161,
+                                162,
+                                163,
+                                261,
+                                262,
+                                263
+                            ],
+                            "department_name": "Chemistry",
+                            "subtractive": false
+                        }
+                    ],
+                    "email": "",
+                    "first_name": "Jane",
+                    "last_name": "_",
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "schedule": [
+                        [],
+                        [],
+                        [],
+                        [
+                            {
+                                "end": 1630,
+                                "service_type": 0,
+                                "start": 1200
+                            }
+                        ],
+                        [],
+                        [],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                110,
+                                112,
+                                201,
+                                202,
+                                203,
+                                250
+                            ],
+                            "department_name": "Accounting",
+                            "subtractive": false
+                        }
+                    ],
+                    "email": "",
+                    "first_name": "Jessica",
+                    "last_name": "_",
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "schedule": [
+                        [],
+                        [
+                            {
+                                "end": 1400,
+                                "service_type": 0,
+                                "start": 900
+                            }
+                        ],
+                        [],
+                        [
+                            {
+                                "end": 1400,
+                                "service_type": 0,
+                                "start": 900
+                            }
+                        ],
+                        [],
+                        [],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                146,
+                                152,
+                                163,
+                                260,
+                                261,
+                                264
+                            ],
+                            "department_name": "Math",
+                            "subtractive": true
+                        }
+                    ],
+                    "email": "",
+                    "first_name": "Kris",
+                    "last_name": "_",
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "schedule": [
+                        [],
+                        [
+                            {
+                                "end": 1900,
+                                "service_type": 0,
+                                "start": 1700
+                            }
+                        ],
+                        [],
+                        [],
+                        [
+                            {
+                                "end": 1700,
+                                "service_type": 0,
+                                "start": 1330
+                            }
+                        ],
+                        [],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                211,
+                                221,
+                                222,
+                                231,
+                                232
+                            ],
+                            "department_name": "Biology",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                110,
+                                120,
+                                130
+                            ],
+                            "department_name": "Nursing",
+                            "subtractive": false
+                        }
+                    ],
+                    "email": "",
+                    "first_name": "Leah",
+                    "last_name": "_",
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "schedule": [
+                        [],
+                        [],
+                        [],
+                        [
+                            {
+                                "end": 1900,
+                                "service_type": 0,
+                                "start": 1700
+                            }
+                        ],
+                        [],
+                        [],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [],
+                            "department_name": "Engineering Technology",
+                            "subtractive": true
+                        },
+                        {
+                            "courses": [
+                                260,
+                                261,
+                                264
+                            ],
+                            "department_name": "Math",
+                            "subtractive": true
+                        },
+                        {
+                            "courses": [],
+                            "department_name": "Mechatronics",
+                            "subtractive": true
+                        }
+                    ],
+                    "email": "",
+                    "first_name": "Liliya",
+                    "last_name": "_",
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "schedule": [
+                        [
+                            {
+                                "end": 1500,
+                                "service_type": 1,
+                                "start": 1200
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1500,
+                                "service_type": 1,
+                                "start": 1200
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1500,
+                                "service_type": 0,
+                                "start": 1200
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1500,
+                                "service_type": 1,
+                                "start": 1200
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1830,
+                                "service_type": 1,
+                                "start": 1530
+                            }
+                        ],
+                        [],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                110,
+                                201,
+                                202,
+                                203
+                            ],
+                            "department_name": "Accounting",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                76,
+                                86,
+                                96
+                            ],
+                            "department_name": "Math",
+                            "subtractive": false
+                        }
+                    ],
+                    "email": "",
+                    "first_name": "Lily",
+                    "last_name": "Kim",
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "schedule": [
+                        [
+                            {
+                                "end": 1400,
+                                "service_type": 0,
+                                "start": 900
+                            }
+                        ],
+                        [],
+                        [
+                            {
+                                "end": 1400,
+                                "service_type": 0,
+                                "start": 900
+                            }
+                        ],
+                        [],
+                        [],
+                        [],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                141,
+                                143
+                            ],
+                            "department_name": "Computer Science",
+                            "subtractive": false
+                        }
+                    ],
+                    "email": "",
+                    "first_name": "Logan",
+                    "last_name": "_",
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "schedule": [
+                        [
+                            {
+                                "end": 1900,
+                                "service_type": 0,
+                                "start": 1400
+                            }
+                        ],
+                        [],
+                        [],
+                        [],
+                        [],
+                        [],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                141,
+                                142,
+                                151,
+                                152
+                            ],
+                            "department_name": "Math",
+                            "subtractive": false
+                        }
+                    ],
+                    "email": "",
+                    "first_name": "Maddy",
+                    "last_name": "Pulliam",
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "schedule": [
+                        [],
+                        [],
+                        [],
+                        [
+                            {
+                                "end": 1900,
+                                "service_type": 0,
+                                "start": 1630
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1400,
+                                "service_type": 0,
+                                "start": 1100
+                            }
+                        ],
+                        [],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                141,
+                                142,
+                                146,
+                                151
+                            ],
+                            "department_name": "Math",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                103
+                            ],
+                            "department_name": "STEM",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                121,
+                                122,
+                                123
+                            ],
+                            "department_name": "Spanish",
+                            "subtractive": false
+                        }
+                    ],
+                    "email": "",
+                    "first_name": "Mariann",
+                    "last_name": "_",
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "schedule": [
+                        [],
+                        [
+                            {
+                                "end": 1900,
+                                "service_type": 0,
+                                "start": 1400
+                            }
+                        ],
+                        [],
+                        [],
+                        [],
+                        [],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                110,
+                                131,
+                                132
+                            ],
+                            "department_name": "Computer Science",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                141,
+                                142,
+                                151
+                            ],
+                            "department_name": "Math",
+                            "subtractive": false
+                        }
+                    ],
+                    "email": "",
+                    "first_name": "Mars",
+                    "last_name": "_",
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "schedule": [
+                        [],
+                        [],
+                        [
+                            {
+                                "end": 1900,
+                                "service_type": 0,
+                                "start": 1400
+                            }
+                        ],
+                        [],
+                        [],
+                        [],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                110,
+                                201,
+                                202
+                            ],
+                            "department_name": "Accounting",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                76,
+                                86,
+                                96,
+                                138,
+                                146
+                            ],
+                            "department_name": "Math",
+                            "subtractive": false
+                        }
+                    ],
+                    "email": "",
+                    "first_name": "Misty",
+                    "last_name": "Nguyen",
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "schedule": [
+                        [
+                            {
+                                "end": 1700,
+                                "service_type": 0,
+                                "start": 1330
+                            }
+                        ],
+                        [],
+                        [
+                            {
+                                "end": 1900,
+                                "service_type": 0,
+                                "start": 1430
+                            }
+                        ],
+                        [],
+                        [],
+                        [],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                231,
+                                232
+                            ],
+                            "department_name": "Biology",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [],
+                            "department_name": "Nursing",
+                            "subtractive": true
+                        }
+                    ],
+                    "email": "",
+                    "first_name": "Mitch",
+                    "last_name": "Newcomb",
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "schedule": [
+                        [
+                            {
+                                "end": 1500,
+                                "service_type": 0,
+                                "start": 1000
+                            }
+                        ],
+                        [],
+                        [],
+                        [],
+                        [
+                            {
+                                "end": 1500,
+                                "service_type": 0,
+                                "start": 1000
+                            }
+                        ],
+                        [
+                            {
+                                "end": 1400,
+                                "service_type": 0,
+                                "start": 1000
+                            }
+                        ],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                110
+                            ],
+                            "department_name": "Computer Science",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                163,
+                                260,
+                                261,
+                                264
+                            ],
+                            "department_name": "Math",
+                            "subtractive": true
+                        },
+                        {
+                            "courses": [
+                                241
+                            ],
+                            "department_name": "Physics",
+                            "subtractive": false
+                        }
+                    ],
+                    "email": "",
+                    "first_name": "Raymond",
+                    "last_name": "_",
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "schedule": [
+                        [],
+                        [],
+                        [],
+                        [],
+                        [],
+                        [],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                111,
+                                121
+                            ],
+                            "department_name": "Engineering",
+                            "subtractive": false
+                        },
+                        {
+                            "courses": [
+                                146,
+                                152,
+                                163,
+                                260,
+                                261,
+                                264
+                            ],
+                            "department_name": "Math",
+                            "subtractive": true
+                        },
+                        {
+                            "courses": [
+                                114,
+                                241
+                            ],
+                            "department_name": "Physics",
+                            "subtractive": false
+                        }
+                    ],
+                    "email": "",
+                    "first_name": "Sebastian",
+                    "last_name": "_",
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "schedule": [
+                        [],
+                        [],
+                        [],
+                        [
+                            {
+                                "end": 1030,
+                                "service_type": 0,
+                                "start": 800
+                            }
+                        ],
+                        [],
+                        [
+                            {
+                                "end": 1400,
+                                "service_type": 0,
+                                "start": 1000
+                            }
+                        ],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [
+                                183,
+                                221,
+                                222
+                            ],
+                            "department_name": "Biology",
+                            "subtractive": false
+                        }
+                    ],
+                    "email": "",
+                    "first_name": "Timothy",
+                    "last_name": "_",
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "schedule": [
+                        [
+                            {
+                                "end": 1700,
+                                "service_type": 0,
+                                "start": 1500
+                            }
+                        ],
+                        [],
+                        [],
+                        [
+                            {
+                                "end": 1700,
+                                "service_type": 0,
+                                "start": 1330
+                            }
+                        ],
+                        [],
+                        [],
+                        []
+                    ]
+                },
+                {
+                    "classes": [
+                        {
+                            "courses": [],
+                            "department_name": "Nursing",
+                            "subtractive": true
+                        }
+                    ],
+                    "email": "",
+                    "first_name": "Trixie",
+                    "last_name": "_",
+                    "max_hours": 0,
+                    "min_hours": 0,
+                    "schedule": [
+                        [],
+                        [
+                            {
+                                "end": 1500,
+                                "service_type": 0,
+                                "start": 1200
+                            }
+                        ],
+                        [],
+                        [],
+                        [],
+                        [],
+                        []
+                    ]
+                }
+            ]
+        }
+    ],
+    "settings": {
+        "export_directory": "./exported_documents/",
+        "resolution": {
+            "h": 600,
+            "w": 1200
+        },
+        "startup_schedule": 0,
+        "term_season": "Spring",
+        "term_year": 2026,
+        "window_title": "Tutoring Center Scheduler"
+    }
+}
