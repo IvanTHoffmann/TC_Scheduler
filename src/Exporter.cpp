@@ -9,7 +9,17 @@
 #include <vector>
 #include <map>
 
+#define SYMBOL_START '['
+#define SYMBOL_END ']'
+
 using namespace std;
+
+string Exporter::GetExportPath(string filename)
+{
+    cout << filename << endl;
+    filesystem::create_directory(appData->export_dir);
+    return appData->export_dir + "/" + filename;
+}
 
 string Exporter::GetExportPath(string subDirectory, string filename)
 {
@@ -22,11 +32,11 @@ string Exporter::GetExportPath(string subDirectory, string filename)
 
 bool Exporter::ReadToNextSymbol(istream &istr, ostream &text, ostream &symbol)
 {
-    if (!ReadUntil(istr, text, '{'))
+    if (!ReadUntil(istr, text, SYMBOL_START))
     {
         return false;
     }
-    if (!ReadUntil(istr, symbol, '}'))
+    if (!ReadUntil(istr, symbol, SYMBOL_END))
     {
         return false;
     }
@@ -42,7 +52,7 @@ bool Exporter::ReadToSymbol(istream &istr, ostream &text, const string &targetSy
         {
             return true;
         }
-        text << "{" << symbol.str() << "}";
+        text << SYMBOL_START << symbol.str() << SYMBOL_END;
 
         symbol.str(std::string());
         symbol.clear();
@@ -73,6 +83,7 @@ bool Exporter::Invoke(istream &istr, ostream &ostr, const string &symbol)
     auto result = symbols.find(symbol);
     if (result != symbols.end())
     {
+        cout << "invoke: " << symbol << endl;
         return invoke(result->second, *this, istr, ostr);
     }
     cout << "invalid symbol: " << symbol << endl;
@@ -112,6 +123,13 @@ Exporter::Exporter(AppData *_appData) : appData(_appData)
     symbols["tutor_firstname"] = Exporter::GetTutorFirstName;
     symbols["term_season"] = Exporter::GetTermSeason;
     symbols["term_year"] = Exporter::GetTermYear;
+
+    symbols["foreach_timetable_timeslot"] = Exporter::Foreach_Timetable_Timeslot;
+    symbols["timeslot_start"] = Exporter::GetTimeslotStart;
+    symbols["timeslot_end"] = Exporter::GetTimeslotEnd;
+    symbols["foreach_weekday_ns"] = Exporter::Foreach_WeekdayNS;
+    symbols["timetable_tutor_list"] = Exporter::GetTimetableTutorList;
+    symbols["timetable_slot_class"] = Exporter::GetTimetableSlotClass;
 }
 
 void Exporter::ExportTutorPage()
@@ -177,7 +195,28 @@ void Exporter::ExportSubjectPage()
 
 void Exporter::ExportTimetable()
 {
-    cout << "Export Timetable" << endl;
+    ifstream fin;
+    ofstream fout;
+
+    fin.open("assets/ExportTemplates/timetable.html");
+
+    if (!fin.is_open())
+    {
+        return;
+    }
+
+    fout.open(GetExportPath("timetable.html"));
+    if (!fout.is_open())
+    {
+        fin.close();
+        return;
+    }
+
+    // file is ready to be written to
+    Process(fin, fout);
+
+    fout.close();
+    fin.close();
 }
 
 void Exporter::ExportRolodex()
@@ -335,7 +374,7 @@ bool Exporter::If_Email(istream &istr, ostream &ostr)
 
 bool Exporter::If_Dept_Tutors(istream &istr, ostream &ostr)
 {
-    Department* department = appData->selected_department.accessor.ptr();
+    Department *department = appData->selected_department.accessor.ptr();
     if (department)
     {
         // Warning: No tutor selected
@@ -348,7 +387,7 @@ bool Exporter::If_Dept_Tutors(istream &istr, ostream &ostr)
     {
         return false;
     }
-    
+
     return true;
 }
 
@@ -366,7 +405,6 @@ bool Exporter::SetService(istream &istr, ostream &ostr)
     service_ids.clear();
     while (ReadToNextSymbol(buffer, tmpOutStream, service_str))
     {
-
         int service_id = 0;
         for (const Service &service : appData->services)
         {
@@ -506,7 +544,7 @@ bool Exporter::GetShiftDuration(istream &istr, ostream &ostr)
 
 bool Exporter::GetSelectedDepartmentServices(istream &istr, ostream &ostr)
 {
-    
+
     return true;
 }
 
@@ -548,6 +586,58 @@ bool Exporter::Foreach_Department_Tutor(istream &istr, ostream &ostr)
     return true;
 }
 
+bool Exporter::Foreach_Timetable_Timeslot(istream &istr, ostream &ostr)
+{
+
+    // Read the loop body into buffer
+    stringstream buffer;
+    if (!ReadToSymbol(istr, buffer, "endloop_timetable_timeslot"))
+    {
+        return false;
+    }
+
+    int slotDuration = 30;
+    for (size_t slotHour = 0; slotHour < 24; slotHour++)
+    {
+        for (size_t slotMin = 0; slotMin < 60; slotMin += slotDuration)
+        {
+            iter_slotStart = slotHour * 100 + slotMin;
+
+            int endSlotHour = slotHour;
+            int endSlotMin = slotMin + slotDuration;
+            if (endSlotMin >= 60)
+            {
+                endSlotHour += endSlotMin / 60;
+                endSlotMin %= 60;
+            }
+            int slotEnd = endSlotHour * 100 + endSlotMin;
+
+            timeslot_start = FormatTime(iter_slotStart);
+            timeslot_end = FormatTime(slotEnd);
+
+            Process(buffer, ostr);
+        }
+    }
+    return false;
+}
+
+bool Exporter::Foreach_WeekdayNS(istream &istr, ostream &ostr)
+{
+    // Read the loop body into buffer
+    stringstream buffer;
+    if (!ReadToSymbol(istr, buffer, "endloop_weekday_ns"))
+    {
+        return false;
+    }
+
+    for (iter_weekday = 0; iter_weekday < 6; iter_weekday++)
+    {
+        Process(buffer, ostr);
+    }
+    iter_weekday = -1;
+    return true;
+}
+
 bool Exporter::GetTutorFirstName(istream &istr, ostream &ostr)
 {
     if (!iter_tutor)
@@ -567,5 +657,58 @@ bool Exporter::GetTermSeason(istream &istr, ostream &ostr)
 bool Exporter::GetTermYear(istream &istr, ostream &ostr)
 {
     ostr << appData->term_year;
+    return true;
+}
+
+bool Exporter::GetTimeslotStart(istream &istr, ostream &ostr)
+{
+    ostr << timeslot_start;
+    return true;
+}
+
+bool Exporter::GetTimeslotEnd(istream &istr, ostream &ostr)
+{
+    ostr << timeslot_end;
+    return true;
+}
+
+bool Exporter::GetTimetableTutorList(istream &istr, ostream &ostr)
+{
+    if (iter_weekday < 0 || 7 <= iter_weekday)
+    {
+        // warning: invalid weekday
+        return false;
+    }
+
+    bool foundTutor = false;
+    selected_tutors.str("");
+    selected_tutors.clear();
+    for (const Tutor &tutor : appData->tutors)
+    {
+        const DaySchedule &day = tutor.schedule.days.at(iter_weekday);
+        for (const ShiftSchedule &shift : day.shifts)
+        {
+            if (shift.start <= iter_slotStart && iter_slotStart < shift.end)
+            {
+                if (ServiceIsSelected(shift.service_type))
+                {
+                    // The tutor is scheduled for a selected service
+                    if (foundTutor)
+                    {
+                        selected_tutors << ", ";
+                    }
+                    selected_tutors << tutor.first_name;
+                }
+                break;
+            }
+        }
+    }
+    ostr << selected_tutors.str();
+    return true;
+}
+
+bool Exporter::GetTimetableSlotClass(istream &istr, ostream &ostr)
+{
+    ostr << "NoClass";
     return true;
 }

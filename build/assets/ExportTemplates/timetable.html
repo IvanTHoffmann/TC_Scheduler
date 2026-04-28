@@ -1,0 +1,52 @@
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    td {
+        text-align: center;
+    }
+    table, th, td {
+        border: 1px solid black;
+    }
+</style>
+
+<table>
+    <caption>
+        <h1>
+            Tutoring Center - [term_season] [term_year] Schedule
+        </h1>
+    </caption>
+
+    <thead>
+        <th>
+            <b>
+                Time
+            </b>
+        </th>
+        [foreach_weekday_ns]
+        <td class="[timetable_slot_class]">
+            <b>
+                [weekday_name]
+            </b>
+        </td>
+        [endloop_weekday_ns]
+    </thead>
+
+    <tbody>
+        [set_service][In-Person][By Appointment][end_set_service]
+        [foreach_timetable_timeslot]
+        <tr>
+            <td>
+                [timeslot_start] - [timeslot_end]
+            </td>
+            [foreach_weekday_ns]
+            <td class="[timetable_slot_class]">
+                [timetable_tutor_list]
+            </td>
+            [endloop_weekday_ns]
+        </tr>
+        [endloop_timetable_timeslot]
+    </tbody>
+
+</table>

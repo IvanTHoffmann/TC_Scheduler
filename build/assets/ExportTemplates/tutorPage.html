@@ -1,11 +1,11 @@
 <p>
-    {selected_tutor_firstname} is a tutor at the Everett Community College Tutoring Center.
+    [selected_tutor_firstname] is a tutor at the Everett Community College Tutoring Center.
 </p>
 
 <table width="auto">
 
     <caption>
-        <h3>{selected_tutor_firstname} is best suited to help with:</h3>
+        <h3>[selected_tutor_firstname] is best suited to help with:</h3>
     </caption>
 
     <thead width="auto">
@@ -16,61 +16,61 @@
     </thead>
 
     <tbody width="auto">
-        {foreach_classList}
+        [foreach_classList]
         <tr>
-            <td width="auto">{classList_deptname}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-            <td>{classList_courses}</td>
+            <td width="auto">[classList_deptname]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td>[classList_courses]</td>
         </tr>
-        {endloop_classList}
+        [endloop_classList]
     </tbody>
     
 </table>
 
-{set_service}{In-Person}{By Appointment}{end_set_service}
-{if_service}
+[set_service][In-Person][By Appointment][end_set_service]
+[if_service]
 <br/>
 <table style="border-collapse: collapse; width: 100%;" border="3">
 
     <caption>
-        <h2>{selected_tutor_firstname}'s {term_season} {term_year} in-person schedule</h2>
+        <h2>[selected_tutor_firstname]'s [term_season] [term_year] in-person schedule</h2>
     </caption>
 
     <thead style="font-size: 24pt;">
         <tr>
-            {foreach_weekday}
+            [foreach_weekday]
             <th scope="col" display="flex" style="text-align: center; vertical-align: top; width: 14.2857%; padding-top: 20px; padding-bottom: 20px;">
                 <b style="font-size: 18pt;">
-                    {weekday_name}s
+                    [weekday_name]s
                 </b>
             </th>
-            {endloop_weekday}
+            [endloop_weekday]
         </tr>
     </thead>
 
     <tbody>
         <tr>
-            {foreach_weekday}
+            [foreach_weekday]
             <td display="flex" style="text-align: center; vertical-align: top; width: 14.2857%; padding-top: 20px; padding-bottom: 20px;">
-                {foreach_service_shift}
-                <p style="font-size: 14pt;">{shift_duration}</p>
-                {endloop_service_shift}
+                [foreach_service_shift]
+                <p style="font-size: 14pt;">[shift_duration]</p>
+                [endloop_service_shift]
             </td>
-            {endloop_weekday}
+            [endloop_weekday]
         </tr>
     </tbody>
 
 </table>
-{endif_service}
+[endif_service]
 
 
-{set_service}{By Appointment}{end_set_service}
-{if_service}
+[set_service][By Appointment][end_set_service]
+[if_service]
 <br/>
 <table style="border-collapse: collapse; width: 100%;" border="3">
 
     <caption>
         <h2>
-            {selected_tutor_firstname}'s {term_season} {term_year} online appointment schedule
+            [selected_tutor_firstname]'s [term_season] [term_year] online appointment schedule
             <br/>
             (<a class="inline_disabled"
                 href="https://everettcc.starfishsolutions.com/starfish-ops/instructor/serviceCatalog.html?tenantId=9343#/service/4224"
@@ -80,39 +80,39 @@
 
     <thead style="font-size: 24pt;">
         <tr>
-            {foreach_weekday}
+            [foreach_weekday]
             <th scope="col" display="flex" style="text-align: center; vertical-align: top; width: 14.2857%; padding-top: 20px; padding-bottom: 20px;">
                 <b style="font-size: 18pt;">
-                    {weekday_name}s
+                    [weekday_name]s
                 </b>
             </th>
-            {endloop_weekday}
+            [endloop_weekday]
         </tr>
     </thead>
 
     <tbody>
         <tr>
-            {foreach_weekday}
+            [foreach_weekday]
             <td display="flex" style="text-align: center; vertical-align: top; width: 14.2857%; padding-top: 20px; padding-bottom: 20px;">
-                {foreach_service_shift}
-                <p style="font-size: 14pt;">{shift_duration}</p>
-                {endloop_service_shift}
+                [foreach_service_shift]
+                <p style="font-size: 14pt;">[shift_duration]</p>
+                [endloop_service_shift]
             </td>
-            {endloop_weekday}
+            [endloop_weekday]
         </tr>
     </tbody>
 
 </table>
-{endif_service}
+[endif_service]
 
-{set_service}{eTutoring}{end_set_service}
-{if_service}
+[set_service][eTutoring][end_set_service]
+[if_service]
 <br/>
 <table style="border-collapse: collapse; width: 100%;" border="3">
 
     <caption>
         <h2>
-            {selected_tutor_firstname}'s {term_season} {term_year} eTutoring schedule
+            [selected_tutor_firstname]'s [term_season] [term_year] eTutoring schedule
             <br/>
             (<a class="inline_disabled"
                 href="https://etutoringonline.org/login.cfm?institutionid=42&returnPage=&institution=EVERETT_COMMUNITY_COLLEGE"
@@ -122,39 +122,39 @@
 
     <thead style="font-size: 24pt;">
         <tr>
-            {foreach_weekday}
+            [foreach_weekday]
             <th scope="col" display="flex" style="text-align: center; vertical-align: top; width: 14.2857%; padding-top: 20px; padding-bottom: 20px;">
                 <b style="font-size: 18pt;">
-                    {weekday_name}s
+                    [weekday_name]s
                 </b>
             </th>
-            {endloop_weekday}
+            [endloop_weekday]
         </tr>
     </thead>
 
     <tbody>
         <tr>
-            {foreach_weekday}
+            [foreach_weekday]
             <td display="flex" style="text-align: center; vertical-align: top; width: 14.2857%; padding-top: 20px; padding-bottom: 20px;">
-                {foreach_service_shift}
-                <p style="font-size: 14pt;">{shift_duration}</p>
-                {endloop_service_shift}
+                [foreach_service_shift]
+                <p style="font-size: 14pt;">[shift_duration]</p>
+                [endloop_service_shift]
             </td>
-            {endloop_weekday}
+            [endloop_weekday]
         </tr>
     </tbody>
 
 </table>
-{endif_service}
+[endif_service]
 
-{if_email}
+[if_email]
 <br/>
 
 <h3>
     Contact
 </h3>
 <p>
-    <a href="mailto:{selected_tutor_email}">Send {selected_tutor_firstname} an email</a>
+    <a href="mailto:[selected_tutor_email]">Send [selected_tutor_firstname] an email</a>
 </p>
 <p>
     <em>
@@ -162,7 +162,7 @@
         to this location.
     </em>
 </p>
-{endif_email}
+[endif_email]
 
 <br/><br/><br/>
 

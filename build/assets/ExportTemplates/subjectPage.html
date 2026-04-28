@@ -1,19 +1,17 @@
 <h1>
-    We currently offer {selected_department_name} support {selected_department_services}.
+    We currently offer [selected_department_name] support [selected_department_services].
 </h1>
 
-{if_dept_tutors}
+[if_dept_tutors]
 <h1>
-    Our {selected_department_name} {foreach_dept_tutor}
+    Our [selected_department_name] [foreach_dept_tutor]
     <a 
-    title="{tutor_firstname}'s Information" 
-    href="https://everettcc.instructure.com/courses/1940759/pages/{tutor_firstname}s-information" 
-    data-api-endpoint="https://everettcc.instructure.com/api/v1/courses/1940759/pages/{tutor_firstname}s-information" 
-    data-api-returntype="Page">{tutor_firstname}</a>{endloop_tutor}.
+    title="[tutor_firstname]'s Information" 
+    href="https://everettcc.instructure.com/courses/1940759/pages/[tutor_firstname]s-information" 
+    data-api-endpoint="https://everettcc.instructure.com/api/v1/courses/1940759/pages/[tutor_firstname]s-information" 
+    data-api-returntype="Page">[tutor_firstname]</a>[endloop_tutor].
 </h1>
-{endif_dept_tutors}
-
-
+[endif_dept_tutors]
 
 <h1>
     Explore your options below.

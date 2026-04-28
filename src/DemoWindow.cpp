@@ -143,7 +143,7 @@ void DemoWindow::UpdateTimetable()
 			}
 
 			// search for shifts that match the search filter
-			bool matches = false;
+			bool matchesFilter = false;
 			for (const Department &dept : appData.departments)
 			{
 				if (!dept.selected)
@@ -155,16 +155,16 @@ void DemoWindow::UpdateTimetable()
 				{
 					if (classList.department_name == dept.name)
 					{
-						matches = true;
+						matchesFilter = true;
 						break;
 					}
 				}
-				if (matches)
+				if (matchesFilter)
 				{
 					break;
 				}
 			}
-			if (!matches)
+			if (!matchesFilter)
 			{
 				continue;
 			}

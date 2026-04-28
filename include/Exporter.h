@@ -1,6 +1,7 @@
 #ifndef EXPORTER_H
 #define EXPORTER_H
 
+#include <sstream>
 #include <string>
 #include <map>
 
@@ -19,9 +20,13 @@ class Exporter {
     int* iter_courseId;
     int iter_weekday;
     Tutor* iter_tutor;
+    stringstream selected_tutors;
+    int iter_slotStart;
+    string timeslot_start, timeslot_end;
 
     AppData* appData;
     map<string, bool (Exporter::*)(istream&, ostream&)> symbols, loopSymbols;
+	string GetExportPath(string filename);
 	string GetExportPath(string subDirectory, string filename);
     bool ReadToNextSymbol(istream& istr, ostream& text, ostream& symbol);
     bool ReadToSymbol(istream& istr, ostream& text, const string& targetSymbol);
@@ -34,6 +39,8 @@ class Exporter {
     bool Foreach_Weekday(istream& istr, ostream& ostr);
     bool Foreach_ServiceShift(istream& istr, ostream& ostr);
     bool Foreach_Department_Tutor(istream& istr, ostream& ostr);
+    bool Foreach_Timetable_Timeslot(istream& istr, ostream& ostr);
+    bool Foreach_WeekdayNS(istream& istr, ostream& ostr);
 
     // Conditional Symbols
     bool If_Service(istream& istr, ostream& ostr);
@@ -51,11 +58,15 @@ class Exporter {
     bool GetClassListCourses(istream& istr, ostream& ostr);
     bool GetWeekdayName(istream& istr, ostream& ostr);
     bool GetShiftDuration(istream& istr, ostream& ostr);
-    bool GetCourseList(istream& istr, ostream& ostr);
+    //bool GetCourseList(istream& istr, ostream& ostr);
     bool GetSelectedDepartmentServices(istream& istr, ostream& ostr);
     bool GetTutorFirstName(istream& istr, ostream& ostr);
     bool GetTermSeason(istream& istr, ostream& ostr);
     bool GetTermYear(istream& istr, ostream& ostr);
+    bool GetTimeslotStart(istream& istr, ostream& ostr);
+    bool GetTimeslotEnd(istream& istr, ostream& ostr);
+    bool GetTimetableTutorList(istream& istr, ostream& ostr);
+    bool GetTimetableSlotClass(istream& istr, ostream& ostr);
     
     public:
 
