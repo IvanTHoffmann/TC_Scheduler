@@ -240,6 +240,7 @@ class TimetableInterface
 
 	void Load(const WeekSchedule& schedule);
 	void Save(WeekSchedule& schedule);
+	void Clear(); // sets all slots to UNSCHEDULED_SLOT
 };
 
 struct AppData

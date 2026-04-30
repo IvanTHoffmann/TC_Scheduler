@@ -186,6 +186,23 @@ void TimetableInterface::Save(WeekSchedule &schedule)
 	}
 }
 
+void TimetableInterface::Clear()
+{
+    for (int dayIndex = 0; dayIndex < 7; ++dayIndex)
+    {
+        TimetableRow& row = rows.at(dayIndex);
+
+        // 1. Ensure the vector is allocated for the full 24 hours
+        row.slots.resize(24 * slotsPerHour);
+
+        // 2. Wipe the data
+        for (TimetableSlot& slot : row.slots)
+        {
+            slot.value = UNSCHEDULED_SLOT;
+        }
+    }
+}
+
 void TimetableInterface::Load(const WeekSchedule &schedule)
 {
 	// Set start and end hours to invalid placeholders

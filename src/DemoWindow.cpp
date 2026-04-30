@@ -507,6 +507,25 @@ void DemoWindow::RemoveDepartment(CALLBACK_PARAMS)
 	}
 }
 
+void DemoWindow::SaveSchedule(CALLBACK_PARAMS)
+{
+	Save();
+	cout << "called Save()" << endl;
+}
+
+void DemoWindow::ResetGrid(CALLBACK_PARAMS)
+{
+	Tutor *tutor = appData.selected_tutor.accessor.ptr();
+	if (!tutor)
+	{
+		return;
+	}
+
+	appData.timetable.Clear();
+	dataModelHandle.DirtyAllVariables();
+	cout << "called ResetGrid()" << endl;
+}
+
 void DemoWindow::ExportTutorPage(CALLBACK_PARAMS)
 {
 	exporter.ExportTutorPage();
@@ -760,6 +779,8 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 		constructor.BindEventCallback("OnTimetableMouseOut", &DemoWindow::OnTimetableMouseOut, this);
 		constructor.BindEventCallback("AddStartTime", &DemoWindow::AddStartTime, this);
 		constructor.BindEventCallback("AddEndTime", &DemoWindow::AddEndTime, this);
+		constructor.BindEventCallback("SaveSchedule", &DemoWindow::SaveSchedule, this);
+		constructor.BindEventCallback("ResetGrid", &DemoWindow::ResetGrid, this);
 
 		// Register transform functions
 		AppData *appData_ptr = &appData;

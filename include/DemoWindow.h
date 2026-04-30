@@ -39,6 +39,8 @@ public:
 
 	Rml::ElementDocument* GetDocument();
 
+	void SaveSchedule(CALLBACK_PARAMS);
+	void ResetGrid(CALLBACK_PARAMS);
 	void SubmitForm(Rml::String in_submit_message);
 
 	// Schedule interaction
