@@ -151,8 +151,8 @@
 	<div data-for="selected_tutor.accessor">
 		<div class="schedule-toolbar">
 			<button class="gradient" data-event-click="ResetGrid">Reset Grid</button>
-			<button class="gradient" data-event-click="SaveSchedule">Save Schedule</button>
 			<template src="service_select"/>
+			<button class="gradient" data-event-click="SaveSchedule">Save</button>
 			<div class="schedule-summary" data-style-background-color="schedule_valid ? '#4CAF50' : '#f44336'">Total: {{formatted_total_hours}}</div>
 		</div>
 		<template src="timetable" />
