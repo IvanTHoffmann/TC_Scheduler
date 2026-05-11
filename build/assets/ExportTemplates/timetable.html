@@ -9,6 +9,12 @@
     table, th, td {
         border: 1px solid black;
     }
+    td.shade {
+        background-color: lightgray;
+    }
+    td.no_shade {
+        background-color: white;
+    }
 </style>
 
 <table>
@@ -25,7 +31,7 @@
             </b>
         </th>
         [foreach_weekday_ns]
-        <td class="[timetable_slot_class]">
+        <td>
             <b>
                 [weekday_name]
             </b>

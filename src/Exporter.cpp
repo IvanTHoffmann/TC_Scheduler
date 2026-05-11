@@ -596,12 +596,41 @@ bool Exporter::Foreach_Timetable_Timeslot(istream &istr, ostream &ostr)
         return false;
     }
 
+    int weekStartTime = 2400;
+    int weekEndTime = 0;
+
+    for (int dayId = 0; dayId < 7; dayId++)
+    {
+        int &startTime = timeRanges.at(dayId).first;
+        int &endTime = timeRanges.at(dayId).second;
+        startTime = 2400;
+        endTime = 0;
+        for (const Tutor &tutor : appData->tutors)
+        {
+            const DaySchedule &day = tutor.schedule.days.at(dayId);
+            for (const ShiftSchedule &shift : day.shifts)
+            {
+                if (ServiceIsSelected(shift.service_type))
+                {
+                    startTime = shift.start < startTime ? shift.start : startTime;
+                    endTime = endTime < shift.end ? shift.end : endTime;
+                }
+            }
+        }
+        weekStartTime = weekStartTime < startTime ? weekStartTime : startTime;
+        weekEndTime = weekEndTime > endTime ? weekEndTime : endTime;
+    }
+
     int slotDuration = 30;
     for (size_t slotHour = 0; slotHour < 24; slotHour++)
     {
         for (size_t slotMin = 0; slotMin < 60; slotMin += slotDuration)
         {
             iter_slotStart = slotHour * 100 + slotMin;
+            if (iter_slotStart < weekStartTime)
+            {
+                continue;
+            }
 
             int endSlotHour = slotHour;
             int endSlotMin = slotMin + slotDuration;
@@ -611,6 +640,11 @@ bool Exporter::Foreach_Timetable_Timeslot(istream &istr, ostream &ostr)
                 endSlotMin %= 60;
             }
             int slotEnd = endSlotHour * 100 + endSlotMin;
+
+            if (weekEndTime < slotEnd)
+            {
+                break;
+            }
 
             timeslot_start = FormatTime(iter_slotStart);
             timeslot_end = FormatTime(slotEnd);
@@ -680,7 +714,7 @@ bool Exporter::GetTimetableTutorList(istream &istr, ostream &ostr)
         return false;
     }
 
-    bool foundTutor = false;
+    iter_timeslotEmpty = true;
     selected_tutors.str("");
     selected_tutors.clear();
     for (const Tutor &tutor : appData->tutors)
@@ -693,10 +727,11 @@ bool Exporter::GetTimetableTutorList(istream &istr, ostream &ostr)
                 if (ServiceIsSelected(shift.service_type))
                 {
                     // The tutor is scheduled for a selected service
-                    if (foundTutor)
+                    if (!iter_timeslotEmpty)
                     {
                         selected_tutors << ", ";
                     }
+                    iter_timeslotEmpty = false;
                     selected_tutors << tutor.first_name;
                 }
                 break;
@@ -709,6 +744,16 @@ bool Exporter::GetTimetableTutorList(istream &istr, ostream &ostr)
 
 bool Exporter::GetTimetableSlotClass(istream &istr, ostream &ostr)
 {
-    ostr << "NoClass";
+    int &startTime = timeRanges.at(iter_weekday).first;
+    int &endTime = timeRanges.at(iter_weekday).second;
+    if (startTime <= iter_slotStart && iter_slotStart < endTime)
+    {
+        ostr << "no_shade";
+    }
+    else
+    {
+        // empty time slot
+        ostr << "shade";
+    }
     return true;
 }

@@ -22,6 +22,8 @@ class Exporter {
     Tutor* iter_tutor;
     stringstream selected_tutors;
     int iter_slotStart;
+    array<pair<int, int>, 7> timeRanges;
+    bool iter_timeslotEmpty;
     string timeslot_start, timeslot_end;
 
     AppData* appData;
