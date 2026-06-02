@@ -20,7 +20,7 @@
 # Compiled Dynamic libraries
 *.so
 *.dylib
-*.dll
+# *.dll
 *.so.*
 
 
@@ -69,7 +69,7 @@ Testing/
 .cache/
 
 # Batch files
-.bat
+# *.bat # why?
 
 # Visual Studio Code settings
 .vscode/
