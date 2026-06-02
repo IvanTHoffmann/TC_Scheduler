@@ -69,6 +69,16 @@ class Exporter {
     bool GetTimeslotEnd(istream& istr, ostream& ostr);
     bool GetTimetableTutorList(istream& istr, ostream& ostr);
     bool GetTimetableSlotClass(istream& istr, ostream& ostr);
+
+    bool Foreach_RolodexHeader(istream& istr, ostream& ostr);
+    bool GetRolodexHeader(istream& istr, ostream& ostr);
+    bool GetRolodexDescription(istream& istr, ostream& ostr);
+    bool GetRolodexTutorList(istream& istr, ostream& ostr);
+    bool Foreach_RolodexShift(istream& istr, ostream& ostr);
+    bool GetRolodexShiftDays(istream& istr, ostream& ostr);
+    bool GetRolodexShiftStartTime(istream& istr, ostream& ostr);
+    bool GetRolodexShiftEndTime(istream& istr, ostream& ostr);
+
     
     public:
 

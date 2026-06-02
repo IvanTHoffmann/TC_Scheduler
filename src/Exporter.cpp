@@ -752,8 +752,47 @@ bool Exporter::GetTimetableSlotClass(istream &istr, ostream &ostr)
     }
     else
     {
-        // empty time slot
         ostr << "shade";
     }
     return true;
+}
+
+bool Exporter::Foreach_RolodexHeader(istream &istr, ostream &ostr)
+{
+    return false;
+}
+
+bool Exporter::GetRolodexHeader(istream &istr, ostream &ostr)
+{
+    return false;
+}
+
+bool Exporter::GetRolodexDescription(istream &istr, ostream &ostr)
+{
+    return false;
+}
+
+bool Exporter::GetRolodexTutorList(istream &istr, ostream &ostr)
+{
+    return false;
+}
+
+bool Exporter::Foreach_RolodexShift(istream &istr, ostream &ostr)
+{
+    return false;
+}
+
+bool Exporter::GetRolodexShiftDays(istream &istr, ostream &ostr)
+{
+    return false;
+}
+
+bool Exporter::GetRolodexShiftStartTime(istream &istr, ostream &ostr)
+{
+    return false;
+}
+
+bool Exporter::GetRolodexShiftEndTime(istream &istr, ostream &ostr)
+{
+    return false;
 }

@@ -14,6 +14,7 @@ using namespace std;
 #include "Service.h"
 #include "Tutor.h"
 #include "TimetableInterface.h"
+#include "RolodexHeader.h"
 
 struct AppData
 {
@@ -28,7 +29,9 @@ struct AppData
 		INDIVIDUAL
 	} timetableDisplayMode;
 	TimetableInterface timetable;
-	// SummaryFilter summary_filter; // flag each item instead
+
+	// rolodex headers
+	vector<RolodexHeader> rolodex_headers;
 	
 	// PREFERENCES
 	vector<Rml::String> schedule_names;

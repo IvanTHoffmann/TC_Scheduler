@@ -1,8 +1,21 @@
 #include "AppData.h"
 
+#include <iostream>
+
+using namespace std;
+
 // AppData implementation
 void AppData::SaveSchedule(Json::object &outElement) const
 {
+	// vector<RolodexHeader> rolodex_headers
+	Json::array roloHeaders_json;
+	for (const RolodexHeader& rolodex_header : rolodex_headers) {
+		Json::object roloHeader_json;
+		rolodex_header.Save(roloHeader_json);
+		roloHeaders_json.push_back(roloHeader_json);
+	}
+	outElement["rolodex_headers"] = roloHeaders_json;
+
 	// vector<Rml::String> budgets;
 	Json::array budgets_json;
 	for (const Rml::String &budget_name : budgets)
@@ -44,6 +57,14 @@ void AppData::SaveSchedule(Json::object &outElement) const
 
 void AppData::LoadSchedule(const Json::object &inElement)
 {
+	
+	// vector<RolodexHeader> rolodex_headers
+	rolodex_headers.clear();
+	for (const Json& inJson : inElement.at("rolodex_headers").array_items()) {
+		rolodex_headers.push_back({});
+		rolodex_headers.back().Load(inJson.object_items());
+	}
+	
 	// vector<Rml::String> budgets
 	budgets.clear();
 	for (const Json& inJson : inElement.at("budgets").array_items()) {

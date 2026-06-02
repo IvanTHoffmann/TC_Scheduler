@@ -1,0 +1,55 @@
+<style>
+    h1 {
+        text-align: center;
+    }
+
+    .parent {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .child {
+        border: 1px;
+        border-color: black;
+        border-style: solid;
+        flex: 1 0 21%;
+        /* explanation below */
+        margin: 5px;
+        height: 100px;
+    }
+</style>
+
+<h1 text-align="center">
+    Tutoring Center Schedule by Subject
+</h1>
+
+<div class="parent">
+    [foreach_rolodex_header]
+    <table class="child">
+
+        <thead>
+            <tr>
+                <th>
+                    [rolodex_department] [if_rolodex_description]([rolodex_description])[endif_rolodex_description]
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>
+                    [rolodex_tutor_list]
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    [foreach_rolodex_shift]
+                    [rolodex_shift_days] [rolodex_shift_start]-[rolodex_shift_end]
+                    [endloop_rolodex_shift]
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+    [endloop_rolodex_header]
+</div>
