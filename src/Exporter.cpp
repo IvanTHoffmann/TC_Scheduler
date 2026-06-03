@@ -130,6 +130,15 @@ Exporter::Exporter(AppData *_appData) : appData(_appData)
     symbols["foreach_weekday_ns"] = Exporter::Foreach_WeekdayNS;
     symbols["timetable_tutor_list"] = Exporter::GetTimetableTutorList;
     symbols["timetable_slot_class"] = Exporter::GetTimetableSlotClass;
+    
+    symbols["foreach_rolodex_header"] = Exporter::Foreach_RolodexHeader;
+    symbols["rolodex_description"] = Exporter::GetRolodexDescription;
+    symbols["rolodex_tutor_list"] = Exporter::GetRolodexTutorList;
+    symbols["foreach_rolodex_shift"] = Exporter::Foreach_RolodexShift;
+    symbols["rolodex_shift_days"] = Exporter::GetRolodexShiftDays;
+    symbols["rolodex_shift_start"] = Exporter::GetRolodexShiftStartTime;
+    symbols["rolodex_shift_end"] = Exporter::GetRolodexShiftEndTime;
+
 }
 
 void Exporter::ExportTutorPage()
@@ -221,7 +230,28 @@ void Exporter::ExportTimetable()
 
 void Exporter::ExportRolodex()
 {
-    cout << "Export Rolodex" << endl;
+    ifstream fin;
+    ofstream fout;
+
+    fin.open("assets/ExportTemplates/rolodex.html");
+
+    if (!fin.is_open())
+    {
+        return;
+    }
+
+    fout.open(GetExportPath("rolodex.html"));
+    if (!fout.is_open())
+    {
+        fin.close();
+        return;
+    }
+
+    // file is ready to be written to
+    Process(fin, fout);
+
+    fout.close();
+    fin.close();
 }
 
 void Exporter::ExportAll()
@@ -759,40 +789,72 @@ bool Exporter::GetTimetableSlotClass(istream &istr, ostream &ostr)
 
 bool Exporter::Foreach_RolodexHeader(istream &istr, ostream &ostr)
 {
-    return false;
-}
+    // Read the loop body into buffer
+    stringstream buffer;
+    if (!ReadToSymbol(istr, buffer, "endloop_rolodex_header"))
+    {
+        return false;
+    }
 
-bool Exporter::GetRolodexHeader(istream &istr, ostream &ostr)
-{
-    return false;
+    for (cur_rolodex_header = appData->rolodex_headers.begin(); cur_rolodex_header != appData->rolodex_headers.end(); ++cur_rolodex_header)
+    {
+        cur_rolodex_tutors.clear();
+        for (const Tutor& tutor : appData->tutors){
+            if (tutor.tutorsClasses(cur_rolodex_header->classes)){
+                cur_rolodex_tutors.push_back(&tutor);
+            }
+        }
+
+        Process(buffer, ostr);
+    }
+    return true;
 }
 
 bool Exporter::GetRolodexDescription(istream &istr, ostream &ostr)
 {
-    return false;
+    const string& description = cur_rolodex_header->description;
+    if (description.size()){
+        ostr << description;
+    }
+    return true;
 }
 
 bool Exporter::GetRolodexTutorList(istream &istr, ostream &ostr)
 {
-    return false;
+    bool first = true;
+    for (const Tutor* tutor : cur_rolodex_tutors){
+        if (!first){
+            ostr << ", ";
+        }
+        ostr << tutor->first_name;
+        first = false;
+    }
+    return true;
 }
 
 bool Exporter::Foreach_RolodexShift(istream &istr, ostream &ostr)
 {
-    return false;
+    // Read the loop body into buffer
+    stringstream buffer;
+    if (!ReadToSymbol(istr, buffer, "endloop_rolodex_shift"))
+    {
+        return false;
+    }
+
+    return true;
 }
 
 bool Exporter::GetRolodexShiftDays(istream &istr, ostream &ostr)
 {
-    return false;
+    return true;
 }
 
 bool Exporter::GetRolodexShiftStartTime(istream &istr, ostream &ostr)
 {
-    return false;
+    return true;
 }
 
 bool Exporter::GetRolodexShiftEndTime(istream &istr, ostream &ostr)
 {
-    return false;
+    return true;
 }

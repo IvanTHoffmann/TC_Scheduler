@@ -11,8 +11,9 @@ using namespace std;
 #include "ClassList.h"
 #include "Schedule.h"
 
-struct Tutor
+class Tutor
 {
+	public:
 	Rml::String first_name, last_name, email;
 	bool selected; // used for summary page
 
@@ -26,6 +27,8 @@ struct Tutor
 	// SAVE/LOAD
 	void Save(Json::object &outElement) const;
 	void Load(const Json::object &inElement);
+
+	bool tutorsClasses(const vector<ClassList>& requireClasses) const;
 };
 
 #endif // TUTOR_H

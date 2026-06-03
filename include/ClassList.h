@@ -10,7 +10,7 @@ using namespace std;
 
 struct ClassList
 {
-	Rml::String department_name;
+	string department_name;
 	bool subtractive;
 	vector<int> courses;
 

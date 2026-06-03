@@ -56,8 +56,85 @@ void Tutor::Load(const Json::object &inElement)
 
 	// vector<ClassList> classes;
 	classes.clear();
-	for (const Json& inJson : inElement.at("classes").array_items()) {
+	for (const Json &inJson : inElement.at("classes").array_items())
+	{
 		classes.push_back({});
 		classes.back().Load(inJson.object_items());
 	}
+}
+
+bool Tutor::tutorsClasses(const vector<ClassList> &requireClasses) const
+{
+	for (const ClassList &filterClassList : requireClasses)
+	{
+		bool foundDepartment = false;
+		for (const ClassList &tutorClassList : classes)
+		{
+			if (tutorClassList.department_name == filterClassList.department_name)
+			{
+				foundDepartment = true;
+
+				if (filterClassList.subtractive)
+				{
+					if (tutorClassList.subtractive)
+					{
+						// Ensure that all non-tutored classes are non-required classes
+						for (int nonTutoredCourse : tutorClassList.courses)
+						{
+							auto result = find(filterClassList.courses.begin(), filterClassList.courses.end(), nonTutoredCourse);
+							bool required = (result == filterClassList.courses.end());
+
+							if (required) // not tutored, but required
+							{
+								return false;
+							}
+						}
+					}
+					else
+					{
+						// A potentially infinite number of classes are required, but only a finite number of classes are tutored
+						return false;
+					}
+				}
+				else // Requirements are additive
+				{
+					if (tutorClassList.subtractive)
+					{
+						// Ensure that no non-tutored classes are required classes
+						for (int nonTutoredCourse : tutorClassList.courses)
+						{
+							auto result = find(filterClassList.courses.begin(), filterClassList.courses.end(), nonTutoredCourse);
+							bool required = (result != filterClassList.courses.end());
+
+							if (required) // not tutored, but required
+							{
+								return false;
+							}
+						}
+					}
+					else
+					{
+						// Ensure that all required classes are tutored
+						for (int requiredCourse : filterClassList.courses)
+						{
+							auto result = find(tutorClassList.courses.begin(), tutorClassList.courses.end(), requiredCourse);
+							bool notFound = (result == tutorClassList.courses.end());
+
+							if (notFound) // required, but not tutored
+							{
+								return false;
+							}
+						}
+					}
+				}
+
+				break; // There is no need to search this tutor's other classLists
+			}
+		}
+		if (!foundDepartment)
+		{
+			return false;
+		}
+	}
+	return true;
 }

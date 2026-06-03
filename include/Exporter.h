@@ -19,6 +19,8 @@ class Exporter {
     ClassList* iter_classList;
     int* iter_courseId;
     int iter_weekday;
+    vector<RolodexHeader>::iterator cur_rolodex_header;
+    vector<const Tutor*> cur_rolodex_tutors;
     Tutor* iter_tutor;
     stringstream selected_tutors;
     int iter_slotStart;
@@ -71,7 +73,6 @@ class Exporter {
     bool GetTimetableSlotClass(istream& istr, ostream& ostr);
 
     bool Foreach_RolodexHeader(istream& istr, ostream& ostr);
-    bool GetRolodexHeader(istream& istr, ostream& ostr);
     bool GetRolodexDescription(istream& istr, ostream& ostr);
     bool GetRolodexTutorList(istream& istr, ostream& ostr);
     bool Foreach_RolodexShift(istream& istr, ostream& ostr);
