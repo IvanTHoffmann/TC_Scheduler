@@ -427,13 +427,21 @@ private:
 
 	// Helper method to lookup TouchState by touch id.
 	TouchState* LookupTouch(TouchId identifier);
-	// Process a single touch movement for this context.
+	/// Process single touch movement for this context.
+	/// @param[in] touch Touch data: identifier and coordinates.
+	/// @return True if touch point is not interacting with any elements in the context, otherwise false.
 	bool ProcessTouchMove(const Touch& touch, int key_modifier_state);
-	// Process a single touch press for this context.
+	/// Process single touch press for this context.
+	/// @param[in] touch Touch data: identifier and coordinates.
+	/// @return True if touch point is not interacting with any elements in the context, otherwise false.
 	bool ProcessTouchStart(const Touch& touch, int key_modifier_state);
-	// Process a single touch release for this context.
+	/// Process single touch release for this context.
+	/// @param[in] touch Touch data: identifier and coordinates.
+	/// @return True if touch point is not interacting with any elements in the context, otherwise false.
 	bool ProcessTouchEnd(const Touch& touch, int key_modifier_state);
-	// Cancel processing a touch for this context.
+	/// Cancel processing touch for this context.
+	/// @param[in] touch Touch data: identifier and coordinates.
+	/// @return True if touch point is not interacting with any elements in the context, otherwise false.
 	bool ProcessTouchCancel(const Touch& touch);
 
 	// Sends the specified event to all elements in new_items that don't appear in old_items.

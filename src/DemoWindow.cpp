@@ -528,12 +528,18 @@ void DemoWindow::ResetGrid(CALLBACK_PARAMS)
 
 void DemoWindow::ExportTutorPage(CALLBACK_PARAMS)
 {
-	exporter.ExportTutorPage();
+	Tutor* tutorPtr = appData.selected_tutor.accessor.ptr();
+	if (tutorPtr){
+		exporter.ExportTutorPage(*tutorPtr);
+	}
 }
 
 void DemoWindow::ExportSubjectPage(CALLBACK_PARAMS)
 {
-	exporter.ExportSubjectPage();
+	Department* deptPtr = appData.selected_department.accessor.ptr();
+	if (deptPtr){
+		exporter.ExportSubjectPage(*deptPtr);
+	}
 }
 
 void DemoWindow::ExportTimetable(CALLBACK_PARAMS)
@@ -548,7 +554,14 @@ void DemoWindow::ExportRolodex(CALLBACK_PARAMS)
 
 void DemoWindow::ExportAll(CALLBACK_PARAMS)
 {
-	exporter.ExportAll();
+	for (Tutor& tutor : appData.tutors){
+		exporter.ExportTutorPage(tutor);
+	}
+	for (Department& dept : appData.departments){
+		exporter.ExportSubjectPage(dept);
+	}
+	exporter.ExportRolodex();
+	exporter.ExportTimetable();
 }
 
 void DemoWindow::OnSlotMouseDown(CALLBACK_PARAMS)
@@ -645,6 +658,7 @@ void RegisterSelectedRangeInterface(Rml::DataModelConstructor &constructor)
 
 bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 {
+	cout << "init" << endl;
 	// Create data model
 	if (Rml::DataModelConstructor constructor = context->CreateDataModel("app_data"))
 	{

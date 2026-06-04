@@ -16,7 +16,6 @@ using namespace std;
 
 string Exporter::GetExportPath(string filename)
 {
-    cout << filename << endl;
     filesystem::create_directory(appData->export_dir);
     return appData->export_dir + "/" + filename;
 }
@@ -105,65 +104,59 @@ bool Exporter::ServiceIsSelected(int service_type)
 Exporter::Exporter(AppData *_appData) : appData(_appData)
 {
     // DEFINE SYMBOLS
-    symbols["selected_department_name"] = Exporter::GetSelectedDepartmentName;
-    symbols["selected_tutor_firstname"] = Exporter::GetSelectedTutorFirstName;
-    symbols["selected_tutor_email"] = Exporter::GetSelectedTutorEmail;
-    symbols["foreach_classList"] = Exporter::Foreach_Classlist;
-    symbols["classList_deptname"] = Exporter::GetClassListDeptName;
-    symbols["classList_courses"] = Exporter::GetClassListCourses;
-    symbols["set_service"] = Exporter::SetService;
-    symbols["if_service"] = Exporter::If_Service;
-    symbols["if_email"] = Exporter::If_Email;
-    symbols["foreach_weekday"] = Exporter::Foreach_Weekday;
-    symbols["weekday_name"] = Exporter::GetWeekdayName;
-    symbols["foreach_service_shift"] = Exporter::Foreach_ServiceShift;
-    symbols["shift_duration"] = Exporter::GetShiftDuration;
-    symbols["selected_department_services"] = Exporter::GetSelectedDepartmentServices;
-    symbols["foreach_dept_tutor"] = Exporter::Foreach_Department_Tutor;
-    symbols["tutor_firstname"] = Exporter::GetTutorFirstName;
-    symbols["term_season"] = Exporter::GetTermSeason;
-    symbols["term_year"] = Exporter::GetTermYear;
+    symbols["selected_department_name"] = &Exporter::GetSelectedDepartmentName;
+    symbols["selected_tutor_firstname"] = &Exporter::GetSelectedTutorFirstName;
+    symbols["selected_tutor_email"] = &Exporter::GetSelectedTutorEmail;
+    symbols["foreach_classList"] = &Exporter::Foreach_Classlist;
+    symbols["classList_deptname"] = &Exporter::GetClassListDeptName;
+    symbols["classList_courses"] = &Exporter::GetClassListCourses;
+    symbols["set_service"] = &Exporter::SetService;
+    symbols["if_service"] = &Exporter::If_Service;
+    symbols["if_email"] = &Exporter::If_Email;
+    symbols["foreach_weekday"] = &Exporter::Foreach_Weekday;
+    symbols["weekday_name"] = &Exporter::GetWeekdayName;
+    symbols["foreach_service_shift"] = &Exporter::Foreach_ServiceShift;
+    symbols["shift_duration"] = &Exporter::GetShiftDuration;
+    symbols["selected_department_services"] = &Exporter::GetSelectedDepartmentServices;
+    symbols["foreach_dept_tutor"] = &Exporter::Foreach_Department_Tutor;
+    symbols["tutor_firstname"] = &Exporter::GetTutorFirstName;
+    symbols["term_season"] = &Exporter::GetTermSeason;
+    symbols["term_year"] = &Exporter::GetTermYear;
 
-    symbols["foreach_timetable_timeslot"] = Exporter::Foreach_Timetable_Timeslot;
-    symbols["timeslot_start"] = Exporter::GetTimeslotStart;
-    symbols["timeslot_end"] = Exporter::GetTimeslotEnd;
-    symbols["foreach_weekday_ns"] = Exporter::Foreach_WeekdayNS;
-    symbols["timetable_tutor_list"] = Exporter::GetTimetableTutorList;
-    symbols["timetable_slot_class"] = Exporter::GetTimetableSlotClass;
+    symbols["foreach_timetable_timeslot"] = &Exporter::Foreach_Timetable_Timeslot;
+    symbols["timeslot_start"] = &Exporter::GetTimeslotStart;
+    symbols["timeslot_end"] = &Exporter::GetTimeslotEnd;
+    symbols["foreach_weekday_ns"] = &Exporter::Foreach_WeekdayNS;
+    symbols["timetable_tutor_list"] = &Exporter::GetTimetableTutorList;
+    symbols["timetable_slot_class"] = &Exporter::GetTimetableSlotClass;
     
-    symbols["foreach_rolodex_header"] = Exporter::Foreach_RolodexHeader;
-    symbols["rolodex_description"] = Exporter::GetRolodexDescription;
-    symbols["rolodex_tutor_list"] = Exporter::GetRolodexTutorList;
-    symbols["foreach_rolodex_shift"] = Exporter::Foreach_RolodexShift;
-    symbols["rolodex_shift_days"] = Exporter::GetRolodexShiftDays;
-    symbols["rolodex_shift_start"] = Exporter::GetRolodexShiftStartTime;
-    symbols["rolodex_shift_end"] = Exporter::GetRolodexShiftEndTime;
+    symbols["foreach_rolodex_header"] = &Exporter::Foreach_RolodexHeader;
+    symbols["rolodex_description"] = &Exporter::GetRolodexDescription;
+    symbols["rolodex_tutor_list"] = &Exporter::GetRolodexTutorList;
+    symbols["foreach_rolodex_shift"] = &Exporter::Foreach_RolodexShift;
+    symbols["rolodex_shift_days"] = &Exporter::GetRolodexShiftDays;
+    symbols["rolodex_shift_start"] = &Exporter::GetRolodexShiftStartTime;
+    symbols["rolodex_shift_end"] = &Exporter::GetRolodexShiftEndTime;
 
 }
 
-void Exporter::ExportTutorPage()
+void Exporter::Export(const string templateFilename, const string outFilename)
 {
     ifstream fin;
     ofstream fout;
 
-    fin.open("assets/ExportTemplates/tutorPage.html");
+    string templateFullPath = "assets/ExportTemplates/" + templateFilename + ".html";
+    fin.open(templateFullPath);
     if (!fin.is_open())
     {
-        cout << "failed to open template" << endl;
+        cout << "Failed to open template: " << templateFullPath << endl;
         return;
     }
 
-    if (appData->selected_tutor.accessor.size() == 0)
-    {
-        cout << "no tutor selected" << endl;
-        return;
-    }
-
-    const Tutor &tutor = *appData->selected_tutor.accessor.begin();
-
-    fout.open(GetExportPath("ByTutor", tutor.last_name + "_" + tutor.first_name + ".html"));
+    fout.open(outFilename);
     if (!fout.is_open())
     {
+        cout << "Failed to open output file: " << outFilename << endl;
         fin.close();
         return;
     }
@@ -175,118 +168,60 @@ void Exporter::ExportTutorPage()
     fin.close();
 }
 
-void Exporter::ExportSubjectPage()
+void Exporter::ExportTutorPage(Tutor& tutor)
 {
-    ifstream fin;
-    ofstream fout;
+    iter_tutor = &tutor;
+    Export("tutorPage", GetExportPath("ByTutor", tutor.last_name + "_" + tutor.first_name + ".html"));
+}
 
-    fin.open("assets/ExportTemplates/subjectPage.html");
-
-    if (!fin.is_open())
-    {
-        return;
-    }
-    const Department &department = *appData->selected_department.accessor.begin();
-
-    fout.open(GetExportPath("BySubject", department.name + ".html"));
-    if (!fout.is_open())
-    {
-        fin.close();
-        return;
-    }
-
-    // file is ready to be written to
-    Process(fin, fout);
-
-    fout.close();
-    fin.close();
+void Exporter::ExportSubjectPage(Department& department)
+{
+    curDepartment = &department;
+    Export("subjectPage", GetExportPath("BySubject", department.name + ".html"));
 }
 
 void Exporter::ExportTimetable()
 {
-    ifstream fin;
-    ofstream fout;
-
-    fin.open("assets/ExportTemplates/timetable.html");
-
-    if (!fin.is_open())
-    {
-        return;
-    }
-
-    fout.open(GetExportPath("timetable.html"));
-    if (!fout.is_open())
-    {
-        fin.close();
-        return;
-    }
-
-    // file is ready to be written to
-    Process(fin, fout);
-
-    fout.close();
-    fin.close();
+    Export("timetable", GetExportPath("timetable.html"));
 }
 
 void Exporter::ExportRolodex()
 {
-    ifstream fin;
-    ofstream fout;
-
-    fin.open("assets/ExportTemplates/rolodex.html");
-
-    if (!fin.is_open())
-    {
-        return;
-    }
-
-    fout.open(GetExportPath("rolodex.html"));
-    if (!fout.is_open())
-    {
-        fin.close();
-        return;
-    }
-
-    // file is ready to be written to
-    Process(fin, fout);
-
-    fout.close();
-    fin.close();
-}
-
-void Exporter::ExportAll()
-{
-    cout << "Export All" << endl;
+    Export("rolodex", GetExportPath("rolodex.html"));
 }
 
 // SYMBOL FUNCS
 bool Exporter::GetSelectedDepartmentName(istream &istr, ostream &ostr)
 {
-    ostr << appData->selected_department.accessor.begin()->name;
-    return true;
+    if (curDepartment){
+        ostr << curDepartment->name;
+    }
+    return curDepartment;
 }
 
 bool Exporter::GetSelectedTutorFirstName(istream &istr, ostream &ostr)
 {
-    ostr << appData->selected_tutor.accessor.begin()->first_name;
-    return true;
+    if (iter_tutor){
+        ostr << iter_tutor->first_name;
+    }
+    return iter_tutor;
 }
 
 bool Exporter::GetSelectedTutorEmail(istream &istr, ostream &ostr)
 {
-    ostr << appData->selected_tutor.accessor.begin()->email;
-    return true;
+    if (iter_tutor){
+        ostr << iter_tutor->email;
+    }
+    return iter_tutor;
 }
 
 bool Exporter::Foreach_Classlist(istream &istr, ostream &ostr)
 {
-    if (appData->selected_tutor.accessor.size() == 0)
-    {
+    if (!iter_tutor){
         // Warning: No tutor selected
         return false;
     }
 
-    Tutor &tutor = *appData->selected_tutor.accessor.begin();
     stringstream buffer;
 
     // Read the loop body into buffer
@@ -297,7 +232,7 @@ bool Exporter::Foreach_Classlist(istream &istr, ostream &ostr)
     }
 
     // perform replacements in loop body
-    for (auto &classList : tutor.classes)
+    for (auto &classList : iter_tutor->classes)
     {
         iter_classList = &classList;
         Process(buffer, ostr);
@@ -346,13 +281,12 @@ bool Exporter::GetClassListCourses(istream &istr, ostream &ostr)
 
 bool Exporter::If_Service(istream &istr, ostream &ostr)
 {
-    if ((appData->selected_tutor.accessor.size() == 0) || service_ids.empty())
+    if (!iter_tutor || service_ids.empty())
     {
         // Warning: No tutor selected
         return false;
     }
 
-    Tutor &tutor = *appData->selected_tutor.accessor.begin();
     stringstream buffer;
 
     // Read the loop body into buffer
@@ -362,7 +296,7 @@ bool Exporter::If_Service(istream &istr, ostream &ostr)
     }
 
     bool foundInPersonShift = false;
-    for (const DaySchedule &daySchedule : tutor.schedule.days)
+    for (const DaySchedule &daySchedule : iter_tutor->schedule.days)
     {
         for (const ShiftSchedule &shift : daySchedule.shifts)
         {
@@ -379,13 +313,12 @@ bool Exporter::If_Service(istream &istr, ostream &ostr)
 
 bool Exporter::If_Email(istream &istr, ostream &ostr)
 {
-    if (appData->selected_tutor.accessor.size() == 0)
+    if (!iter_tutor)
     {
         // Warning: No tutor selected
         return false;
     }
 
-    Tutor &tutor = *appData->selected_tutor.accessor.begin();
     stringstream buffer;
 
     // Read the loop body into buffer
@@ -394,7 +327,7 @@ bool Exporter::If_Email(istream &istr, ostream &ostr)
         return false;
     }
 
-    if (tutor.email.size())
+    if (iter_tutor->email.size())
     {
         // perform replacements in loop body
         Process(buffer, ostr);
@@ -404,10 +337,9 @@ bool Exporter::If_Email(istream &istr, ostream &ostr)
 
 bool Exporter::If_Dept_Tutors(istream &istr, ostream &ostr)
 {
-    Department *department = appData->selected_department.accessor.ptr();
-    if (department)
+    if (!curDepartment)
     {
-        // Warning: No tutor selected
+        // Warning: No department selected
         return false;
     }
 
@@ -509,13 +441,12 @@ bool Exporter::GetWeekdayName(istream &istr, ostream &ostr)
 
 bool Exporter::Foreach_ServiceShift(istream &istr, ostream &ostr)
 {
-    if ((appData->selected_tutor.accessor.size() == 0) || service_ids.empty())
+    if (!iter_tutor || service_ids.empty())
     {
         // Warning: No tutor selected
         return false;
     }
 
-    Tutor &tutor = *appData->selected_tutor.accessor.begin();
     stringstream buffer;
 
     // Read the loop body into buffer
@@ -525,7 +456,7 @@ bool Exporter::Foreach_ServiceShift(istream &istr, ostream &ostr)
     }
 
     // perform replacements in loop body
-    DaySchedule &daySchedule = tutor.schedule.days.at(iter_weekday);
+    DaySchedule &daySchedule = iter_tutor->schedule.days.at(iter_weekday);
 
     iter_found_shift = false;
     for (const ShiftSchedule &shift : daySchedule.shifts)
@@ -580,13 +511,12 @@ bool Exporter::GetSelectedDepartmentServices(istream &istr, ostream &ostr)
 
 bool Exporter::Foreach_Department_Tutor(istream &istr, ostream &ostr)
 {
-    if (appData->selected_department.accessor.size() == 0)
+    if (!curDepartment)
     {
         // Warning: No tutor selected
         return false;
     }
 
-    Department &department = *appData->selected_department.accessor.begin();
     stringstream buffer;
 
     // Read the loop body into buffer
@@ -601,7 +531,7 @@ bool Exporter::Foreach_Department_Tutor(istream &istr, ostream &ostr)
     {
         for (const ClassList &classList : tutor.classes)
         {
-            if (classList.department_name == department.name)
+            if (classList.department_name == curDepartment->name)
             {
                 iter_tutor = &tutor;
                 stringstream link_buffer;

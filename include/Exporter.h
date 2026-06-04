@@ -14,6 +14,8 @@ class Exporter {
     private:
     vector<int> service_ids;
 
+    Department* curDepartment;
+
     bool iter_found_shift;
     ShiftSchedule iter_shift;
     ClassList* iter_classList;
@@ -80,15 +82,15 @@ class Exporter {
     bool GetRolodexShiftStartTime(istream& istr, ostream& ostr);
     bool GetRolodexShiftEndTime(istream& istr, ostream& ostr);
 
+    void Export(const string templateFilename, const string outFilename);
     
     public:
 
     Exporter(AppData* _appData);
-	void ExportTutorPage();
-	void ExportSubjectPage();
+	void ExportTutorPage(Tutor&);
+	void ExportSubjectPage(Department&);
 	void ExportTimetable();
 	void ExportRolodex();
-	void ExportAll();
 
 };
 

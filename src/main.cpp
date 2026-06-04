@@ -3,17 +3,16 @@
 #include <RmlUi/Core/ElementDocument.h>
 #include <RmlUi/Core/Factory.h>
 #include <RmlUi/Debugger.h>
-#include <RmlUi_Backend.h> 
+#include <RmlUi_Backend.h>
 #include <Shell.h>
 
 #define WINDOW_TITLE "TC Scheduler"
 
-
 #if defined RMLUI_PLATFORM_WIN32
-	#include <RmlUi_Include_Windows.h>
+#include <RmlUi_Include_Windows.h>
 int APIENTRY WinMain(HINSTANCE /*instance_handle*/, HINSTANCE /*previous_instance_handle*/, char* /*command_line*/, int /*command_show*/)
 #else
-int main(int /*argc*/, char** /*argv*/)
+int main(int argc, char **argv)
 #endif
 {
 	DemoWindow demo_window;
@@ -21,7 +20,9 @@ int main(int /*argc*/, char** /*argv*/)
 
 	// Initializes the shell which provides common functionality used by the included samples.
 	if (!Shell::Initialize())
+	{
 		return -1;
+	}
 
 	// Constructs the system and render interfaces, creates a window, and attaches the renderer.
 	if (!Backend::Initialize(demo_window.GetWindowTitle().c_str(), demo_window.GetWidth(), demo_window.GetHeight(), true))
@@ -38,7 +39,7 @@ int main(int /*argc*/, char** /*argv*/)
 	Rml::Initialise();
 
 	// Create the main RmlUi context.
-	Rml::Context* context = Rml::CreateContext("main", Rml::Vector2i(demo_window.GetWidth(), demo_window.GetHeight()));
+	Rml::Context *context = Rml::CreateContext("main", Rml::Vector2i(demo_window.GetWidth(), demo_window.GetHeight()));
 	if (!context)
 	{
 		Rml::Shutdown();
@@ -65,10 +66,11 @@ int main(int /*argc*/, char** /*argv*/)
 	demo_window.GetDocument()->AddEventListener(Rml::EventId::Keydown, &demo_window);
 	demo_window.GetDocument()->AddEventListener(Rml::EventId::Keyup, &demo_window);
 	demo_window.GetDocument()->AddEventListener(Rml::EventId::Mouseup, &demo_window);
-	//demo_window.GetDocument()->AddEventListener(Rml::EventId::Animationend, &demo_window);
+	// demo_window.GetDocument()->AddEventListener(Rml::EventId::Animationend, &demo_window);
 
 	bool running = true;
-	while (running) {
+	while (running)
+	{
 		demo_window.Update();
 
 		running = Backend::ProcessEvents(context, &Shell::ProcessKeyDownShortcuts, true);

@@ -6,41 +6,44 @@
 #include <RmlUi/Core/Profiling.h>
 #include <GLFW/glfw3.h>
 
-static void SetupCallbacks(GLFWwindow* window);
+static void SetupCallbacks(GLFWwindow *window);
 
-static void LogErrorFromGLFW(int error, const char* description)
+static void LogErrorFromGLFW(int error, const char *description)
 {
 	Rml::Log::Message(Rml::Log::LT_ERROR, "GLFW error (0x%x): %s", error, description);
 }
 
 /**
-    Global data used by this backend.
+	Global data used by this backend.
 
-    Lifetime governed by the calls to Backend::Initialize() and Backend::Shutdown().
+	Lifetime governed by the calls to Backend::Initialize() and Backend::Shutdown().
  */
-struct BackendData {
-	BackendData(GLFWwindow* window) : system_interface(window) {}
+struct BackendData
+{
+	BackendData(GLFWwindow *window) : system_interface(window) {}
 
 	SystemInterface_GLFW system_interface;
 	RenderInterface_GL3 render_interface;
-	GLFWwindow* window = nullptr;
+	GLFWwindow *window = nullptr;
 	int glfw_active_modifiers = 0;
 	bool context_dimensions_dirty = true;
 
 	// Arguments set during event processing and nulled otherwise.
-	Rml::Context* context = nullptr;
+	Rml::Context *context = nullptr;
 	KeyDownCallback key_down_callback = nullptr;
 };
 static Rml::UniquePtr<BackendData> data;
 
-bool Backend::Initialize(const char* name, int width, int height, bool allow_resize)
+bool Backend::Initialize(const char *name, int width, int height, bool allow_resize)
 {
 	RMLUI_ASSERT(!data);
 
 	glfwSetErrorCallback(LogErrorFromGLFW);
 
 	if (!glfwInit())
+	{
 		return false;
+	}
 
 	// Set window hints for OpenGL 3.3 Core context creation.
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -54,9 +57,11 @@ bool Backend::Initialize(const char* name, int width, int height, bool allow_res
 
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-	GLFWwindow* window = glfwCreateWindow(width, height, name, nullptr, nullptr);
+	GLFWwindow *window = glfwCreateWindow(width, height, name, nullptr, nullptr);
 	if (!window)
+	{
 		return false;
+	}
 
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);
@@ -64,12 +69,16 @@ bool Backend::Initialize(const char* name, int width, int height, bool allow_res
 	// Load the OpenGL functions.
 	Rml::String renderer_message;
 	if (!RmlGL3::Initialize(&renderer_message))
+	{
 		return false;
+	}
 
 	// Construct the system and render interface, this includes compiling all the shaders. If this fails, it is likely an error in the shader code.
 	data = Rml::MakeUnique<BackendData>(window);
 	if (!data || !data->render_interface)
+	{
 		return false;
+	}
 
 	data->window = window;
 	data->system_interface.LogMessage(Rml::Log::LT_INFO, renderer_message);
@@ -96,19 +105,19 @@ void Backend::Shutdown()
 	glfwTerminate();
 }
 
-Rml::SystemInterface* Backend::GetSystemInterface()
+Rml::SystemInterface *Backend::GetSystemInterface()
 {
 	RMLUI_ASSERT(data);
 	return &data->system_interface;
 }
 
-Rml::RenderInterface* Backend::GetRenderInterface()
+Rml::RenderInterface *Backend::GetRenderInterface()
 {
 	RMLUI_ASSERT(data);
 	return &data->render_interface;
 }
 
-bool Backend::ProcessEvents(Rml::Context* context, KeyDownCallback key_down_callback, bool power_save)
+bool Backend::ProcessEvents(Rml::Context *context, KeyDownCallback key_down_callback, bool power_save)
 {
 	RMLUI_ASSERT(data && context);
 
@@ -165,12 +174,13 @@ void Backend::PresentFrame()
 	RMLUI_FrameMark;
 }
 
-static void SetupCallbacks(GLFWwindow* window)
+static void SetupCallbacks(GLFWwindow *window)
 {
 	RMLUI_ASSERT(data);
 
 	// Key input
-	glfwSetKeyCallback(window, [](GLFWwindow* /*window*/, int glfw_key, int /*scancode*/, int glfw_action, int glfw_mods) {
+	glfwSetKeyCallback(window, [](GLFWwindow * /*window*/, int glfw_key, int /*scancode*/, int glfw_action, int glfw_mods)
+					   {
 		if (!data->context)
 			return;
 
@@ -203,33 +213,33 @@ static void SetupCallbacks(GLFWwindow* window)
 		}
 		break;
 		case GLFW_RELEASE: RmlGLFW::ProcessKeyCallback(context, glfw_key, glfw_action, glfw_mods); break;
-		}
-	});
+		} });
 
-	glfwSetCharCallback(window, [](GLFWwindow* /*window*/, unsigned int codepoint) { RmlGLFW::ProcessCharCallback(data->context, codepoint); });
+	glfwSetCharCallback(window, [](GLFWwindow * /*window*/, unsigned int codepoint)
+						{ RmlGLFW::ProcessCharCallback(data->context, codepoint); });
 
-	glfwSetCursorEnterCallback(window, [](GLFWwindow* /*window*/, int entered) { RmlGLFW::ProcessCursorEnterCallback(data->context, entered); });
+	glfwSetCursorEnterCallback(window, [](GLFWwindow * /*window*/, int entered)
+							   { RmlGLFW::ProcessCursorEnterCallback(data->context, entered); });
 
 	// Mouse input
-	glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xpos, double ypos) {
-		RmlGLFW::ProcessCursorPosCallback(data->context, window, xpos, ypos, data->glfw_active_modifiers);
-	});
+	glfwSetCursorPosCallback(window, [](GLFWwindow *window, double xpos, double ypos)
+							 { RmlGLFW::ProcessCursorPosCallback(data->context, window, xpos, ypos, data->glfw_active_modifiers); });
 
-	glfwSetMouseButtonCallback(window, [](GLFWwindow* /*window*/, int button, int action, int mods) {
+	glfwSetMouseButtonCallback(window, [](GLFWwindow * /*window*/, int button, int action, int mods)
+							   {
 		data->glfw_active_modifiers = mods;
-		RmlGLFW::ProcessMouseButtonCallback(data->context, button, action, mods);
-	});
+		RmlGLFW::ProcessMouseButtonCallback(data->context, button, action, mods); });
 
-	glfwSetScrollCallback(window, [](GLFWwindow* /*window*/, double /*xoffset*/, double yoffset) {
-		RmlGLFW::ProcessScrollCallback(data->context, yoffset, data->glfw_active_modifiers);
-	});
+	glfwSetScrollCallback(window, [](GLFWwindow * /*window*/, double /*xoffset*/, double yoffset)
+						  { RmlGLFW::ProcessScrollCallback(data->context, yoffset, data->glfw_active_modifiers); });
 
 	// Window events
-	glfwSetFramebufferSizeCallback(window, [](GLFWwindow* /*window*/, int width, int height) {
+	glfwSetFramebufferSizeCallback(window, [](GLFWwindow * /*window*/, int width, int height)
+								   {
 		data->render_interface.SetViewport(width, height);
-		RmlGLFW::ProcessFramebufferSizeCallback(data->context, width, height);
-	});
+		RmlGLFW::ProcessFramebufferSizeCallback(data->context, width, height); });
 
 	glfwSetWindowContentScaleCallback(window,
-		[](GLFWwindow* /*window*/, float xscale, float /*yscale*/) { RmlGLFW::ProcessContentScaleCallback(data->context, xscale); });
+									  [](GLFWwindow * /*window*/, float xscale, float /*yscale*/)
+									  { RmlGLFW::ProcessContentScaleCallback(data->context, xscale); });
 }
