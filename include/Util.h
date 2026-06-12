@@ -39,49 +39,27 @@ string FormatList(const _ContainerT &inStrings)
 bool ReadUntil(istream &inStream, ostream &outStream, char delim);
 string FormatTime(int timeValue);
 
-/*
-#800000
-#e6194b
-#fabed4
-#9a6324
-#f58231
-#ffd8b1
-#808000
-#ffe119
-#fffac8
-#bfef45
-#3cb44b
-#aaffc3
-#469990
-#42d4f4
-#000075
-#4363d8
-#911eb4
-#dcbeff
-#f032e6
-#a9a9a9
-*/
-
 const array<int, 20> contrastingColors = {
-    0x800000,
-    0xe6194b,
-    0xfabed4,
-    0x9a6324,
-    0xf58231,
-    0xffd8b1,
-    0x808000,
-    0xffe119,
-    0xfffac8,
-    0xbfef45,
-    0x3cb44b,
-    0xaaffc3,
-    0x469990,
-    0x42d4f4,
-    0x000075,
-    0x4363d8,
-    0x911eb4,
-    0xdcbeff,
-    0xf032e6,
-    0xa9a9a9};
+    0xe6194b, // Red        #e6194b
+    0x3cb44b, // Green      #3cb44b
+    0xffe119, // Yellow     #ffe119
+    0x4363d8, // Blue       #4363d8
+    0xf58231, // Orange     #f58231
+    0x911eb4, // Purple     #911eb4
+    0x42d4f4, // Cyan       #42d4f4
+    0xf032e6, // Magenta    #f032e6
+    0xbfef45, // Lime       #bfef45
+    0xfabed4, // Pink       #fabed4
+    0x469990, // Teal       #469990
+    0xdcbeff, // Lavender   #dcbeff
+    0x9a6324, // Brown      #9a6324
+    0xfffac8, // Beige      #fffac8
+    0x800000, // Maroon     #800000
+    0xaaffc3, // Mint       #aaffc3
+    0x808000, // Olive      #808000
+    0xffd8b1, // Apricot    #ffd8b1
+    0x000075, // Navy       #000075
+    0xa9a9a9  // Grey       #a9a9a9
+};
 
 #endif
