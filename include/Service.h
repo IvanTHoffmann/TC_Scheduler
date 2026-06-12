@@ -13,7 +13,7 @@ struct Service
 
 	int min_hours;
 	int max_hours;
-	Rml::Colourb color{255, 0, 0};
+	Rml::Colourb color;
 	bool on_canvas;
 
 	Rml::String GetColor() {

@@ -7,42 +7,11 @@
 *.o
 *.obj
 
-# Precompiled Headers
-*.gch
-*.pch
-
-# Linker files
-*.ilk
-
 # Debugger Files
 *.pdb
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-# *.dll
-*.so.*
-
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-# *.exe
-*.out
-*.app
-
 # Build directories
-# build/
-# Build/
-# build-*/
+build/
 
 # CMake generated files
 CMakeFiles/
@@ -64,17 +33,10 @@ vcpkg_installed/
 # debug information files
 *.dwo
 
-# test output & cache
-Testing/
-.cache/
-
-# Batch files
-# *.bat # why?
-
 # Visual Studio Code settings
-.vscode/
+# .vscode/
 *.o
 *.a
 
 # Exported Files
-build/exported_documents/
+dist/exported_documents/

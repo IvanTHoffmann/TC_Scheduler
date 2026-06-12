@@ -40,9 +40,13 @@
 							</td>
 						</tr>
 						<tr data-for="service:services"
+							style="border-width:1px; border-color:#aaa;"
 							data-event-mousedown="service.selected = !service.selected" 
 							data-style-background="service.selected ? 'rgb(120, 255, 120)' : '#ffffff'">
-							<td colspan="2">
+							<td>
+								[{{service.name}}]
+							</td>
+							<td>
 								{{service.description}}
 							</td>
 						</tr>
@@ -66,6 +70,7 @@
 							</td>
 						</tr>
 						<tr data-for="dept:departments"
+							style="border-width:1px; border-color:#aaa;"
 							data-event-mousedown="dept.selected = !dept.selected" 
 							data-style-background="dept.selected ? 'rgb(120, 255, 120)' : '#ffffff'">
 							<td colspan="2">
@@ -92,6 +97,7 @@
 							</td>
 						</tr>
 						<tr data-for="tutor:tutors" 
+							style="border-width:1px; border-color:#aaa;"
 							data-event-mousedown="tutor.selected = !tutor.selected" 
 							data-style-background="tutor.selected ? 'rgb(120, 255, 120)' : '#ffffff'">
 							<td colspan="2">
@@ -112,10 +118,10 @@
 		<button class="gradient" data-event-click="RemoveTutor">Remove Tutor</button>
 
 		<br/>
-		Service Name: 
+		Service: 
 		<input type="text" data-value="mod_service_name" style="width:20%"/>
-		<button class="gradient" data-event-click="AddService">Add Service</button>
-		<button class="gradient" data-event-click="RemoveService">Remove Service</button>
+		<button class="gradient" data-event-click="AddService">Add (Use Description)</button>
+		<button class="gradient" data-event-click="RemoveService">Remove (Use ID)</button>
 
 		<br/>
 		Department Name: 
@@ -129,10 +135,10 @@
 <tab data-event-click="OnClick_SchedulesTab()">Manage Schedules</tab>
 <panel>
 
+
+	<!-- TUTOR NAME -->
 	<div data-if="!edit_tutor">
 		<template src="tutor_select"/>
-		<br/>
-		<button data-for="selected_tutor.accessor" class="gradient" data-event-click="EnableEditTutor">Edit Tutor</button>
 	</div>
 
 	<div data-if="edit_tutor" data-for="tutor:selected_tutor.accessor">
@@ -142,19 +148,34 @@
 		<input type="text" data-value="tutor.last_name" style="width:20%;"/>
 		<span>Email:</span>
 		<input type="text" data-value="tutor.email" style="width:20%;"/>
-
-		<br/>
-
-		<button class="gradient" data-event-click="ConfirmEditTutor">Confirm</button>
 	</div>
 
+	<!-- OPTION TOOLBAR -->
 	<div data-for="selected_tutor.accessor">
 		<div class="schedule-toolbar">
 			<button class="gradient" data-event-click="ResetGrid">Reset Grid</button>
-			<template src="service_select"/>
+			<span data-if="edit_tutor">
+				<button class="gradient" data-event-click="ConfirmEditTutor">Confirm Changes</button>
+			</span>
+			<span data-if="!edit_tutor">
+				<button data-for="selected_tutor.accessor" class="gradient" data-event-click="EnableEditTutor">Edit Tutor</button>
+			</span>
 			<button class="gradient" data-event-click="SaveSchedule">Save</button>
 			<div class="schedule-summary" data-style-background-color="schedule_valid ? '#4CAF50' : '#f44336'">Total: {{formatted_total_hours}}</div>
 		</div>
+
+		<!-- SERVICE SELECT -->
+		<div>
+			<span data-for="service : services">
+				<button class="gradient" data-event-click="selected_service.index = it_index" data-style-image-color="GetServiceColor(service.name)" 
+					style="border-width:0px; border-color:#aaa; font-effect: outline( 1px #000); color: #fff">
+					{{selected_service.index == it_index ? '---' : ''}}
+					{{service.name}}
+					{{selected_service.index == it_index ? '---' : ''}}
+				</button>
+			</span>
+		</div>
+
 		<template src="timetable" />
 
 		<div data-for="tutor:selected_tutor.accessor">

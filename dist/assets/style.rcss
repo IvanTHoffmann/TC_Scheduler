@@ -196,6 +196,10 @@ p.title
 	decorator: horizontal-gradient( #cebdbd #bea99a );
 	border-color: #9f9f9f;
 }
+#decorators button.gradient.selected{
+	border-color: #524f3a;
+}
+
 #decorators button.gradient:hover
 {
 	border-color: #524f3a;

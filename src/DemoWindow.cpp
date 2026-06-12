@@ -80,7 +80,8 @@ bool DemoWindow::Load()
 	return true;
 }
 
-bool DemoWindow::Save(){
+bool DemoWindow::Save()
+{
 	cout << "Save document" << endl;
 
 	Json::object newDocument = jsonDocument.object_items(); // Make a copy of loaded document
@@ -482,7 +483,69 @@ void DemoWindow::AddService(CALLBACK_PARAMS)
 		return;
 	}
 	appData.services.push_back({});
-	appData.services.back().name = appData.mod_service_name;
+	Service &service = appData.services.back();
+	service.description = appData.mod_service_name;
+	// GENERATE NAME BASED ON DESCRIPTION
+
+	bool foundUniqueName = false;
+	string testName = "";
+	for (char c : service.description)
+	{
+		c = tolower(c);
+		if (isalnum(c))
+		{
+			testName.push_back(c);
+			if (testName.length() >= 2 && !appData.GetService(testName))
+			{
+				// No service exists with this name
+				foundUniqueName = true;
+				break;
+			}
+			if (testName.length() >= 4)
+			{
+				// Name is getting too long. Pop the last character and try some numbers instead
+				testName.pop_back();
+				break;
+			}
+		}
+	}
+	for (int n = 2; !foundUniqueName; ++n)
+	{
+		string numName = testName + to_string(n);
+		if (numName.length() > 4)
+		{
+			// Name is getting too long. Pop the last character and reset count
+			testName.pop_back();
+			n = 1;
+			continue;
+		}
+		if (!appData.GetService(numName))
+		{
+			foundUniqueName = true;
+			testName = numName;
+		}
+	}
+	service.name = testName;
+
+	service.color = Rml::Colourb(0, 0, 0);
+	for (int colorHex : contrastingColors)
+	{
+		Rml::Colourb color(colorHex >> 16, (colorHex >> 8) & 255, colorHex & 255);
+		bool foundUniqueColor = true;
+		for (Service &testService : appData.services)
+		{
+			if (testService.color == color)
+			{
+				foundUniqueColor = false;
+				break;
+			}
+		}
+		if (foundUniqueColor)
+		{
+			service.color = color;
+			break;
+		}
+	}
 
 	appData.mod_service_name = "";
 	dataModelHandle.DirtyAllVariables();
@@ -646,13 +709,14 @@ void DemoWindow::OnTimetableMouseUp(CALLBACK_PARAMS)
 
 void DemoWindow::SetRolodexTarget(CALLBACK_PARAMS)
 {
-	// Sets the rolodex 
+	// Sets the rolodex
 	appData.rolodexTarget = -1;
-	if (arguments.size() != 1 || !arguments.at(0).GetInto<int>(appData.rolodexTarget)){
+	if (arguments.size() != 1 || !arguments.at(0).GetInto<int>(appData.rolodexTarget))
+	{
 		// INVALID ARGUMENT LIST
 		return;
 	}
-	
+
 	RolodexHeader &rolodexCard = appData.rolodex_headers.at(appData.rolodexTarget);
 
 	for (Department &dept : appData.departments)
@@ -681,9 +745,11 @@ void DemoWindow::SetRolodexTarget(CALLBACK_PARAMS)
 	dataModelHandle.DirtyAllVariables();
 }
 
-void DemoWindow::SaveRolodexTarget(CALLBACK_PARAMS){
+void DemoWindow::SaveRolodexTarget(CALLBACK_PARAMS)
+{
 	// Sets the rolodex
-	if (appData.rolodexTarget < 0 || appData.rolodexTarget >= appData.rolodex_headers.size()){
+	if (appData.rolodexTarget < 0 || appData.rolodexTarget >= appData.rolodex_headers.size())
+	{
 		return;
 	}
 
@@ -713,14 +779,15 @@ void DemoWindow::AddRolodexHeader(CALLBACK_PARAMS)
 	RolodexHeader rolodexCard;
 	rolodexCard.description = "New Rolodex Card";
 	appData.rolodex_headers.push_back(rolodexCard);
-	
+
 	dataModelHandle.DirtyAllVariables();
 }
 
 void DemoWindow::DeleteRolodexTarget(CALLBACK_PARAMS)
 {
 	appData.rolodexTarget = -1;
-	if (arguments.size() != 1 || !arguments.at(0).GetInto<int>(appData.rolodexTarget)){
+	if (arguments.size() != 1 || !arguments.at(0).GetInto<int>(appData.rolodexTarget))
+	{
 		// INVALID ARGUMENT LIST
 		return;
 	}
@@ -965,6 +1032,25 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 			return Rml::Variant(ToString(slotColor));
 		};
 		constructor.RegisterTransformFunc("GetSlotColor", GetSlotColor);
+
+		Rml::DataTransformFunc GetServiceColor = [appData_ptr](const Rml::VariantList &arguments) -> Rml::Variant
+		{
+			if (arguments.size() < 1)
+			{
+				return {};
+			}
+
+			const string &slot_service_name = arguments[0].Get<string>();
+
+			Service service;
+			Rml::Colourb slotColor(255, 255, 255);
+			if (appData_ptr->GetService(service, slot_service_name))
+			{
+				slotColor = service.color;
+			}
+			return Rml::Variant(ToString(slotColor));
+		};
+		constructor.RegisterTransformFunc("GetServiceColor", GetServiceColor);
 
 		dataModelHandle = constructor.GetModelHandle();
 
