@@ -35,7 +35,7 @@
 *.lib
 
 # Executables
-*.exe
+# *.exe
 *.out
 *.app
 
@@ -73,7 +73,6 @@ Testing/
 
 # Visual Studio Code settings
 .vscode/
-*.exe
 *.o
 *.a
 

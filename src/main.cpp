@@ -14,7 +14,7 @@ using namespace std;
 
 #define WINDOW_TITLE "TC Scheduler"
 
-#if 0//defined RMLUI_PLATFORM_WIN32
+#if defined RMLUI_PLATFORM_WIN32
 #include <RmlUi_Include_Windows.h>
 int APIENTRY WinMain(HINSTANCE /*instance_handle*/, HINSTANCE /*previous_instance_handle*/, char* /*command_line*/, int /*command_show*/)
 #else
