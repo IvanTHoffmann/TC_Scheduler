@@ -85,6 +85,8 @@ void AppData::LoadSchedule(const Json::object &inElement)
 		departments.back().name = inJson.string_value();
 	}
 
+	cout << "LOAD SERVICES" << endl;
+
 	// vector<Service> services;
 	services.clear();
 	for (const Json& inJson : inElement.at("services").array_items()) {
@@ -138,4 +140,25 @@ void AppData::LoadSettings(const Json::object &inElement)
 
 	// int schedule_id;
 	schedule_id = inElement.at("startup_schedule").int_value();
+}
+
+bool AppData::GetService(Service &outService, string serviceName)
+{
+    for (Service& service : services){
+		if (service.name == serviceName){
+			outService = service;
+			return true;
+		}
+	}
+	return false;
+}
+
+Service* AppData::GetService(string serviceName)
+{
+    for (Service& service : services){
+		if (service.name == serviceName){	
+			return &service;
+		}
+	}
+	return nullptr;
 }

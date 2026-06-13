@@ -12,7 +12,8 @@ using namespace json11;
 #include "VectorInterface.h"
 
 struct TimetableSlot {
-	int value; // Can be ServiceIndex or a number of occurances
+	string service_name;
+	int count;
 };
 
 struct TimetableRow {

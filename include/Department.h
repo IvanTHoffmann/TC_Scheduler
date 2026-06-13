@@ -15,6 +15,7 @@ struct Department
 	bool selected; // used for summary page
 
 	// used for editing tutor class lists
+	bool edit_selected;
 	bool edit_subtractive;
 	vector<int> edit_courses;
 	FormattedIntVector edit_formatted_courses;

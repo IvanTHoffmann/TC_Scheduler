@@ -12,9 +12,11 @@ using namespace std;
 
 class Exporter {
     private:
-    vector<int> service_ids;
+    unordered_set<string> service_names;
 
     Department* curDepartment;
+    vector<Service>::iterator curService;
+    vector<ShiftSchedule>::iterator curShift;
 
     bool iter_found_shift;
     ShiftSchedule iter_shift;
@@ -23,6 +25,7 @@ class Exporter {
     int iter_weekday;
     vector<RolodexHeader>::iterator cur_rolodex_header;
     vector<const Tutor*> cur_rolodex_tutors;
+    WeekSchedule cur_rolodex_schedule;
     Tutor* iter_tutor;
     stringstream selected_tutors;
     int iter_slotStart;
@@ -38,7 +41,7 @@ class Exporter {
     bool ReadToSymbol(istream& istr, ostream& text, const string& targetSymbol);
     bool Process(istream& istr, ostream& ostr);
     bool Invoke(istream& istr, ostream& ostr, const string& symbol);
-    bool ServiceIsSelected(int service_type);
+    bool ServiceIsSelected(string inServiceName);
 
     // Looping Symbols
     bool Foreach_Classlist(istream& istr, ostream& ostr);
@@ -47,11 +50,16 @@ class Exporter {
     bool Foreach_Department_Tutor(istream& istr, ostream& ostr);
     bool Foreach_Timetable_Timeslot(istream& istr, ostream& ostr);
     bool Foreach_WeekdayNS(istream& istr, ostream& ostr);
+    bool Foreach_Service(istream& istr, ostream& ostr);
+
 
     // Conditional Symbols
     bool If_Service(istream& istr, ostream& ostr);
     bool If_Email(istream& istr, ostream& ostr);
-    bool If_Dept_Tutors(istream& istr, ostream& ostr);
+    bool If_Dept_Services(istream& istr, ostream& ostr);
+    bool If_N_Dept_Tutors(istream& istr, ostream& ostr);
+    bool If_Rolodex_Day(istream& istr, ostream& ostr);
+    bool If_Rolodex_Service(istream& istr, ostream& ostr);
 
     // Setter symbols
     bool SetService(istream& istr, ostream& ostr);
@@ -78,9 +86,9 @@ class Exporter {
     bool GetRolodexDescription(istream& istr, ostream& ostr);
     bool GetRolodexTutorList(istream& istr, ostream& ostr);
     bool Foreach_RolodexShift(istream& istr, ostream& ostr);
-    bool GetRolodexShiftDays(istream& istr, ostream& ostr);
     bool GetRolodexShiftStartTime(istream& istr, ostream& ostr);
     bool GetRolodexShiftEndTime(istream& istr, ostream& ostr);
+    bool GetServiceDescription(istream& istr, ostream& ostr);
 
     void Export(const string templateFilename, const string outFilename);
     

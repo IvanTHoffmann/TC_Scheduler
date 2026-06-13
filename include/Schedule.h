@@ -4,6 +4,7 @@
 #include <RmlUi/Core.h>
 #include "json11.hpp"
 #include <vector>
+#include <unordered_set>
 #include <array>
 
 using namespace json11;
@@ -14,7 +15,7 @@ const ServiceIndex_t UNSCHEDULED_SLOT = -1;
 
 struct ShiftSchedule{
 	int start, end;
-	ServiceIndex_t service_type;
+	string service_name;
 
 	// SAVE/LOAD
 	void Save(Json::object &outElement) const;
@@ -37,6 +38,9 @@ struct WeekSchedule
 	// SAVE/LOAD
 	void Save(Json::array &outElement) const;
 	void Load(const Json::array &inElement);
+
+	unordered_set<string> GetServices() const;
+	void Clear();
 };
 
 #endif // SCHEDULE_H

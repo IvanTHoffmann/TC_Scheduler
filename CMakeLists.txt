@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 4.0)
 cmake_policy(SET CMP0048 NEW)
 
 project(TCScheduler VERSION 0.0.1)
+# set(PLATFORM WIN32) # Comment this line to show the console window
 
 if(NOT DEFINED CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")
@@ -48,7 +49,7 @@ file(
 
 add_executable(
     ${APP}
-    WIN32
+    ${PLATFORM}
     ${SRC_FILES}
     ${THIRD_PARTY_SRC_FILES}
 )

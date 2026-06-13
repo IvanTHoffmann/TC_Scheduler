@@ -29,6 +29,7 @@ class Tutor
 	void Load(const Json::object &inElement);
 
 	bool tutorsClasses(const vector<ClassList>& requireClasses) const;
+	bool usesService(const string &serviceName) const;
 };
 
 #endif // TUTOR_H

@@ -17,7 +17,7 @@
 <panel>
 	
 	<div>
-		<button class="gradient" data-event-click="OnTutorChanged">Apply Filter</button>
+		<button class="gradient" data-event-click="OnTutorChanged(-1)">Apply Filter</button>
 		<template src="timetable"/>
 
 		<br/>
@@ -43,7 +43,7 @@
 							data-event-mousedown="service.selected = !service.selected" 
 							data-style-background="service.selected ? 'rgb(120, 255, 120)' : '#ffffff'">
 							<td colspan="2">
-								{{service.name}}
+								{{service.description}}
 							</td>
 						</tr>
 					</tbody>
@@ -95,7 +95,7 @@
 							data-event-mousedown="tutor.selected = !tutor.selected" 
 							data-style-background="tutor.selected ? 'rgb(120, 255, 120)' : '#ffffff'">
 							<td colspan="2">
-								{{tutor.first_name}}, {{tutor.last_name}}
+								{{tutor.first_name}} {{tutor.last_name}}
 							</td>
 						</tr>
 					</tbody>
@@ -220,6 +220,86 @@
 	</div>
 </panel>
 
+<tab data-event-click="OnClick_RolodexTab">Rolodex</tab>
+<panel>
+	<div>
+		<button class="gradient" data-event-click="AddRolodexHeader()">Add Rolodex Card</button>
+
+		<table>
+			<thead>
+				<tr>
+					<td>Description</td>
+					<td>Courses</td>
+					<td style="width:auto"></td>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr data-for="rolodex_card : rolodex_headers">
+					<td>
+						<input data-value="rolodex_card.description"/>
+					</td>
+					<td>
+						<span data-for="classList: rolodex_card.classes">
+							<span>{{classList.department_name}}</span>
+							<span>
+								&nbsp;(
+								<span data-if="classList.subtractive">All{{classList.courses.size ? ' Except ' : ''}}</span>
+								<span data-for="course:classList.courses">{{it_index ? ', ' : ''}}{{course}}</span>
+								)&nbsp;&nbsp;&nbsp;
+							</span>
+						</span>
+					</td>
+					<td style="width:auto">
+						<button class="gradient" data-event-click="SaveRolodexTarget()" data-if="rolodexTarget == it_index">Save</button>
+						<button class="gradient" data-event-click="SetRolodexTarget(it_index)">Edit</button>
+						<button class="gradient" data-event-click="DeleteRolodexTarget(it_index)">Delete</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<div data-if="rolodexTarget != -1">
+			<table>
+				<thead>
+					<tr>
+						<td style="width:auto">Department</td>
+						<td style="width:auto">Selected</td>
+						<td style="width:auto">All / All Except</td>
+						<td>Courses</td>
+						<td>Output</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr data-for="department:departments">
+						<td style="width:auto">{{department.name}}</td>
+						<td style="width:auto">
+							<input type="checkbox" data-checked="department.edit_selected"/>
+						</td>
+						<td style="width:auto">
+							<input type="checkbox" data-disabled="!department.edit_selected" data-checked="department.edit_subtractive"/>
+						</td>
+						<td>
+							<input data-disabled="!department.edit_selected" data-value="department.edit_formatted_courses"></input>
+						</td>
+						<td>
+							<span data-if="department.edit_subtractive">All{{department.edit_courses.size ? ' Except ' : ''}}</span>
+							<span data-for="course:department.edit_courses">{{it_index ? ', ' : ''}}{{course}}</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</panel>
+
+<tab data-event-click="">Export</tab>
+<panel>
+	<div>
+		<button class="gradient" data-event-click="ExportAll">Export All</button>
+	</div>
+</panel>
+
 <tab data-event-click="">Preferences</tab>
 <panel>
 	<div>
@@ -227,25 +307,6 @@
 	</div>
 	<div>Export Directory:<input type="text" data-value="export_directory"/></div>
 	<div>Developer Options:<input type="checkbox" data-value="dev_enable"/></div>
-</panel>
-
-<tab data-event-click="">Export</tab>
-<panel>
-	<div>
-		<button class="gradient" data-event-click="ExportTimetable">Export Timetable</button>
-		<button class="gradient" data-event-click="ExportRolodex">Export Rolodex</button>
-	</div>
-	<div>
-		<template src="tutor_select"/><button data-for="tutor:selected_tutor.accessor" class="gradient" data-event-click="CopyTutorHtml">Copy Tutor Html</button>
-	</div>
-	<div>
-		<template src="department_select"/><button data-for="department:selected_department.accessor" class="gradient" data-event-click="CopySubjectHtml">Copy Subject Html</button>
-	</div>
-	<hr/>
-	<div>
-		<button class="gradient" data-event-click="ExportAll">Export All</button>
-	</div>
-
 </panel>
 
 <tab data-if="dev_enable" data-event-click="">Tests</tab>

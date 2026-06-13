@@ -1,8 +1,15 @@
+
+[if_n_dept_services]
 <h1>
-    We currently offer [selected_department_name] support [selected_department_services].
+    We do not currently offer [selected_department_name] support as of [term_season] [term_year].
+</h1>
+[endif_n_dept_services]
+
+[if_dept_services]
+<h1>
+    We currently offer [selected_department_name] support via [selected_department_services].
 </h1>
 
-[if_dept_tutors]
 <h1>
     Our [selected_department_name] [foreach_dept_tutor]
     <a 
@@ -11,7 +18,6 @@
     data-api-endpoint="https://everettcc.instructure.com/api/v1/courses/1940759/pages/[tutor_firstname]s-information" 
     data-api-returntype="Page">[tutor_firstname]</a>[endloop_tutor].
 </h1>
-[endif_dept_tutors]
 
 <h1>
     Explore your options below.
@@ -87,3 +93,6 @@
     <div id="StudentTray__Container"></div>
 </div>
 <div id="nav-tray-portal"></div>
+
+[endif_dept_services]
+

@@ -8,12 +8,13 @@ using namespace json11;
 
 struct Service
 {
-	Rml::String name;
+	Rml::String name, description;
 	bool selected; // used for summary page
 
 	int min_hours;
 	int max_hours;
 	Rml::Colourb color{255, 0, 0};
+	bool on_canvas;
 
 	Rml::String GetColor() {
 		return Rml::ToString(color);

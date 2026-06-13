@@ -5,16 +5,23 @@
 #include <RmlUi/Debugger.h>
 #include <RmlUi_Backend.h>
 #include <Shell.h>
+#include <iostream>
+
+using namespace std;
+
+// added description to services
+// changed service_id to service_name
 
 #define WINDOW_TITLE "TC Scheduler"
 
-#if defined RMLUI_PLATFORM_WIN32
+#if 0//defined RMLUI_PLATFORM_WIN32
 #include <RmlUi_Include_Windows.h>
 int APIENTRY WinMain(HINSTANCE /*instance_handle*/, HINSTANCE /*previous_instance_handle*/, char* /*command_line*/, int /*command_show*/)
 #else
 int main(int argc, char **argv)
 #endif
 {
+	cout << "APP INIT" << endl;
 	DemoWindow demo_window;
 	demo_window.Load();
 
@@ -23,6 +30,8 @@ int main(int argc, char **argv)
 	{
 		return -1;
 	}
+	
+	cout << "what" << endl;
 
 	// Constructs the system and render interfaces, creates a window, and attaches the renderer.
 	if (!Backend::Initialize(demo_window.GetWindowTitle().c_str(), demo_window.GetWidth(), demo_window.GetHeight(), true))
@@ -37,6 +46,7 @@ int main(int argc, char **argv)
 
 	// RmlUi initialisation.
 	Rml::Initialise();
+
 
 	// Create the main RmlUi context.
 	Rml::Context *context = Rml::CreateContext("main", Rml::Vector2i(demo_window.GetWidth(), demo_window.GetHeight()));

@@ -13,11 +13,13 @@ void RolodexHeader::Save(Json::object &outElement) const
 {
     // string description
     outElement["description"] = description;
+	cout << "description: " << description << endl; 
 
 	// vector<ClassList> classes;
 	Json::array classes_json;
 	for (const ClassList &classList : classes)
 	{
+		cout << "\tclasslist dept: " << classList.department_name << endl; 
 		Json::object class_json;
 		classList.Save(class_json);
 		classes_json.push_back(class_json);

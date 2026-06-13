@@ -16,8 +16,9 @@ using namespace std;
 #include "TimetableInterface.h"
 #include "RolodexHeader.h"
 
-struct AppData
+class AppData
 {
+	public:
 	Rml::String current_tab;
 	Rml::String window_title;
 	Rml::String export_dir;
@@ -32,6 +33,7 @@ struct AppData
 
 	// rolodex headers
 	vector<RolodexHeader> rolodex_headers;
+	int rolodexTarget;
 	
 	// PREFERENCES
 	vector<Rml::String> schedule_names;
@@ -61,6 +63,9 @@ struct AppData
 
 	void SaveSettings(Json::object &outElement) const;
 	void LoadSettings(const Json::object &inElement);
+
+	bool GetService(Service& service, string serviceName);
+	Service* GetService(string serviceName);
 };
 
 #endif // APPDATA_H

@@ -138,3 +138,16 @@ bool Tutor::tutorsClasses(const vector<ClassList> &requireClasses) const
 	}
 	return true;
 }
+
+bool Tutor::usesService(const string &serviceName) const
+{
+	for (const DaySchedule &day : schedule.days)
+	{	
+		for (const ShiftSchedule& shift : day.shifts){
+			if (shift.service_name == serviceName){
+				return true;
+			}
+		}
+	}
+	return false;
+}

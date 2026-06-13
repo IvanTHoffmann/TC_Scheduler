@@ -1,6 +1,7 @@
 #include <string>
 
 #include "ClassList.h"
+#include "VectorInterface.h"
 
 using namespace std;
 

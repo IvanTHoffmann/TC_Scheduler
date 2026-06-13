@@ -17,6 +17,10 @@
         margin: 5px;
         height: 100px;
     }
+
+    .bold {
+        font-weight: bold;
+    }
 </style>
 
 <h1 text-align="center">
@@ -41,13 +45,21 @@
                     [rolodex_tutor_list]
                 </td>
             </tr>
+            [foreach_service]
+            [if_rolodex_service]
             <tr>
                 <td>
-                    [foreach_rolodex_shift]
-                    [rolodex_shift_days] [rolodex_shift_start]-[rolodex_shift_end]
-                    [endloop_rolodex_shift]
+                    <br/><span class="bold">[service_description]</span><br/>
+                    [foreach_weekday]
+                        [if_rolodex_day]
+                    <span class="bold">[weekday_name]</span>&nbsp;[foreach_rolodex_shift]| [rolodex_shift_start]-[rolodex_shift_end] [endloop_rolodex_shift]
+                    <br/>
+                        [endif_rolodex_day]
+                    [endloop_weekday]
                 </td>
             </tr>
+            [endif_rolodex_service]
+            [endloop_service]
         </tbody>
 
     </table>

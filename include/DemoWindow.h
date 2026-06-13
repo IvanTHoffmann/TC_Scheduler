@@ -41,17 +41,15 @@ public:
 
 	void SaveSchedule(CALLBACK_PARAMS);
 	void ResetGrid(CALLBACK_PARAMS);
-	void SubmitForm(Rml::String in_submit_message);
 
 	// Schedule interaction
 	void UpdateTimetable();
-	void UpdateScheduleSummary();
-	int CountTutorScheduleSlots(int tutor_index);
 	float CalculateTotalHours(const WeekSchedule& schedule);
 	void UpdateTotalHours();
 
 	void OnClick_SummaryTab(CALLBACK_PARAMS);
 	void OnClick_SchedulesTab(CALLBACK_PARAMS);
+	void OnClick_RolodexTab(CALLBACK_PARAMS);
 	void OnClick_ClassesTab(CALLBACK_PARAMS);
 
 	void SetSelectedServices(CALLBACK_PARAMS);
@@ -82,6 +80,11 @@ public:
 	void OnSlotMouseOver(CALLBACK_PARAMS);
 	void OnTimetableMouseUp(CALLBACK_PARAMS);
 	void OnTimetableMouseOut(CALLBACK_PARAMS);
+
+	void SetRolodexTarget(CALLBACK_PARAMS);
+	void SaveRolodexTarget(CALLBACK_PARAMS);
+	void AddRolodexHeader(CALLBACK_PARAMS);
+	void DeleteRolodexTarget(CALLBACK_PARAMS);
 
 private:
 	void ColorSlot(int, int);

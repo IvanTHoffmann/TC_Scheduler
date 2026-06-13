@@ -21,7 +21,7 @@
 			<tr data-for="row,row_id:timetable.rows" data-event-mouseout="">
 				<td colspan=2>{{row.label}}</td>
 				<td data-for="slot,slot_id:row.view[0].accessor" class="slot"
-					data-style-background-color="GetSlotColor(slot.value)"
+					data-style-background-color="GetSlotColor(slot.service_name, slot.count)"
 					data-event-mousedown="OnSlotMouseDown(row_id, slot_id)"
 					data-event-mouseover="OnSlotMouseOver(row_id, slot_id)">
 				</td>
