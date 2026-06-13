@@ -15,8 +15,6 @@
 
 <tab data-event-click="OnClick_SummaryTab()">Overview</tab>
 <panel>
-
-Hello Sam! You've downloaded the latest version.
 	
 	<div>
 		<button class="gradient" data-event-click="OnTutorChanged(-1)">Apply Filter</button>
