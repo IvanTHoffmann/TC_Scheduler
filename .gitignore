@@ -40,3 +40,6 @@ vcpkg_installed/
 
 # Exported Files
 dist/exported_documents/
+
+# Save files
+*.json
