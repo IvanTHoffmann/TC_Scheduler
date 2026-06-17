@@ -22,6 +22,7 @@ class AppData
 	Rml::String current_tab;
 	Rml::String window_title;
 	Rml::String export_dir;
+	Rml::String schedules_dir, schedule_name;
 
 	Rml::String mod_tutor_first_name, mod_tutor_last_name, mod_service_name, mod_department_name;
 	

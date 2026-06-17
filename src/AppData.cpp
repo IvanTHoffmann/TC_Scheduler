@@ -57,10 +57,10 @@ void AppData::SaveSchedule(Json::object &outElement) const
 
 void AppData::LoadSchedule(const Json::object &inElement)
 {
-	
-	// vector<RolodexHeader> rolodex_headers
+	// vector<RolodexHeader> rolodex_header
 	rolodex_headers.clear();
 	for (const Json& inJson : inElement.at("rolodex_headers").array_items()) {
+		cout << "rolodex item" << endl;
 		rolodex_headers.push_back({});
 		rolodex_headers.back().Load(inJson.object_items());
 	}
@@ -82,10 +82,10 @@ void AppData::LoadSchedule(const Json::object &inElement)
 	departments.clear();
 	for (const Json& inJson : inElement.at("departments").array_items()) {
 		departments.push_back({});
-		departments.back().name = inJson.string_value();
+		Department &dept = departments.back();
+		dept.name = inJson.string_value();
+		dept.selected = false;
 	}
-
-	cout << "LOAD SERVICES" << endl;
 
 	// vector<Service> services;
 	services.clear();
@@ -102,6 +102,8 @@ void AppData::SaveSettings(Json::object &outElement) const
 
 	// Rml::String export_dir;
 	outElement["export_directory"] = export_dir;
+	outElement["schedules_dir"] = schedules_dir; 
+	outElement["startup_schedule"] = schedule_name;
 
 	// Rml::String term_season;
 	outElement["term_season"] = term_season;
@@ -114,9 +116,6 @@ void AppData::SaveSettings(Json::object &outElement) const
 	resolution_json["w"] = resolution[0];
 	resolution_json["h"] = resolution[1];
 	outElement["resolution"] = resolution_json;
-
-	// int schedule_id;
-	outElement["startup_schedule"] = schedule_id;
 }
 
 void AppData::LoadSettings(const Json::object &inElement)
@@ -126,6 +125,8 @@ void AppData::LoadSettings(const Json::object &inElement)
 
 	// Rml::String export_dir;
 	export_dir = inElement.at("export_directory").string_value();
+	schedules_dir = inElement.at("schedules_dir").string_value();
+	schedule_name = inElement.at("startup_schedule").string_value();
 
 	// Rml::String term_season;
 	term_season = inElement.at("term_season").string_value();
@@ -137,9 +138,6 @@ void AppData::LoadSettings(const Json::object &inElement)
 	const Json &resolution_json = inElement.at("resolution");
 	resolution[0] = resolution_json.object_items().at("w").int_value();
 	resolution[1] = resolution_json.object_items().at("h").int_value();
-
-	// int schedule_id;
-	schedule_id = inElement.at("startup_schedule").int_value();
 }
 
 bool AppData::GetService(Service &outService, string serviceName)

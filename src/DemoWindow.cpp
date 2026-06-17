@@ -29,7 +29,9 @@ bool DemoWindow::Load()
 {
 	ifstream fin;
 	string buf, err;
+	cout << "load settings from: " << APPDATA_FILENAME << endl;
 
+	// open appdata
 	fin.open(APPDATA_FILENAME);
 	if (fin.is_open())
 	{
@@ -43,70 +45,49 @@ bool DemoWindow::Load()
 	else
 	{
 		// create a default appdata.json file
-		buf = "{\"schedules\": [{\"budgets\": [],\"departments\": [],\"name\": \"Unnamed Schedule\",\"services\": [],\"tutors\": []}]}";
+		cout << "failed to load settings" << endl;
+		buf = "null";
 	}
 
-	cout << "PARSE JSON" << endl;
-
 	jsonDocument = Json::parse(buf, err);
-
-	//*
 	if (!err.empty())
 	{
 		cout << "failed to load " << APPDATA_FILENAME << ": " << err << endl;
 		return false;
 	}
-	// cout << "loaded " << APPDATA_FILENAME << ": " << jsonDocument.dump().c_str() << endl;
-
 	// Load document settings into appData
-	Json settings_json = jsonDocument.object_items().at("settings");
-	appData.LoadSettings(settings_json.object_items());
+	appData.LoadSettings(jsonDocument.object_items());
 
-	Json::array schedules_json = jsonDocument.object_items().at("schedules").array_items();
-
-	appData.schedule_names.clear();
-	for (const Json &schedule : schedules_json)
-	{
-		const string &schedule_name = schedule.object_items().at("name").string_value();
-		appData.schedule_names.push_back(schedule_name);
-	}
-
-	cout << "LOAD SCHEDULE" << endl;
-	Json schedule_json = schedules_json.at(appData.schedule_id);
-	appData.LoadSchedule(schedule_json.object_items());
-
-	cout << "FINISHED LOADING APPDATA" << endl;
+	LoadSchedule();
 
 	return true;
 }
 
 bool DemoWindow::Save()
 {
-	cout << "Save document" << endl;
+	Json::object settingsDocument, scheduleDocument;
+	std::string filename = appData.schedules_dir + appData.schedule_name + ".json";
+	ofstream fout;
 
-	Json::object newDocument = jsonDocument.object_items(); // Make a copy of loaded document
-
-	Json::object settings_json;
-	appData.SaveSettings(settings_json);	 // Save settings to a new json object
-	newDocument["settings"] = settings_json; // Write settings to the new copy of the document
-
-	Json::array schedules_json = newDocument.at("schedules").array_items(); // Make a copy of the schedules array
-	Json::object schedule_json;
-	schedule_json["name"] = appData.schedule_names[appData.schedule_id];
-	appData.SaveSchedule(schedule_json);					// Save the current schedule to a new json object
-	schedules_json.at(appData.schedule_id) = schedule_json; // Write the current schedule to the new copy of the schedules array
-	newDocument["schedules"] = schedules_json;				// Write new schedule array to the new copy of the document
-
-	jsonDocument = newDocument; // Overwrite the previous document
-
-	ofstream fout(APPDATA_FILENAME);
-	if (!fout.is_open())
+	fout.open(APPDATA_FILENAME);
+	if (fout.is_open())
 	{
-		return false;
+		appData.SaveSettings(settingsDocument);
+		fout << ((Json)settingsDocument).dump().c_str();
+		fout.close();
 	}
 
-	fout << jsonDocument.dump().c_str();
-	return fout.good();
+	fout.clear();
+
+	fout.open(filename);
+	if (fout.is_open())
+	{
+		appData.SaveSchedule(scheduleDocument);
+		fout << ((Json)scheduleDocument).dump().c_str();
+		fout.close();
+	}
+
+	return true;
 }
 
 DemoWindow::DemoWindow() : appData(), exporter(&appData)
@@ -594,10 +575,57 @@ void DemoWindow::RemoveDepartment(CALLBACK_PARAMS)
 	}
 }
 
+bool DemoWindow::LoadSchedule()
+{
+	std::string schedule_path = appData.schedules_dir + appData.schedule_name + ".json";
+
+	cout << "load schedule from: " << schedule_path << endl;
+	// load schedules
+	string buf, err;
+	ifstream fin;
+	Json schedule_json;
+
+	bool error = false;
+
+	fin.open(schedule_path);
+	error = !fin.is_open();
+
+	if (!error)
+	{
+		string line;
+		while (std::getline(fin, line))
+		{
+			buf += line + "\n";
+		}
+		fin.close();
+
+		schedule_json = Json::parse(buf, err);
+		error = !err.empty();
+
+		if (error)
+		{
+			cout << "failed to load " << schedule_path << ": " << err << endl;
+		}
+	}
+
+	if (error)
+	{
+		buf = "{\"budgets\": [], \"departments\": [], \"name\": \"Tutoring Center\", \"rolodex_headers\": [],\"services\": [],\"tutors\": []}";
+		schedule_json = Json::parse(buf, err);
+	}
+
+	appData.LoadSchedule(schedule_json.object_items());
+	return true;
+}
+
+void DemoWindow::LoadScheduleCB(CALLBACK_PARAMS)
+{
+	LoadSchedule();
+}
+
 void DemoWindow::SaveSchedule(CALLBACK_PARAMS)
 {
 	Save();
-	cout << "called Save()" << endl;
 }
 
 void DemoWindow::ResetGrid(CALLBACK_PARAMS)
@@ -941,6 +969,8 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 
 		// Bind appData members
 		constructor.Bind("export_directory", &appData.export_dir);
+		constructor.Bind("schedules_dir", &appData.schedules_dir);
+		constructor.Bind("schedule_name", &appData.schedule_name);
 		constructor.Bind("departments", &appData.departments);
 		constructor.Bind("services", &appData.services);
 		constructor.Bind("tutors", &appData.tutors);
@@ -989,6 +1019,7 @@ bool DemoWindow::Initialize(const Rml::String &title, Rml::Context *context)
 		constructor.BindEventCallback("OnTimetableMouseOut", &DemoWindow::OnTimetableMouseOut, this);
 		constructor.BindEventCallback("AddStartTime", &DemoWindow::AddStartTime, this);
 		constructor.BindEventCallback("AddEndTime", &DemoWindow::AddEndTime, this);
+		constructor.BindEventCallback("LoadSchedule", &DemoWindow::LoadScheduleCB, this);
 		constructor.BindEventCallback("SaveSchedule", &DemoWindow::SaveSchedule, this);
 		constructor.BindEventCallback("ResetGrid", &DemoWindow::ResetGrid, this);
 		constructor.BindEventCallback("SetRolodexTarget", &DemoWindow::SetRolodexTarget, this);

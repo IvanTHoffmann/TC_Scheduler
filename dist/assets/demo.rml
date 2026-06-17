@@ -327,6 +327,11 @@
 		This is the configuration page where you will be able to control the settings of the application.
 	</div>
 	<div>Export Directory:<input type="text" data-value="export_directory"/></div>
+	<div>Schedules Directory:<input type="text" data-value="schedules_dir"/></div>
+	<div>
+		Schedule Name:<input type="text" data-value="schedule_name"/>
+		<button class="gradient" data-event-click="LoadSchedule()">Load Schedule</button>
+	</div>
 	<div>Developer Options:<input type="checkbox" data-value="dev_enable"/></div>
 </panel>
 

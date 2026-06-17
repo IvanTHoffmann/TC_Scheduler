@@ -14,7 +14,7 @@ using namespace json11;
 using namespace std;
 
 
-#define APPDATA_FILENAME "data/appdata.json"
+#define APPDATA_FILENAME "appdata.json"
 
 #define CALLBACK_PARAMS Rml::DataModelHandle model, Rml::Event& ev, const Rml::VariantList& arguments
 
@@ -34,11 +34,13 @@ public:
 	bool Initialize(const Rml::String& title, Rml::Context* context);
 	void Shutdown();
 	void Update();
-
+	
 	void ProcessEvent(Rml::Event& event) override;
-
+	
 	Rml::ElementDocument* GetDocument();
-
+	
+	bool LoadSchedule();
+	void LoadScheduleCB(CALLBACK_PARAMS);
 	void SaveSchedule(CALLBACK_PARAMS);
 	void ResetGrid(CALLBACK_PARAMS);
 
