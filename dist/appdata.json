@@ -1,1 +1,12 @@
-{"export_directory": "./exported_documents/", "resolution": {"h": 600, "w": 1200}, "schedules_dir": "./data/", "startup_schedule": "tutoring_center", "term_season": "Spring", "term_year": 2026, "window_title": "Tutoring Center Scheduler"}
+{
+    "export_directory": "./exported_documents/",
+    "resolution": {
+        "h": 600,
+        "w": 1200
+    },
+    "schedules_dir": "./data/",
+    "startup_schedule": "tutoring_center",
+    "term_season": "Summer",
+    "term_year": 2026,
+    "window_title": "Tutoring Center Scheduler"
+}

@@ -7,6 +7,12 @@ using namespace std;
 // AppData implementation
 void AppData::SaveSchedule(Json::object &outElement) const
 {
+	// Rml::String term_season;
+	outElement["term_season"] = term_season;
+
+	// int term_year;
+	outElement["term_year"] = term_year;
+
 	// vector<RolodexHeader> rolodex_headers
 	Json::array roloHeaders_json;
 	for (const RolodexHeader& rolodex_header : rolodex_headers) {
@@ -57,10 +63,26 @@ void AppData::SaveSchedule(Json::object &outElement) const
 
 void AppData::LoadSchedule(const Json::object &inElement)
 {
+	// TODO: detect which file seasons need to be loaded from
+
+	#ifndef PATCH_LOAD
+	// Rml::String term_season;
+	term_season = inElement.at("term_season").string_value();
+
+	// int term_year;
+	term_year = inElement.at("term_year").int_value();
+	#endif
+
 	// vector<RolodexHeader> rolodex_header
 	rolodex_headers.clear();
 	for (const Json& inJson : inElement.at("rolodex_headers").array_items()) {
-		cout << "rolodex item" << endl;
+		rolodex_headers.push_back({});
+		rolodex_headers.back().Load(inJson.object_items());
+	}
+
+	// vector<RolodexHeader> rolodex_header
+	rolodex_headers.clear();
+	for (const Json& inJson : inElement.at("rolodex_headers").array_items()) {
 		rolodex_headers.push_back({});
 		rolodex_headers.back().Load(inJson.object_items());
 	}
@@ -105,12 +127,6 @@ void AppData::SaveSettings(Json::object &outElement) const
 	outElement["schedules_dir"] = schedules_dir; 
 	outElement["startup_schedule"] = schedule_name;
 
-	// Rml::String term_season;
-	outElement["term_season"] = term_season;
-
-	// int term_year;
-	outElement["term_year"] = term_year;
-
 	// int resolution[2];
 	Json::object resolution_json;
 	resolution_json["w"] = resolution[0];
@@ -120,6 +136,14 @@ void AppData::SaveSettings(Json::object &outElement) const
 
 void AppData::LoadSettings(const Json::object &inElement)
 {
+	#ifdef PATCH_LOAD
+	// Rml::String term_season;
+	term_season = inElement.at("term_season").string_value();
+
+	// int term_year;
+	term_year = inElement.at("term_year").int_value();
+	#endif
+
 	// Rml::String window_title;
 	window_title = inElement.at("window_title").string_value();
 
@@ -127,12 +151,6 @@ void AppData::LoadSettings(const Json::object &inElement)
 	export_dir = inElement.at("export_directory").string_value();
 	schedules_dir = inElement.at("schedules_dir").string_value();
 	schedule_name = inElement.at("startup_schedule").string_value();
-
-	// Rml::String term_season;
-	term_season = inElement.at("term_season").string_value();
-
-	// int term_year;
-	term_year = inElement.at("term_year").int_value();
 
 	// int resolution[2];
 	const Json &resolution_json = inElement.at("resolution");
